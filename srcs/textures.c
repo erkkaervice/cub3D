@@ -6,22 +6,25 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:32:32 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/04 16:48:43 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/05 17:36:48 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	load_texture(void *mlx, t_texture *texture, char *path)
+int	load_texture(mlx_t *mlx, t_texture *texture, char *path)
 {
-	texture->img = mlx_xpm_file_to_image(mlx,
-			path, &texture->width, &texture->height);
+	texture->img = mlx_load_png(path);
 	if (!texture->img)
 		return (0);
-	texture->addr = mlx_get_data_addr(texture->img,
-			&texture->bpp, &texture->line_len, &texture->endian);
-	if (!texture->addr)
+	texture->width = texture->img->width;
+	texture->height = texture->img->height;
+	texture->image = mlx_texture_to_image(mlx, texture->img);
+	if (!texture->image)
+	{
+		mlx_delete_texture(texture->img);
 		return (0);
+	}
 	return (1);
 }
 
@@ -59,7 +62,8 @@ int	get_texture_index(int side, float ray_dir_x, float ray_dir_y)
 	{
 		if (ray_dir_x > 0)
 			return (1);
-		return (0);
+		else
+			return (0);
 	}
 	if (ray_dir_y > 0)
 		return (3);
@@ -69,22 +73,23 @@ int	get_texture_index(int side, float ray_dir_x, float ray_dir_y)
 int	get_texture_color(t_game *game, int tex_id, int tex_x, int tex_y)
 {
 	t_texture		*tex;
-	unsigned int	color;
+	unsigned char	*pixel;
 
-	if (tex_id < 0 || tex_id >= 4)
+	if ((unsigned int)tex_id >= 4)
 		return (0);
 	tex = game->textures[tex_id];
-	if (!tex || !tex->addr || tex->bpp <= 0)
+	if (!tex || !tex->image)
 		return (0);
+	if ((unsigned int)tex_x >= (unsigned int)tex->width)
+		tex_x = tex->width - 1;
+	if ((unsigned int)tex_y >= (unsigned int)tex->height)
+		tex_y = tex->height - 1;
 	if (tex_x < 0)
 		tex_x = 0;
-	else if (tex_x >= tex->width)
-		tex_x = tex->width - 1;
 	if (tex_y < 0)
 		tex_y = 0;
-	else if (tex_y >= tex->height)
-		tex_y = tex->height - 1;
-	color = *(unsigned int *)(tex->addr + tex_y * tex->line_len
-			+ tex_x * (tex->bpp / 8));
-	return (color);
+	pixel = (unsigned char *)(tex->image->pixels
+			+ (tex_y * tex->image->width + tex_x) * 4);
+	return ((int)(pixel[0] | (pixel[1] << 8) | (pixel[2] << 16)
+		| (pixel[3] << 24)));
 }

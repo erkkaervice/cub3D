@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:24:31 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/04 17:23:25 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/05 18:29:08 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,10 @@
 # define CUB3D_H
 
 # include <libft.h>
-# include <mlx.h>
+# include "MLX42/MLX42.h"
 # include <math.h>
 # include <stdlib.h>
 
-/* Screen & Key Constants */
 # define WIDTH 1800
 # define HEIGHT 1600
 # define KEY_W 119
@@ -29,7 +28,6 @@
 # define KEY_LEFT 65363
 # define KEY_RIGHT 65361
 
-/* Input State */
 typedef struct s_input
 {
 	int	w;
@@ -40,7 +38,6 @@ typedef struct s_input
 	int	right;
 }	t_input;
 
-/* Parsed Config */
 typedef struct s_config
 {
 	char	*north_texture;
@@ -55,19 +52,14 @@ typedef struct s_config
 	char	player_dir;
 }	t_config;
 
-/* Texture Data */
 typedef struct s_texture
 {
-	void	*img;
-	char	*addr;
-	int		bpp;
-	int		line_len;
-	int		endian;
-	int		width;
-	int		height;
+	mlx_texture_t	*img;
+	mlx_image_t		*image;
+	int				width;
+	int				height;
 }	t_texture;
 
-/* Initial Dir Setup (for N/S/W/E) */
 typedef struct s_dir_info
 {
 	char	dir;
@@ -77,7 +69,6 @@ typedef struct s_dir_info
 	float	plane_y;
 }	t_dir_info;
 
-/* Raycasting Data */
 typedef struct s_ray
 {
 	float	ray_dir_x;
@@ -93,7 +84,6 @@ typedef struct s_ray
 	int		side;
 }	t_ray;
 
-/* Wall Hit Info */
 typedef struct s_wall
 {
 	float	perp_wall_dist;
@@ -103,16 +93,10 @@ typedef struct s_wall
 	int		tex_x;
 }	t_wall;
 
-/* Main Game Struct */
 typedef struct s_game
 {
-	void		*mlx;
-	void		*win;
-	void		*img;
-	char		*addr;
-	int			bpp;
-	int			line_len;
-	int			endian;
+	mlx_t		*mlx;
+	mlx_image_t	*img;
 	t_config	*cfg;
 	float		player_x;
 	float		player_y;
@@ -125,34 +109,43 @@ typedef struct s_game
 	t_input		input;
 }	t_game;
 
-/* Init */
+/* Config and Initialization */
+t_config	*mock_config(void);
 void		init_game_struct(t_game *game);
 void		init_dir_infos(t_game *game);
 void		init_player(t_game *game);
-t_config	*mock_config(void);
 int			init_game(t_game *game);
 
+/* Raycasting */
+void		init_ray_basic(t_game *game, int x, t_ray *ray);
+void		init_ray_steps(t_game *game, t_ray *ray);
+int			perform_dda(t_game *game, t_ray *ray);
+void		calculate_wall(t_game *game, t_ray *ray, t_wall *wall);
+
 /* Rendering */
-int			render_frame(void *param);
+void		render_frame(void *param);
 void		draw_column(t_game *game, int x, t_wall *wall, t_ray *ray);
 int			get_tex_x(t_game *game, t_ray *ray, float wall_x);
 void		raycast(t_game *game);
 void		update_player_position(t_game *game);
 
 /* Textures */
-int			load_texture(void *mlx, t_texture *texture, char *path);
+int			load_texture(mlx_t *mlx, t_texture *texture, char *path);
 int			load_textures(t_game *game);
 int			get_texture_index(int side, float ray_dir_x, float ray_dir_y);
 int			get_texture_color(t_game *game, int tex_id, int tex_x, int tex_y);
 void		free_textures(t_game *game, int count);
 
 /* Input */
-int			key_press(int keycode, t_game *game);
-int			key_release(int keycode, t_game *game);
+void		key_press(mlx_key_data_t keydata, void *param);
+void		key_release(mlx_key_data_t keydata, void *param);
+void		key_hook(mlx_key_data_t keydata, void *param);
 
-/* Utils */
+/* Map */
 int			map_height(char **map);
 int			map_width(char *row);
+
+/* Cleanup */
 void		cleanup_game(t_game *game);
 
 #endif

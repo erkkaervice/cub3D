@@ -6,13 +6,13 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:55:14 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/04 17:23:34 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/05 18:09:58 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static void	init_ray_basic(t_game *game, int x, t_ray *ray)
+void	init_ray_basic(t_game *game, int x, t_ray *ray)
 {
 	float	camera_x;
 
@@ -21,19 +21,19 @@ static void	init_ray_basic(t_game *game, int x, t_ray *ray)
 	ray->ray_dir_y = game->dir_y + game->plane_y * camera_x;
 	ray->map_x = (int)game->player_x;
 	ray->map_y = (int)game->player_y;
-	if (ray->ray_dir_x == 0.0f)
+	if (ray->ray_dir_x == 0)
 		ray->delta_dist_x = 1e30f;
 	else
 		ray->delta_dist_x = fabsf(1.0f / ray->ray_dir_x);
-	if (ray->ray_dir_y == 0.0f)
+	if (ray->ray_dir_y == 0)
 		ray->delta_dist_y = 1e30f;
 	else
 		ray->delta_dist_y = fabsf(1.0f / ray->ray_dir_y);
 }
 
-static void	init_ray_steps(t_game *game, t_ray *ray)
+void	init_ray_steps(t_game *game, t_ray *ray)
 {
-	if (ray->ray_dir_x < 0.0f)
+	if (ray->ray_dir_x < 0)
 	{
 		ray->step_x = -1;
 		ray->side_dist_x = (game->player_x - ray->map_x) * ray->delta_dist_x;
@@ -44,7 +44,7 @@ static void	init_ray_steps(t_game *game, t_ray *ray)
 		ray->side_dist_x = (ray->map_x + 1.0f - game->player_x)
 			* ray->delta_dist_x;
 	}
-	if (ray->ray_dir_y < 0.0f)
+	if (ray->ray_dir_y < 0)
 	{
 		ray->step_y = -1;
 		ray->side_dist_y = (game->player_y - ray->map_y) * ray->delta_dist_y;
@@ -57,12 +57,9 @@ static void	init_ray_steps(t_game *game, t_ray *ray)
 	}
 }
 
-static int	perform_dda(t_game *game, t_ray *ray)
+int	perform_dda(t_game *game, t_ray *ray)
 {
-	int	hit;
-
-	hit = 0;
-	while (hit == 0)
+	while (1)
 	{
 		if (ray->side_dist_x < ray->side_dist_y)
 		{
@@ -76,59 +73,57 @@ static int	perform_dda(t_game *game, t_ray *ray)
 			ray->map_y += ray->step_y;
 			ray->side = 1;
 		}
-		if (ray->map_y < 0
-			|| ray->map_y >= map_height(game->cfg->map) || ray->map_x < 0
-			|| ray->map_x >= map_width(game->cfg->map[0]))
-			break ;
+		if (ray->map_x < 0
+			|| ray->map_x >= map_width(game->cfg->map[0])
+			|| ray->map_y < 0
+			|| ray->map_y >= map_height(game->cfg->map))
+			return (0);
 		if (game->cfg->map[ray->map_y][ray->map_x] == '1')
-			hit = 1;
+			return (1);
 	}
-	return (hit);
 }
 
-static void	calculate_wall(t_game *game, t_ray *ray, t_wall *wall)
+static float	wall_maths(t_game *game, t_ray *ray, float *wall_x)
 {
+	float	perp_dist;
+
 	if (ray->side == 0)
-		wall->perp_wall_dist = (ray->map_x - game->player_x
-				+ (1 - ray->step_x) / 2) / ray->ray_dir_x;
+		perp_dist = (ray->map_x - game->player_x + (1 - ray->step_x)
+				* 0.5f) / ray->ray_dir_x;
 	else
-		wall->perp_wall_dist = (ray->map_y - game->player_y
-				+ (1 - ray->step_y) / 2) / ray->ray_dir_y;
-	wall->line_height = (int)(HEIGHT / wall->perp_wall_dist);
-	if (wall->line_height < 1)
-		wall->line_height = 1;
-	wall->draw_start = -wall->line_height / 2 + HEIGHT / 2;
-	if (wall->draw_start < 0)
-		wall->draw_start = 0;
-	wall->draw_end = wall->line_height / 2 + HEIGHT / 2;
-	if (wall->draw_end >= HEIGHT)
-		wall->draw_end = HEIGHT - 1;
+		perp_dist = (ray->map_y - game->player_y + (1 - ray->step_y)
+				* 0.5f) / ray->ray_dir_y;
+	if (perp_dist < 0.001f)
+		perp_dist = 0.001f;
 	if (ray->side == 0)
-		wall->tex_x = get_tex_x(game, ray, game->player_y
-				+ wall->perp_wall_dist * ray->ray_dir_y);
+		*wall_x = game->player_y + perp_dist * ray->ray_dir_y;
 	else
-		wall->tex_x = get_tex_x(game, ray, game->player_x
-				+ wall->perp_wall_dist * ray->ray_dir_x);
+		*wall_x = game->player_x + perp_dist * ray->ray_dir_x;
+	*wall_x -= floorf(*wall_x);
+	return (perp_dist);
 }
 
-void	raycast(t_game *game)
+void	calculate_wall(t_game *game, t_ray *ray, t_wall *wall)
 {
-	int		x;
-	t_ray	ray;
-	t_wall	wall;
+	float	perp_dist;
+	int		line_h;
+	int		draw_start;
+	int		draw_end;
+	float	wall_x;
 
-	x = 0;
-	while (x < WIDTH)
-	{
-		init_ray_basic(game, x, &ray);
-		init_ray_steps(game, &ray);
-		if (perform_dda(game, &ray) == 0)
-		{
-			x++;
-			continue ;
-		}
-		calculate_wall(game, &ray, &wall);
-		draw_column(game, x, &wall, &ray);
-		x++;
-	}
+	perp_dist = wall_maths(game, ray, &wall_x);
+	line_h = (int)(HEIGHT / perp_dist);
+	if (line_h < 1)
+		line_h = 1;
+	draw_start = -line_h / 2 + HEIGHT / 2;
+	if (draw_start < 0)
+		draw_start = 0;
+	draw_end = line_h / 2 + HEIGHT / 2;
+	if (draw_end >= HEIGHT)
+		draw_end = HEIGHT - 1;
+	wall->perp_wall_dist = perp_dist;
+	wall->line_height = line_h;
+	wall->draw_start = draw_start;
+	wall->draw_end = draw_end;
+	wall->tex_x = get_tex_x(game, ray, wall_x);
 }

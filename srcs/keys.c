@@ -6,47 +6,52 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 15:25:54 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/04 16:54:00 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/05 16:58:06 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	key_press(int keycode, t_game *game)
+static void	set_key(t_input *input, int key, int value)
 {
-	if (keycode == KEY_W)
-		game->input.w = 1;
-	else if (keycode == KEY_A)
-		game->input.a = 1;
-	else if (keycode == KEY_S)
-		game->input.s = 1;
-	else if (keycode == KEY_D)
-		game->input.d = 1;
-	else if (keycode == KEY_LEFT)
-		game->input.left = 1;
-	else if (keycode == KEY_RIGHT)
-		game->input.right = 1;
-	else if (keycode == KEY_ESC)
-	{
-		cleanup_game(game);
-		exit(0);
-	}
-	return (0);
+	if (key == MLX_KEY_W)
+		input->w = value;
+	else if (key == MLX_KEY_A)
+		input->a = value;
+	else if (key == MLX_KEY_S)
+		input->s = value;
+	else if (key == MLX_KEY_D)
+		input->d = value;
+	else if (key == MLX_KEY_LEFT)
+		input->left = value;
+	else if (key == MLX_KEY_RIGHT)
+		input->right = value;
 }
 
-int	key_release(int keycode, t_game *game)
+void	key_hook(mlx_key_data_t keydata, void *param)
 {
-	if (keycode == KEY_W)
-		game->input.w = 0;
-	else if (keycode == KEY_A)
-		game->input.a = 0;
-	else if (keycode == KEY_S)
-		game->input.s = 0;
-	else if (keycode == KEY_D)
-		game->input.d = 0;
-	else if (keycode == KEY_LEFT)
-		game->input.left = 0;
-	else if (keycode == KEY_RIGHT)
-		game->input.right = 0;
-	return (0);
+	t_game	*game;
+
+	game = (t_game *)param;
+	if (keydata.action == MLX_PRESS)
+	{
+		if (keydata.key == MLX_KEY_ESCAPE)
+			mlx_close_window(game->mlx);
+		else
+			set_key(&game->input, keydata.key, 1);
+	}
+	else if (keydata.action == MLX_RELEASE)
+		set_key(&game->input, keydata.key, 0);
+}
+
+void	key_press(mlx_key_data_t keydata, void *param)
+{
+	if (keydata.action == MLX_PRESS)
+		key_hook(keydata, param);
+}
+
+void	key_release(mlx_key_data_t keydata, void *param)
+{
+	if (keydata.action == MLX_RELEASE)
+		key_hook(keydata, param);
 }

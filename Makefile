@@ -6,17 +6,17 @@
 #    By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/04 15:36:34 by eala-lah          #+#    #+#              #
-#    Updated: 2025/08/04 16:43:56 by eala-lah         ###   ########.fr        #
+#    Updated: 2025/08/05 15:43:21 by eala-lah         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= cub3D
-INCS		= -I ./incs/ -I ./libft/inc/ -I ./mlx/
+INCS		= -I ./incs/ -I ./libft/inc/ -I ./mlx/include/
 LIBFT_DIR	= libft/
 LIBFT		= $(LIBFT_DIR)/libft.a
 MLX_DIR		= mlx/
-MLX_LIB		= $(MLX_DIR)/libmlx.a
-MLX_FLAGS	= -L $(MLX_DIR) -lmlx -lXext -lX11 -lm -ldl
+MLX_LIB		= $(MLX_DIR)/build/libmlx42.a
+MLX_FLAGS	= -L $(MLX_DIR)/build -lmlx42 -lglfw -lm -ldl -pthread
 
 SRC_DIR		= srcs/
 SRC		= \
@@ -57,9 +57,10 @@ $(LIBFT):
 
 $(MLX_LIB):
 	@if [ ! -d "$(MLX_DIR)" ]; then \
-		$(GIT_FLAGS) https://github.com/42Paris/minilibx-linux.git $(MLX_DIR) > /dev/null 2>&1 || { echo "Failed to clone minilibx-linux repository." >&2; exit 1; }; \
+		$(GIT_FLAGS) https://github.com/codam-coding-college/MLX42.git $(MLX_DIR) > /dev/null 2>&1 || { echo "Failed to clone MLX42." >&2; exit 1; }; \
 	fi
-	@$(MAKE) -C $(MLX_DIR) > /dev/null 2>&1 || { echo "Failed to build minilibx-linux." >&2; exit 1; }
+	@cmake -B $(MLX_DIR)/build -S $(MLX_DIR) > /dev/null 2>&1 || { echo "Failed to configure MLX42 with CMake." >&2; exit 1; }
+	@cmake --build $(MLX_DIR)/build > /dev/null 2>&1 || { echo "Failed to build MLX42." >&2; exit 1; }
 
 $(OBJ_SUBDIR)%.o: $(SRC_DIR)%.c incs/cub3d.h
 	@$(CC) $(CFLAGS) -c $< -o $@ 2> /dev/stderr || { echo "Failed to compile $<." >&2; exit 1; }

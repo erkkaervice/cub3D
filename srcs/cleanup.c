@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:44:13 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/04 16:53:18 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/05 17:35:24 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,15 @@ void	free_textures(t_game *game, int count)
 {
 	int	i;
 
+	if (!game || !game->textures)
+		return ;
 	i = 0;
 	while (i < count)
 	{
 		if (game->textures[i])
 		{
 			if (game->textures[i]->img)
-				mlx_destroy_image(game->mlx, game->textures[i]->img);
+				mlx_delete_texture(game->textures[i]->img);
 			free(game->textures[i]);
 			game->textures[i] = NULL;
 		}
@@ -32,45 +34,43 @@ void	free_textures(t_game *game, int count)
 
 static void	cleanup_textures(t_game *game)
 {
-	if (!game || !game->cfg)
+	t_config	*config;
+
+	if (!game)
 		return ;
-	if (game->cfg->north_texture)
-	{
-		free(game->cfg->north_texture);
-		game->cfg->north_texture = NULL;
-	}
-	if (game->cfg->south_texture)
-	{
-		free(game->cfg->south_texture);
-		game->cfg->south_texture = NULL;
-	}
-	if (game->cfg->west_texture)
-	{
-		free(game->cfg->west_texture);
-		game->cfg->west_texture = NULL;
-	}
-	if (game->cfg->east_texture)
-	{
-		free(game->cfg->east_texture);
-		game->cfg->east_texture = NULL;
-	}
+	config = game->cfg;
+	if (!config)
+		return ;
+	free(config->north_texture);
+	config->north_texture = NULL;
+	free(config->south_texture);
+	config->south_texture = NULL;
+	free(config->west_texture);
+	config->west_texture = NULL;
+	free(config->east_texture);
+	config->east_texture = NULL;
 	free_textures(game, 4);
 }
 
 static void	cleanup_map(t_game *game)
 {
-	int	i;
+	char	**map;
+	int		i;
 
-	if (!game || !game->cfg || !game->cfg->map)
+	if (!game)
+		return ;
+	if (!game->cfg)
+		return ;
+	map = game->cfg->map;
+	if (!map)
 		return ;
 	i = 0;
-	while (game->cfg->map[i])
+	while (map[i])
 	{
-		free(game->cfg->map[i]);
-		game->cfg->map[i] = NULL;
+		free(map[i]);
 		i++;
 	}
-	free(game->cfg->map);
+	free(map);
 	game->cfg->map = NULL;
 }
 
@@ -78,17 +78,18 @@ void	cleanup_game(t_game *game)
 {
 	if (!game)
 		return ;
-	if (game->img && game->mlx)
-		mlx_destroy_image(game->mlx, game->img);
-	if (game->win && game->mlx)
-		mlx_destroy_window(game->mlx, game->win);
+	if (game->img)
+		mlx_delete_image(game->mlx, game->img);
 	cleanup_textures(game);
 	cleanup_map(game);
 	if (game->cfg)
+	{
 		free(game->cfg);
+		game->cfg = NULL;
+	}
 	if (game->mlx)
 	{
-		mlx_destroy_display(game->mlx);
-		free(game->mlx);
+		mlx_terminate(game->mlx);
+		game->mlx = NULL;
 	}
 }
