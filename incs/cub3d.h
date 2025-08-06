@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:24:31 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/06 15:53:55 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/06 17:57:01 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,12 @@ typedef struct s_wall
 	int		tex_x;
 }	t_wall;
 
+typedef struct s_point
+{
+	int	x;
+	int	y;
+}	t_point;
+
 typedef struct s_fps
 {
 	int			frames;
@@ -142,6 +148,7 @@ int			init_game(t_game *game);
 void		init_ray_basic(t_game *game, int x, t_ray *ray);
 void		init_ray_steps(t_game *game, t_ray *ray);
 int			perform_dda(t_game *game, t_ray *ray);
+int			is_wall_or_door(t_game *game, int x, int y);
 void		calculate_wall(t_game *game, t_ray *ray, t_wall *wall);
 
 /* Rendering */

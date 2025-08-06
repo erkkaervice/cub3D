@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 15:29:29 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/06 15:59:40 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/06 17:03:08 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,20 @@ static int	can_move(t_game *game, float x, float y)
 {
 	int		ix;
 	int		iy;
-	int		map_w;
-	int		map_h;
+	int		height;
 
+	height = map_height(game->cfg->map);
 	if (x < 0.0f || y < 0.0f)
+		return (0);
+	if (y >= (float)height)
+		return (0);
+	if (x >= (float)map_width(game->cfg->map[(int)y]))
 		return (0);
 	ix = (int)x;
 	iy = (int)y;
-	map_h = map_height(game->cfg->map);
-	map_w = map_width(game->cfg->map[0]);
-	if ((unsigned int)iy >= (unsigned int)map_h
-		|| (unsigned int)ix >= (unsigned int)map_w)
+	if (is_wall_or_door(game, ix, iy))
 		return (0);
-	return (game->cfg->map[iy][ix] != '1');
+	return (1);
 }
 
 static void	move_player(t_game *game, float dx, float dy, float speed)
@@ -37,20 +38,22 @@ static void	move_player(t_game *game, float dx, float dy, float speed)
 	float	new_y;
 
 	new_x = game->player_x + dx * speed;
-	if (can_move(game, new_x, game->player_y))
-		game->player_x = new_x;
 	new_y = game->player_y + dy * speed;
-	if (can_move(game, game->player_x, new_y))
-		game->player_y = new_y;
-	if (!can_move(game, new_x, game->player_y)
-		&& !can_move(game, game->player_x, new_y))
+	if (can_move(game, new_x, new_y))
 	{
-		new_x = game->player_x + dx * speed * 0.5f;
-		if (can_move(game, new_x, game->player_y))
-			game->player_x = new_x;
-		new_y = game->player_y + dy * speed * 0.5f;
-		if (can_move(game, game->player_x, new_y))
-			game->player_y = new_y;
+		game->player_x = new_x;
+		game->player_y = new_y;
+		return ;
+	}
+	if (can_move(game, new_x, game->player_y))
+	{
+		game->player_x = new_x;
+		return ;
+	}
+	if (can_move(game, game->player_x, new_y))
+	{
+		game->player_y = new_y;
+		return ;
 	}
 }
 
@@ -73,22 +76,22 @@ static void	rotate_player(t_game *game, float angle)
 
 void	update_movement_vector(t_game *game, float *dx, float *dy)
 {
-	if (game->input.w)
+	if (game->input.w == 1)
 	{
 		*dx += game->dir_x;
 		*dy += game->dir_y;
 	}
-	if (game->input.s)
+	if (game->input.s == 1)
 	{
 		*dx -= game->dir_x;
 		*dy -= game->dir_y;
 	}
-	if (game->input.a)
+	if (game->input.a == 1)
 	{
 		*dx -= game->plane_x;
 		*dy -= game->plane_y;
 	}
-	if (game->input.d)
+	if (game->input.d == 1)
 	{
 		*dx += game->plane_x;
 		*dy += game->plane_y;
@@ -104,7 +107,7 @@ void	update_player_position(t_game *game)
 	float	len;
 
 	move = 0.05f;
-	if (game->input.shift)
+	if (game->input.shift == 1)
 		move = 0.09f;
 	rot = 0.07f;
 	dx = 0.0f;
@@ -118,8 +121,8 @@ void	update_player_position(t_game *game)
 		dy /= len;
 	}
 	move_player(game, dx, dy, move);
-	if (game->input.left)
+	if (game->input.left == 1)
 		rotate_player(game, -rot);
-	if (game->input.right)
+	if (game->input.right == 1)
 		rotate_player(game, rot);
 }

@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:16:05 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/06 15:58:28 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/06 17:09:20 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,15 @@ static void	draw_minimap_tile(t_game *game, int map_x, int map_y)
 	}
 }
 
+static float	clamp(float val, float min, float max)
+{
+	if (val < min)
+		return (min);
+	if (val > max)
+		return (max);
+	return (val);
+}
+
 static void	draw_player_minimap(t_game *game)
 {
 	int		px;
@@ -58,8 +67,10 @@ static void	draw_player_minimap(t_game *game)
 	int		j;
 
 	size = MINIMAP_SCALE / 2;
-	px = (int)(game->player_x * MINIMAP_SCALE);
-	py = (int)(game->player_y * MINIMAP_SCALE);
+	px = (int)(clamp(game->player_x, 0.0f,
+				(float)map_width(game->cfg->map[0])) * MINIMAP_SCALE);
+	py = (int)(clamp(game->player_y, 0.0f,
+				(float)map_height(game->cfg->map)) * MINIMAP_SCALE);
 	i = 0;
 	while (i < size)
 	{

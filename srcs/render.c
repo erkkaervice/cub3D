@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:53:42 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/06 15:57:30 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/06 17:11:22 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,21 +77,25 @@ void	draw_column_loop(t_game *game, int x, t_wall *wall, int tex_id)
 	}
 }
 
-void	draw_column(t_game *game, int x, t_wall *wall, t_ray *ray)
+static void	render_column(t_game *game, int x)
 {
-	int	tex_id;
+	t_ray	ray;
+	t_wall	wall;
+	int		tex_id;
 
-	tex_id = get_texture_index(ray->side,
-			ray->ray_dir_x, ray->ray_dir_y);
-	draw_column_loop(game, x, wall, tex_id);
+	init_ray_basic(game, x, &ray);
+	init_ray_steps(game, &ray);
+	if (!perform_dda(game, &ray))
+		return ;
+	calculate_wall(game, &ray, &wall);
+	tex_id = get_texture_index(ray.side, ray.ray_dir_x, ray.ray_dir_y);
+	draw_column_loop(game, x, &wall, tex_id);
 }
 
 void	render_frame(void *param)
 {
 	t_game	*game;
 	int		x;
-	t_ray	ray;
-	t_wall	wall;
 
 	game = (t_game *)param;
 	fill_floor_ceiling(game);
@@ -99,15 +103,7 @@ void	render_frame(void *param)
 	x = 0;
 	while (x < WIDTH)
 	{
-		init_ray_basic(game, x, &ray);
-		init_ray_steps(game, &ray);
-		if (!perform_dda(game, &ray))
-		{
-			x++;
-			continue ;
-		}
-		calculate_wall(game, &ray, &wall);
-		draw_column(game, x, &wall, &ray);
+		render_column(game, x);
 		x++;
 	}
 	if (game->minimap_visible)

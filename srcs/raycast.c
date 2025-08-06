@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:55:14 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/06 15:59:11 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/06 16:54:05 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,14 @@ int	perform_dda(t_game *game, t_ray *ray)
 {
 	int	map_w;
 	int	map_h;
+	int	step_count;
+	int	max_steps;
 
 	map_w = map_width(game->cfg->map[0]);
 	map_h = map_height(game->cfg->map);
-	while (1)
+	step_count = 0;
+	max_steps = 1000;
+	while (step_count < max_steps)
 	{
 		if (ray->side_dist_x < ray->side_dist_y)
 			step_ray(ray, 0);
@@ -104,5 +108,7 @@ int	perform_dda(t_game *game, t_ray *ray)
 		if (game->cfg->map[ray->map_y][ray->map_x] == '1'
 			|| game->cfg->map[ray->map_y][ray->map_x] == 'D')
 			return (1);
+		step_count++;
 	}
+	return (0);
 }

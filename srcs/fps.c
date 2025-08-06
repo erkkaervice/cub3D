@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:26:54 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/06 16:10:21 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/06 17:58:45 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,34 @@
 
 #define CHAR_COLOR	0xFFFFFF
 
-static const char	g_font_digits[10][5] = {
-	{7,5,5,5,7},
-	{2,6,2,2,7},
-	{7,1,7,4,7},
-	{7,1,7,1,7},
-	{5,5,7,1,1},
-	{7,4,7,1,7},
-	{7,4,7,5,7},
-	{7,1,2,2,2},
-	{7,5,7,5,7},
-	{7,5,7,1,7}
-};
+static const char	(*get_font_digits(void))[5]
+{
+	static const char	font_digits[10][5] = {
+	{7, 5, 5, 5, 7},
+	{2, 6, 2, 2, 7},
+	{7, 1, 7, 4, 7},
+	{7, 1, 7, 1, 7},
+	{5, 5, 7, 1, 1},
+	{7, 4, 7, 1, 7},
+	{7, 4, 7, 5, 7},
+	{7, 1, 2, 2, 2},
+	{7, 5, 7, 5, 7},
+	{7, 5, 7, 1, 7}
+	};
 
-static const char	g_font_letters[3][5] = {
-	{7,4,7,4,4},
-	{7,5,7,4,4},
-	{7,4,7,1,7}
-};
+	return (font_digits);
+}
+
+static const char	(*get_font_letters(void))[5]
+{
+	static const char	font_letters[3][5] = {
+	{7, 4, 7, 4, 4},
+	{7, 5, 7, 4, 4},
+	{7, 4, 7, 1, 7}
+	};
+
+	return (font_letters);
+}
 
 static void	draw_fps_pixel(t_game *game, int x, int y, int color)
 {
@@ -41,6 +51,110 @@ static void	draw_fps_pixel(t_game *game, int x, int y, int color)
 		return ;
 	pixel = (uint32_t *)game->img->pixels + y * WIDTH + x;
 	*pixel = color;
+}
+
+static void	draw_scaled_pixel(t_game *game, struct s_point pos,
+	int scale, int color)
+{
+	int	dx;
+	int	dy;
+
+	dy = 0;
+	while (dy < scale)
+	{
+		dx = 0;
+		while (dx < scale)
+		{
+			draw_fps_pixel(game, pos.x + dx, pos.y + dy, color);
+			dx++;
+		}
+		dy++;
+	}
+}
+
+static void	draw_char(t_game *game, struct s_point pos,
+	const char bitmap[5], int scale)
+{
+	int	row;
+	int	col;
+
+	row = 0;
+	while (row < 5)
+	{
+		col = 0;
+		while (col < 3)
+		{
+			if (bitmap[row] & (1 << (2 - col)))
+				draw_scaled_pixel(game, (struct s_point){pos.x + col
+					* scale, pos.y + row * scale}, scale, CHAR_COLOR);
+			col++;
+		}
+		row++;
+	}
+}
+
+static void	setup_fonts(const char **digits_arr, const char **letters_arr)
+{
+	int	i;
+
+	i = 0;
+	while (i < 10)
+	{
+		digits_arr[i] = get_font_digits()[i];
+		i++;
+	}
+	letters_arr[0] = get_font_letters()[0];
+	letters_arr[1] = get_font_letters()[1];
+	letters_arr[2] = get_font_letters()[2];
+}
+
+static void	draw_string_char(t_game *game,
+	struct s_point pos, char c, int scale)
+{
+	static const char	*digits_arr[10];
+	static const char	*letters_arr[3];
+	static int			init = 0;
+
+	if (!init)
+	{
+		setup_fonts(digits_arr, letters_arr);
+		init = 1;
+	}
+	if (c >= '0' && c <= '9')
+		draw_char(game, pos, digits_arr[c - '0'], scale);
+	else if (c == 'F')
+		draw_char(game, pos, letters_arr[0], scale);
+	else if (c == 'P')
+		draw_char(game, pos, letters_arr[1], scale);
+	else if (c == 'S')
+		draw_char(game, pos, letters_arr[2], scale);
+	else if (c == ':')
+	{
+		draw_scaled_pixel(game, (struct s_point){pos.x + scale, pos.y + scale},
+			scale, CHAR_COLOR);
+		draw_scaled_pixel(game, (struct s_point){pos.x + scale, pos.y
+			+ 3 * scale},
+			scale, CHAR_COLOR);
+	}
+}
+
+static void	draw_string(t_game *game, struct s_point pos,
+	const char *str, int scale)
+{
+	int		i;
+	int		x;
+	char	c;
+
+	x = pos.x;
+	i = 0;
+	c = str[i];
+	while (c != '\0')
+	{
+		draw_string_char(game, (struct s_point){x, pos.y}, c, scale);
+		x += (3 * scale) + scale;
+		i++;
+		c = str[i];
+	}
 }
 
 void	update_fps(t_fps *fps)
@@ -57,98 +171,22 @@ void	update_fps(t_fps *fps)
 	}
 }
 
-static void	draw_scaled_pixel(t_game *game, int x, int y, int scale, int color)
-{
-	int	dx;
-	int	dy;
-
-	dy = 0;
-	while (dy < scale)
-	{
-		dx = 0;
-		while (dx < scale)
-		{
-			draw_fps_pixel(game, x + dx, y + dy, color);
-			dx++;
-		}
-		dy++;
-	}
-}
-
-static void	draw_char(t_game *game, int x, int y, const char bitmap[5],
-		int scale)
-{
-	int	row;
-	int	col;
-
-	row = 0;
-	while (row < 5)
-	{
-		col = 0;
-		while (col < 3)
-		{
-			if (bitmap[row] & (1 << (2 - col)))
-				draw_scaled_pixel(game,
-					x + col * scale,
-					y + row * scale,
-					scale,
-					CHAR_COLOR);
-			col++;
-		}
-		row++;
-	}
-}
-
-static void	draw_string(t_game *game, int x, int y, const char *str, int scale)
-{
-	int		i;
-	int		pos_x;
-	char	c;
-
-	pos_x = x;
-	i = 0;
-	while ((c = str[i]))
-	{
-		if (c >= '0' && c <= '9')
-			draw_char(game, pos_x, y, g_font_digits[c - '0'], scale);
-		else if (c == 'F')
-			draw_char(game, pos_x, y, g_font_letters[0], scale);
-		else if (c == 'P')
-			draw_char(game, pos_x, y, g_font_letters[1], scale);
-		else if (c == 'S')
-			draw_char(game, pos_x, y, g_font_letters[2], scale);
-		else if (c == ':')
-		{
-			draw_scaled_pixel(game, pos_x + scale, y + scale, scale, CHAR_COLOR);
-			draw_scaled_pixel(game, pos_x + scale, y + 3 * scale, scale,
-				CHAR_COLOR);
-		}
-		pos_x += (3 * scale) + scale;
-		i++;
-	}
-}
-
 static void	draw_fps_text(t_game *game)
 {
 	int		scale;
-	int		box_w;
-	int		box_h;
-	int		char_h;
 	int		x;
 	int		y;
 	char	*str;
 
 	scale = 5;
-	box_w = 100;
-	box_h = 20;
-	char_h = 5 * scale;
-	x = WIDTH - box_w - 60 + 5;
-	y = 10 + (box_h - char_h) / 2;
-	draw_string(game, x, y, "FPS:", scale);
+	x = WIDTH - 100 - 60 + 5;
+	y = 10 + (20 - 5 * scale) / 2;
+	draw_string(game, (struct s_point){x, y}, "FPS:", scale);
 	str = ft_itoa(game->fps.fps);
 	if (str)
 	{
-		draw_string(game, x + 4 * ((3 * scale) + scale), y, str, scale);
+		draw_string(game, (struct s_point){x + 4 * (3 * scale + scale), y},
+			str, scale);
 		free(str);
 	}
 }
