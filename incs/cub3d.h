@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:24:31 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/05 18:29:08 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/06 15:53:55 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,15 @@
 # include <libft.h>
 # include "MLX42/MLX42.h"
 # include <math.h>
-# include <stdlib.h>
+# include <time.h>
 
 # define WIDTH 1800
 # define HEIGHT 1600
+# define MINIMAP_SCALE 15
+# define MINIMAP_SIZE  10
+# define MINIMAP_WALL_COLOR 0xFFFFFF88
+# define MINIMAP_FLOOR_COLOR 0x00000088
+# define MINIMAP_PLAYER_COLOR 0xFF0000FF
 # define KEY_W 119
 # define KEY_A 97
 # define KEY_S 115
@@ -27,6 +32,12 @@
 # define KEY_ESC 65307
 # define KEY_LEFT 65363
 # define KEY_RIGHT 65361
+# define KEY_SHIFT_LEFT 65505
+# define KEY_SHIFT_RIGHT 65506
+# define KEY_M 109
+# define KEY_F 102
+# define KEY_MINIMAP_TOGGLE MLX_KEY_M
+# define KEY_FPS_TOGGLE     MLX_KEY_F
 
 typedef struct s_input
 {
@@ -36,6 +47,7 @@ typedef struct s_input
 	int	d;
 	int	left;
 	int	right;
+	int	shift;
 }	t_input;
 
 typedef struct s_config
@@ -93,6 +105,13 @@ typedef struct s_wall
 	int		tex_x;
 }	t_wall;
 
+typedef struct s_fps
+{
+	int			frames;
+	int			fps;
+	clock_t		last_time;
+}	t_fps;
+
 typedef struct s_game
 {
 	mlx_t		*mlx;
@@ -107,6 +126,9 @@ typedef struct s_game
 	t_texture	*textures[4];
 	t_dir_info	dir_infos[4];
 	t_input		input;
+	int			minimap_visible;
+	int			fps_visible;
+	t_fps		fps;
 }	t_game;
 
 /* Config and Initialization */
@@ -123,6 +145,8 @@ int			perform_dda(t_game *game, t_ray *ray);
 void		calculate_wall(t_game *game, t_ray *ray, t_wall *wall);
 
 /* Rendering */
+void		render_fps(t_game *game);
+void		render_minimap(t_game *game);
 void		render_frame(void *param);
 void		draw_column(t_game *game, int x, t_wall *wall, t_ray *ray);
 int			get_tex_x(t_game *game, t_ray *ray, float wall_x);
@@ -137,8 +161,6 @@ int			get_texture_color(t_game *game, int tex_id, int tex_x, int tex_y);
 void		free_textures(t_game *game, int count);
 
 /* Input */
-void		key_press(mlx_key_data_t keydata, void *param);
-void		key_release(mlx_key_data_t keydata, void *param);
 void		key_hook(mlx_key_data_t keydata, void *param);
 
 /* Map */

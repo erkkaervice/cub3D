@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 15:29:29 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/05 17:37:13 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/06 15:59:40 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,16 @@ static void	move_player(t_game *game, float dx, float dy, float speed)
 	new_y = game->player_y + dy * speed;
 	if (can_move(game, game->player_x, new_y))
 		game->player_y = new_y;
+	if (!can_move(game, new_x, game->player_y)
+		&& !can_move(game, game->player_x, new_y))
+	{
+		new_x = game->player_x + dx * speed * 0.5f;
+		if (can_move(game, new_x, game->player_y))
+			game->player_x = new_x;
+		new_y = game->player_y + dy * speed * 0.5f;
+		if (can_move(game, game->player_x, new_y))
+			game->player_y = new_y;
+	}
 }
 
 static void	rotate_player(t_game *game, float angle)
@@ -61,23 +71,55 @@ static void	rotate_player(t_game *game, float angle)
 	game->plane_y = old_plane_x * sin_a + game->plane_y * cos_a;
 }
 
+void	update_movement_vector(t_game *game, float *dx, float *dy)
+{
+	if (game->input.w)
+	{
+		*dx += game->dir_x;
+		*dy += game->dir_y;
+	}
+	if (game->input.s)
+	{
+		*dx -= game->dir_x;
+		*dy -= game->dir_y;
+	}
+	if (game->input.a)
+	{
+		*dx -= game->plane_x;
+		*dy -= game->plane_y;
+	}
+	if (game->input.d)
+	{
+		*dx += game->plane_x;
+		*dy += game->plane_y;
+	}
+}
+
 void	update_player_position(t_game *game)
 {
-	float	move_speed;
-	float	rot_speed;
+	float	move;
+	float	rot;
+	float	dx;
+	float	dy;
+	float	len;
 
-	move_speed = 0.05f;
-	rot_speed = 0.03f;
-	if (mlx_is_key_down(game->mlx, MLX_KEY_W))
-		move_player(game, game->dir_x, game->dir_y, move_speed);
-	if (mlx_is_key_down(game->mlx, MLX_KEY_S))
-		move_player(game, -game->dir_x, -game->dir_y, move_speed);
-	if (mlx_is_key_down(game->mlx, MLX_KEY_A))
-		move_player(game, -game->plane_x, -game->plane_y, move_speed);
-	if (mlx_is_key_down(game->mlx, MLX_KEY_D))
-		move_player(game, game->plane_x, game->plane_y, move_speed);
-	if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
-		rotate_player(game, -rot_speed);
-	if (mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
-		rotate_player(game, rot_speed);
+	move = 0.05f;
+	if (game->input.shift)
+		move = 0.09f;
+	rot = 0.07f;
+	dx = 0.0f;
+	dy = 0.0f;
+	update_movement_vector(game, &dx, &dy);
+	len = dx * dx + dy * dy;
+	if (len > 1.0f)
+	{
+		len = sqrtf(len);
+		dx /= len;
+		dy /= len;
+	}
+	move_player(game, dx, dy, move);
+	if (game->input.left)
+		rotate_player(game, -rot);
+	if (game->input.right)
+		rotate_player(game, rot);
 }

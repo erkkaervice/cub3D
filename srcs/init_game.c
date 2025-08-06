@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 16:42:45 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/05 17:09:04 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/06 15:06:23 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,22 @@ static int	init_mlx_and_win(t_game *game)
 	return (game->mlx != NULL);
 }
 
-static int	init_img(t_game *game)
-{
-	game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
-	if (!game->img)
-		return (0);
-	if (mlx_image_to_window(game->mlx, game->img, 0, 0) < 0)
-		return (0);
-	return (1);
-}
-
 static int	init_cfg_and_textures(t_game *game)
 {
 	game->cfg = mock_config();
 	if (!game->cfg)
 		return (0);
 	if (!load_textures(game))
+		return (0);
+	return (1);
+}
+
+static int	init_img(t_game *game)
+{
+	game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
+	if (!game->img)
+		return (0);
+	if (mlx_image_to_window(game->mlx, game->img, 0, 0) < 0)
 		return (0);
 	return (1);
 }
@@ -54,6 +54,8 @@ int	init_game(t_game *game)
 		return (0);
 	init_dir_infos(game);
 	init_player(game);
+	game->minimap_visible = 0;
+	game->fps_visible = 0;
 	mlx_key_hook(game->mlx, key_hook, game);
 	mlx_close_hook(game->mlx, close_hook, game);
 	mlx_loop_hook(game->mlx, render_frame, game);

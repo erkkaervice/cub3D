@@ -6,7 +6,7 @@
 #    By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/04 15:36:34 by eala-lah          #+#    #+#              #
-#    Updated: 2025/08/05 15:43:21 by eala-lah         ###   ########.fr        #
+#    Updated: 2025/08/06 13:41:12 by eala-lah         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,11 +22,13 @@ SRC_DIR		= srcs/
 SRC		= \
 	cfg.c \
 	cleanup.c \
+	fps.c \
 	init_data.c \
 	init_game.c \
 	keys.c \
 	main.c \
 	map.c \
+	minimap.c \
 	movement.c \
 	raycast.c \
 	render.c \
