@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 16:42:45 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/06 15:06:23 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/07 18:24:56 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ static int	init_cfg_and_textures(t_game *game)
 	game->cfg = mock_config();
 	if (!game->cfg)
 		return (0);
+	init_doors(game);
 	if (!load_textures(game))
 		return (0);
 	return (1);

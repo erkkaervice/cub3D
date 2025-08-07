@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/04 12:24:31 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/06 17:57:01 by eala-lah         ###   ########.fr       */
+/*   Created: 2025/08/07 14:44:35 by eala-lah          #+#    #+#             */
+/*   Updated: 2025/08/07 18:54:43 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,19 @@
 # include <math.h>
 # include <time.h>
 
+/* Screen size */
 # define WIDTH 1800
 # define HEIGHT 1600
+
+/* HUD */
 # define MINIMAP_SCALE 15
 # define MINIMAP_SIZE  10
 # define MINIMAP_WALL_COLOR 0xFFFFFF88
 # define MINIMAP_FLOOR_COLOR 0x00000088
 # define MINIMAP_PLAYER_COLOR 0xFF0000FF
+# define CHAR_COLOR 0xFFFFFF
+
+/* Key codes */
 # define KEY_W 119
 # define KEY_A 97
 # define KEY_S 115
@@ -36,8 +42,14 @@
 # define KEY_SHIFT_RIGHT 65506
 # define KEY_M 109
 # define KEY_F 102
+# define KEY_E 101
+
 # define KEY_MINIMAP_TOGGLE MLX_KEY_M
 # define KEY_FPS_TOGGLE     MLX_KEY_F
+
+# define TEXTURE_COUNT 5
+
+/* Data structures */
 
 typedef struct s_input
 {
@@ -56,6 +68,7 @@ typedef struct s_config
 	char	*south_texture;
 	char	*east_texture;
 	char	*west_texture;
+	char	*door_texture;
 	int		floor_color;
 	int		ceiling_color;
 	char	**map;
@@ -94,6 +107,7 @@ typedef struct s_ray
 	int		step_x;
 	int		step_y;
 	int		side;
+	float	perp_wall_dist;  // add this
 }	t_ray;
 
 typedef struct s_wall
@@ -103,7 +117,16 @@ typedef struct s_wall
 	int		draw_start;
 	int		draw_end;
 	int		tex_x;
+	float	wall_x;
 }	t_wall;
+
+typedef struct s_door
+{
+	int		x;
+	int		y;
+	float	open_ratio; // 0.0 closed, 1.0 fully open
+	int		is_opening; // 1 if door is currently opening, 0 otherwise
+}	t_door;
 
 typedef struct s_point
 {
@@ -129,50 +152,70 @@ typedef struct s_game
 	float		dir_y;
 	float		plane_x;
 	float		plane_y;
-	t_texture	*textures[4];
+	t_texture	*textures[TEXTURE_COUNT];
 	t_dir_info	dir_infos[4];
 	t_input		input;
 	int			minimap_visible;
 	int			fps_visible;
 	t_fps		fps;
+	t_door		*doors;
+	int			num_doors;
 }	t_game;
 
-/* Config and Initialization */
+/* Initialization and Config */
+int	find_door_index(t_game *game, int x, int y);
+void	adjust_ray_for_door(t_ray *ray, float open_ratio);
+void	init_doors(t_game *game);
+void	update_doors(t_game *game);
 t_config	*mock_config(void);
+int			init_game(t_game *game);
 void		init_game_struct(t_game *game);
 void		init_dir_infos(t_game *game);
 void		init_player(t_game *game);
-int			init_game(t_game *game);
+
+/* Map utilities */
+int			map_width(char *row);
+int			map_height(char **map);
+int			is_wall_or_door(t_game *game, int x, int y);
 
 /* Raycasting */
 void		init_ray_basic(t_game *game, int x, t_ray *ray);
 void		init_ray_steps(t_game *game, t_ray *ray);
 int			perform_dda(t_game *game, t_ray *ray);
-int			is_wall_or_door(t_game *game, int x, int y);
 void		calculate_wall(t_game *game, t_ray *ray, t_wall *wall);
+int			get_tex_x(t_game *game, t_ray *ray, float wall_x, int tex_id);
 
-/* Rendering */
-void		render_fps(t_game *game);
-void		render_minimap(t_game *game);
-void		render_frame(void *param);
-void		draw_column(t_game *game, int x, t_wall *wall, t_ray *ray);
-int			get_tex_x(t_game *game, t_ray *ray, float wall_x);
-void		raycast(t_game *game);
-void		update_player_position(t_game *game);
-
-/* Textures */
+/* Texture management */
 int			load_texture(mlx_t *mlx, t_texture *texture, char *path);
 int			load_textures(t_game *game);
 int			get_texture_index(int side, float ray_dir_x, float ray_dir_y);
+int			get_texture_index_door(t_game *game, int map_x, int map_y);
 int			get_texture_color(t_game *game, int tex_id, int tex_x, int tex_y);
 void		free_textures(t_game *game, int count);
+void		toggle_door(t_game *game);
+
+/* Player movement */
+void		update_player_position(t_game *game);
+
+/* Rendering */
+void		render_frame(void *param);
+void		render_minimap(t_game *game);
+void		render_fps(t_game *game);
+void		draw_column(t_game *game, int x, t_wall *wall, t_ray *ray);
+
+/* Fonts and text rendering */
+const char	**get_font_digits(void);
+const char	**get_font_letters(void);
+void		setup_fonts(const char **digits_arr, const char **letters_arr);
+void		draw_string_char(t_game *game, t_point pos, char c, int scale);
+void		draw_string(t_game *game, t_point pos, const char *str, int scale);
+void		draw_fps_text(t_game *game);
+void		draw_fps_pixel(t_game *game, int x, int y, int color);
+void		draw_scaled_pixel(t_game *game, t_point pos, int scale, int color);
+void		draw_char(t_game *game, t_point pos, const char bmap[5], int scale);
 
 /* Input */
 void		key_hook(mlx_key_data_t keydata, void *param);
-
-/* Map */
-int			map_height(char **map);
-int			map_width(char *row);
 
 /* Cleanup */
 void		cleanup_game(t_game *game);

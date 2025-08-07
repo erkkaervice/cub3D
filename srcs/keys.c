@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 15:25:54 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/06 16:36:25 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/07 18:25:23 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 			game->minimap_visible = !game->minimap_visible;
 		else if (keydata.key == KEY_FPS_TOGGLE)
 			game->fps_visible = !game->fps_visible;
+		else if (keydata.key == MLX_KEY_E)
+			toggle_door(game);
 		else
 			set_key(&game->input, keydata.key, 1);
 	}

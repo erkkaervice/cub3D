@@ -6,30 +6,11 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:53:42 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/06 17:11:22 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/07 18:56:58 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-int	get_tex_x(t_game *game, t_ray *ray, float wall_x)
-{
-	int		tex_x;
-	int		tex_w;
-	int		tex_id;
-
-	tex_id = get_texture_index(ray->side,
-			ray->ray_dir_x, ray->ray_dir_y);
-	tex_w = game->textures[tex_id]->width;
-	wall_x -= (int)wall_x;
-	tex_x = (int)(wall_x * tex_w);
-	if (tex_x >= tex_w)
-		tex_x = tex_w - 1;
-	if ((ray->side == 0 && ray->ray_dir_x > 0)
-		|| (ray->side == 1 && ray->ray_dir_y < 0))
-		tex_x = tex_w - tex_x - 1;
-	return (tex_x);
-}
 
 static void	fill_floor_ceiling(t_game *game)
 {
@@ -50,31 +31,46 @@ static void	fill_floor_ceiling(t_game *game)
 		p[i++] = f;
 }
 
-void	draw_column_loop(t_game *game, int x, t_wall *wall, int tex_id)
+static void	draw_column_pixels(t_game *game, t_wall *wall, int x, int tex_id)
 {
 	t_texture	*tex;
-	uint32_t	*pix;
-	int			y;
 	float		step;
 	float		pos;
+	int			y;
+	int			tex_y;
 
 	tex = game->textures[tex_id];
-	step = (float)tex->height / wall->line_height;
-	pos = (wall->draw_start - HEIGHT / 2
-			+ wall->line_height / 2) * step;
-	pix = (uint32_t *)game->img->pixels
-		+ wall->draw_start * WIDTH + x;
+	step = (float)tex->height / (float)wall->line_height;
+	pos = (wall->draw_start - HEIGHT / 2 + wall->line_height / 2) * step;
 	y = wall->draw_start;
 	while (y <= wall->draw_end)
 	{
-		*pix = get_texture_color(game,
-				tex_id,
-				wall->tex_x,
-				(int)pos & (tex->height - 1));
+		tex_y = (int)pos;
+		if (tex_y < 0)
+			tex_y = 0;
+		if (tex_y >= tex->height)
+			tex_y = tex->height - 1;
+		*((uint32_t *)game->img->pixels + y * WIDTH + x)
+			= get_texture_color(game, tex_id, wall->tex_x, tex_y);
 		pos += step;
-		pix += WIDTH;
 		y++;
 	}
+}
+
+void	draw_column_loop(t_game *game, int x, t_wall *wall, int tex_id)
+{
+	t_texture	*tex;
+
+	if (tex_id < 0 || tex_id >= TEXTURE_COUNT)
+		return ;
+	tex = game->textures[tex_id];
+	if (!tex || !tex->image)
+		return ;
+	if (wall->draw_start < 0)
+		wall->draw_start = 0;
+	if (wall->draw_end >= HEIGHT)
+		wall->draw_end = HEIGHT - 1;
+	draw_column_pixels(game, wall, x, tex_id);
 }
 
 static void	render_column(t_game *game, int x)
@@ -82,13 +78,42 @@ static void	render_column(t_game *game, int x)
 	t_ray	ray;
 	t_wall	wall;
 	int		tex_id;
+	int		hit;
+	int		door_index;
+	float	offset;
 
 	init_ray_basic(game, x, &ray);
 	init_ray_steps(game, &ray);
-	if (!perform_dda(game, &ray))
+	ray.perp_wall_dist = 1e30f; // large number to track nearest hit
+	hit = perform_dda(game, &ray);
+	if (hit == 0)
 		return ;
-	calculate_wall(game, &ray, &wall);
-	tex_id = get_texture_index(ray.side, ray.ray_dir_x, ray.ray_dir_y);
+	if (hit == 2)
+	{
+		door_index = find_door_index(game, ray.map_x, ray.map_y);
+		if (door_index >= 0)
+		{
+			offset = game->doors[door_index].open_ratio;
+			if (offset > 1.0f)
+				offset = 1.0f;
+			else if (offset < 0.0f)
+				offset = 0.0f;
+			adjust_ray_for_door(&ray, offset);
+			calculate_wall(game, &ray, &wall);
+			tex_id = get_texture_index_door(game, ray.map_x, ray.map_y);
+		}
+		else
+		{
+			calculate_wall(game, &ray, &wall);
+			tex_id = 4;
+		}
+	}
+	else
+	{
+		calculate_wall(game, &ray, &wall);
+		tex_id = get_texture_index(ray.side, ray.ray_dir_x, ray.ray_dir_y);
+	}
+	wall.tex_x = get_tex_x(game, &ray, wall.wall_x, tex_id);
 	draw_column_loop(game, x, &wall, tex_id);
 }
 
@@ -99,6 +124,7 @@ void	render_frame(void *param)
 
 	game = (t_game *)param;
 	fill_floor_ceiling(game);
+	update_doors(game);
 	update_player_position(game);
 	x = 0;
 	while (x < WIDTH)
