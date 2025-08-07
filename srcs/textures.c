@@ -6,13 +6,13 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:32:32 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/07 18:23:03 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/07 20:05:18 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	load_texture(mlx_t *mlx, t_texture *texture, char *path)
+static int	load_texture(mlx_t *mlx, t_texture *texture, char *path)
 {
 	texture->img = mlx_load_png(path);
 	if (!texture->img)
@@ -82,13 +82,13 @@ int	get_texture_index_door(t_game *game, int map_x, int map_y)
 	{
 		if (game->doors[i].x == map_x && game->doors[i].y == map_y)
 		{
-			if (game->doors[i].open_ratio == 0.0f) // closed door uses door texture
+			if (game->doors[i].open_ratio == 0.0f)
 			{
 				if (game->textures[4] && game->textures[4]->image)
 					return (4);
 				return (-1);
 			}
-			else // open door, no texture or floor texture maybe
+			else
 				return (-1);
 		}
 		i++;

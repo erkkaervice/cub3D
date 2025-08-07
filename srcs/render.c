@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:53:42 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/07 18:56:58 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/07 20:03:50 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static void	draw_column_pixels(t_game *game, t_wall *wall, int x, int tex_id)
 	}
 }
 
-void	draw_column_loop(t_game *game, int x, t_wall *wall, int tex_id)
+static void	draw_column_loop(t_game *game, int x, t_wall *wall, int tex_id)
 {
 	t_texture	*tex;
 
@@ -79,36 +79,19 @@ static void	render_column(t_game *game, int x)
 	t_wall	wall;
 	int		tex_id;
 	int		hit;
-	int		door_index;
-	float	offset;
 
 	init_ray_basic(game, x, &ray);
 	init_ray_steps(game, &ray);
-	ray.perp_wall_dist = 1e30f; // large number to track nearest hit
+	ray.perp_wall_dist = 1e30f;
 	hit = perform_dda(game, &ray);
 	if (hit == 0)
 		return ;
-	if (hit == 2)
+	if (hit == 2 && handle_door_hit(game, &ray, &wall, &tex_id) == 0)
 	{
-		door_index = find_door_index(game, ray.map_x, ray.map_y);
-		if (door_index >= 0)
-		{
-			offset = game->doors[door_index].open_ratio;
-			if (offset > 1.0f)
-				offset = 1.0f;
-			else if (offset < 0.0f)
-				offset = 0.0f;
-			adjust_ray_for_door(&ray, offset);
-			calculate_wall(game, &ray, &wall);
-			tex_id = get_texture_index_door(game, ray.map_x, ray.map_y);
-		}
-		else
-		{
-			calculate_wall(game, &ray, &wall);
-			tex_id = 4;
-		}
+		calculate_wall(game, &ray, &wall);
+		tex_id = 4;
 	}
-	else
+	else if (hit == 1)
 	{
 		calculate_wall(game, &ray, &wall);
 		tex_id = get_texture_index(ray.side, ray.ray_dir_x, ray.ray_dir_y);

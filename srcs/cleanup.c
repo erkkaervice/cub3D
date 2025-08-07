@@ -6,11 +6,29 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:44:13 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/05 17:35:24 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/07 19:47:19 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+static void	cleanup_map(t_game *game)
+{
+	char	**map;
+	int		i;
+
+	if (!game || !game->cfg || !game->cfg->map)
+		return ;
+	map = game->cfg->map;
+	i = 0;
+	while (map[i])
+	{
+		free(map[i]);
+		i++;
+	}
+	free(map);
+	game->cfg->map = NULL;
+}
 
 void	free_textures(t_game *game, int count)
 {
@@ -36,11 +54,9 @@ static void	cleanup_textures(t_game *game)
 {
 	t_config	*config;
 
-	if (!game)
+	if (!game || !game->cfg)
 		return ;
 	config = game->cfg;
-	if (!config)
-		return ;
 	free(config->north_texture);
 	config->north_texture = NULL;
 	free(config->south_texture);
@@ -50,28 +66,6 @@ static void	cleanup_textures(t_game *game)
 	free(config->east_texture);
 	config->east_texture = NULL;
 	free_textures(game, 4);
-}
-
-static void	cleanup_map(t_game *game)
-{
-	char	**map;
-	int		i;
-
-	if (!game)
-		return ;
-	if (!game->cfg)
-		return ;
-	map = game->cfg->map;
-	if (!map)
-		return ;
-	i = 0;
-	while (map[i])
-	{
-		free(map[i]);
-		i++;
-	}
-	free(map);
-	game->cfg->map = NULL;
 }
 
 void	cleanup_game(t_game *game)

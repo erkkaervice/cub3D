@@ -6,40 +6,11 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 14:50:30 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/07 17:57:46 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/07 20:06:21 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-const char	**get_font_digits(void)
-{
-	static const char	*font_digits[10] = {
-		(char *)"\x07\x05\x05\x05\x07",
-		(char *)"\x02\x06\x02\x02\x07",
-		(char *)"\x07\x01\x07\x04\x07",
-		(char *)"\x07\x01\x07\x01\x07",
-		(char *)"\x05\x05\x07\x01\x01",
-		(char *)"\x07\x04\x07\x01\x07",
-		(char *)"\x07\x04\x07\x05\x07",
-		(char *)"\x07\x01\x02\x02\x02",
-		(char *)"\x07\x05\x07\x05\x07",
-		(char *)"\x07\x05\x07\x01\x07"
-	};
-
-	return (font_digits);
-}
-
-const char	**get_font_letters(void)
-{
-	static const char	*font_letters[3] = {
-		(char *)"\x07\x04\x07\x04\x04",
-		(char *)"\x07\x05\x07\x04\x04",
-		(char *)"\x07\x04\x07\x01\x07"
-	};
-
-	return (font_letters);
-}
 
 void	draw_fps_pixel(t_game *game, int x, int y, int color)
 {
@@ -89,4 +60,33 @@ void	draw_char(t_game *game, struct s_point pos,
 		}
 		row++;
 	}
+}
+
+const char	**get_font_digits(void)
+{
+	static const char	*font_digits[10] = {
+		(char *)"\x07\x05\x05\x05\x07",
+		(char *)"\x02\x06\x02\x02\x07",
+		(char *)"\x07\x01\x07\x04\x07",
+		(char *)"\x07\x01\x07\x01\x07",
+		(char *)"\x05\x05\x07\x01\x01",
+		(char *)"\x07\x04\x07\x01\x07",
+		(char *)"\x07\x04\x07\x05\x07",
+		(char *)"\x07\x01\x02\x02\x02",
+		(char *)"\x07\x05\x07\x05\x07",
+		(char *)"\x07\x05\x07\x01\x07"
+	};
+
+	return (font_digits);
+}
+
+const char	**get_font_letters(void)
+{
+	static const char	*font_letters[3] = {
+		(char *)"\x07\x04\x07\x04\x04",
+		(char *)"\x07\x05\x07\x04\x04",
+		(char *)"\x07\x04\x07\x01\x07"
+	};
+
+	return (font_letters);
 }

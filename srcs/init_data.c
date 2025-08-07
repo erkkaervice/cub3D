@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:22:57 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/07 16:47:31 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/07 19:57:08 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,5 +61,34 @@ void	init_player(t_game *game)
 			break ;
 		}
 		i++;
+	}
+}
+
+void	init_doors(t_game *game)
+{
+	int	y;
+	int	x;
+	int	idx;
+
+	if (!count_and_fill_doors(game))
+		return ;
+	idx = 0;
+	y = 0;
+	while (game->cfg->map[y])
+	{
+		x = 0;
+		while (game->cfg->map[y][x])
+		{
+			if (game->cfg->map[y][x] == 'D')
+			{
+				game->doors[idx].x = x;
+				game->doors[idx].y = y;
+				game->doors[idx].open_ratio = 0.0f;
+				game->doors[idx].is_opening = 0;
+				idx++;
+			}
+			x++;
+		}
+		y++;
 	}
 }

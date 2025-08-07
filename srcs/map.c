@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:52:06 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/07 18:28:11 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/07 19:58:42 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ int	is_wall_or_door(t_game *game, int x, int y)
 	}
 	return (0);
 }
-
 
 static float	wall_maths(t_game *game, t_ray *ray, float *wx)
 {

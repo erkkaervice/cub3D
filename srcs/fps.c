@@ -6,13 +6,13 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:26:54 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/07 15:03:20 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/07 19:54:26 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	setup_fonts(const char **digits_arr, const char **letters_arr)
+static void	setup_fonts(const char **digits_arr, const char **letters_arr)
 {
 	int	i;
 
@@ -27,7 +27,7 @@ void	setup_fonts(const char **digits_arr, const char **letters_arr)
 	letters_arr[2] = get_font_letters()[2];
 }
 
-void	draw_string_char(t_game *game,
+static void	draw_string_char(t_game *game,
 	struct s_point pos, char c, int scale)
 {
 	static const char	*digits_arr[10];
@@ -57,7 +57,7 @@ void	draw_string_char(t_game *game,
 	}
 }
 
-void	draw_string(t_game *game, struct s_point pos,
+static void	draw_string(t_game *game, struct s_point pos,
 	const char *str, int scale)
 {
 	int		i;
@@ -76,7 +76,7 @@ void	draw_string(t_game *game, struct s_point pos,
 	}
 }
 
-void	draw_fps_text(t_game *game)
+static void	draw_fps_text(t_game *game)
 {
 	int		scale;
 	int		x;

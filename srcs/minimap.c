@@ -6,11 +6,20 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:16:05 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/06 17:09:20 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/07 19:59:42 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+static float	clamp(float val, float min, float max)
+{
+	if (val < min)
+		return (min);
+	if (val > max)
+		return (max);
+	return (val);
+}
 
 static void	draw_minimap_pixel(t_game *game, int x, int y, int color)
 {
@@ -47,15 +56,6 @@ static void	draw_minimap_tile(t_game *game, int map_x, int map_y)
 		}
 		i++;
 	}
-}
-
-static float	clamp(float val, float min, float max)
-{
-	if (val < min)
-		return (min);
-	if (val > max)
-		return (max);
-	return (val);
 }
 
 static void	draw_player_minimap(t_game *game)
