@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 18:02:25 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/12 15:57:18 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/12 16:50:09 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ void	toggle_door(t_game *game)
 	py = game->player_y;
 	x = (int)(px + game->dir_x * 0.8f);
 	y = (int)(py + game->dir_y * 0.8f);
-	i = 0;
-	while (i < game->num_doors)
+	i = -1;
+	while (++i < game->num_doors)
 	{
 		if (game->doors[i].x == x && game->doors[i].y == y)
 		{
@@ -52,7 +52,6 @@ void	toggle_door(t_game *game)
 			game->doors[i].is_opening = !game->doors[i].is_opening;
 			break ;
 		}
-		i++;
 	}
 }
 
