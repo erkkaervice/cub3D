@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:44:13 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/12 18:41:39 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/12 19:00:21 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ static void	cleanup_textures(t_game *game)
 	config->west_texture = NULL;
 	free(config->east_texture);
 	config->east_texture = NULL;
+	free(config->door_texture);
+	config->door_texture = NULL;
 	free_textures(game, TEXTURE_COUNT);
 }
 
@@ -73,9 +75,18 @@ void	cleanup_game(t_game *game)
 	if (!game)
 		return ;
 	if (game->img)
+	{
 		mlx_delete_image(game->mlx, game->img);
+		game->img = NULL;
+	}
 	cleanup_textures(game);
 	cleanup_map(game);
+	if (game->doors)
+	{
+		free(game->doors);
+		game->doors = NULL;
+		game->num_doors = 0;
+	}
 	if (game->cfg)
 	{
 		free(game->cfg);
