@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 14:44:35 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/07 20:04:52 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/12 15:13:53 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,5 +222,6 @@ void		key_hook(mlx_key_data_t keydata, void *param);
 
 /* Cleanup */
 void		cleanup_game(t_game *game);
+void		cleanup_and_exit(void *param);
 
 #endif

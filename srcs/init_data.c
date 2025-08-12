@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:22:57 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/07 19:57:08 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/12 15:21:40 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@ void	init_game_struct(t_game *game)
 	game->plane_y = 0.0f;
 	game->input = (t_input){.w = 0, .a = 0, .s = 0, .d = 0,
 		.left = 0, .right = 0, .shift = 0};
+	game->fps.frames = 0;
+	game->fps.fps = 0;
+	game->fps.last_time = clock();
 	while (i < 5)
 	{
 		game->textures[i] = NULL;
