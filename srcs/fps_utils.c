@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 14:50:30 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/07 20:06:21 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:38:02 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ void	draw_char(t_game *game, struct s_point pos,
 		while (col < 3)
 		{
 			if (bmap[row] & (1 << (2 - col)))
-				draw_scaled_pixel(game, (struct s_point){pos.x + col
-					* scale, pos.y + row * scale}, scale, CHAR_COLOR);
+				draw_scaled_pixel(game, (struct s_point){pos.x + col * scale,
+					pos.y + row * scale}, scale, CHAR_COLOR);
 			col++;
 		}
 		row++;

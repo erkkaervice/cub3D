@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:22:57 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/12 15:21:40 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:34:56 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	init_game_struct(t_game *game)
 	game->fps.frames = 0;
 	game->fps.fps = 0;
 	game->fps.last_time = clock();
-	while (i < 5)
+	while (i < TEXTURE_COUNT)
 	{
 		game->textures[i] = NULL;
 		i++;
@@ -40,10 +40,14 @@ void	init_game_struct(t_game *game)
 
 void	init_dir_infos(t_game *game)
 {
-	game->dir_infos[0] = (t_dir_info){'N', 0, -1, 0.66f, 0};
-	game->dir_infos[1] = (t_dir_info){'S', 0, 1, -0.66f, 0};
-	game->dir_infos[2] = (t_dir_info){'E', 1, 0, 0, 0.66f};
-	game->dir_infos[3] = (t_dir_info){'W', -1, 0, 0, -0.66f};
+	game->dir_infos[0] = (t_dir_info){DIR_NORTH, DIR_NORTH_X, DIR_NORTH_Y,
+		DIR_NORTH_PLANE_X, DIR_NORTH_PLANE_Y};
+	game->dir_infos[1] = (t_dir_info){DIR_SOUTH, DIR_SOUTH_X, DIR_SOUTH_Y,
+		DIR_SOUTH_PLANE_X, DIR_SOUTH_PLANE_Y};
+	game->dir_infos[2] = (t_dir_info){DIR_EAST, DIR_EAST_X, DIR_EAST_Y,
+		DIR_EAST_PLANE_X, DIR_EAST_PLANE_Y};
+	game->dir_infos[3] = (t_dir_info){DIR_WEST, DIR_WEST_X, DIR_WEST_Y,
+		DIR_WEST_PLANE_X, DIR_WEST_PLANE_Y};
 }
 
 void	init_player(t_game *game)
@@ -53,7 +57,7 @@ void	init_player(t_game *game)
 	i = 0;
 	game->player_x = game->cfg->player_x + 0.5f;
 	game->player_y = game->cfg->player_y + 0.5f;
-	while (i < 4)
+	while (i < DIR_COUNT)
 	{
 		if (game->dir_infos[i].dir == game->cfg->player_dir)
 		{
@@ -82,11 +86,11 @@ void	init_doors(t_game *game)
 		x = 0;
 		while (game->cfg->map[y][x])
 		{
-			if (game->cfg->map[y][x] == 'D')
+			if (game->cfg->map[y][x] == TILE_DOOR)
 			{
 				game->doors[idx].x = x;
 				game->doors[idx].y = y;
-				game->doors[idx].open_ratio = 0.0f;
+				game->doors[idx].open_ratio = DOOR_INITIAL_OPEN_RATIO;
 				game->doors[idx].is_opening = 0;
 				idx++;
 			}

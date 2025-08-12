@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:55:14 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/07 20:06:40 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:21:46 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,17 @@
 
 static void	step_ray(t_ray *ray, int axis)
 {
-	if (axis == 0)
+	if (axis == AXIS_X)
 	{
 		ray->side_dist_x += ray->delta_dist_x;
 		ray->map_x += ray->step_x;
-		ray->side = 0;
+		ray->side = AXIS_X;
 	}
 	else
 	{
 		ray->side_dist_y += ray->delta_dist_y;
 		ray->map_y += ray->step_y;
-		ray->side = 1;
+		ray->side = AXIS_Y;
 	}
 }
 
@@ -39,8 +39,8 @@ int	get_tex_x(t_game *game, t_ray *ray, float wall_x, int tex_id)
 	if (!tex || !tex->image)
 		return (0);
 	tex_x = (int)(wall_x * (float)tex->width);
-	if ((ray->side == 0 && ray->ray_dir_x > 0)
-		|| (ray->side == 1 && ray->ray_dir_y < 0))
+	if ((ray->side == AXIS_X && ray->ray_dir_x > 0)
+		|| (ray->side == AXIS_Y && ray->ray_dir_y < 0))
 		tex_x = tex->width - tex_x - 1;
 	if (tex_x < 0)
 		tex_x = 0;
@@ -114,12 +114,12 @@ int	perform_dda(t_game *game, t_ray *ray)
 	map_w = map_width(game->cfg->map[0]);
 	map_h = map_height(game->cfg->map);
 	step_count = 0;
-	while (step_count < 1000)
+	while (step_count < MAX_DDA_STEPS)
 	{
 		if (ray->side_dist_x < ray->side_dist_y)
-			step_ray(ray, 0);
+			step_ray(ray, AXIS_X);
 		else
-			step_ray(ray, 1);
+			step_ray(ray, AXIS_Y);
 		ret = handle_tile(game, ray, map_w, map_h);
 		if (ret != -1)
 			return (ret);

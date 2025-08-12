@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:52:06 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/07 19:58:42 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:19:11 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,14 @@ int	is_wall_or_door(t_game *game, int x, int y)
 	if (x < 0 || x >= map_width(game->cfg->map[y]))
 		return (1);
 	tile = game->cfg->map[y][x];
-	if (tile == '1')
+	if (tile == TILE_WALL)
 		return (1);
-	if (tile == 'D')
+	if (tile == TILE_DOOR)
 	{
 		door_idx = find_door_index(game, x, y);
 		if (door_idx < 0)
 			return (1);
-		if (game->doors[door_idx].open_ratio < 1.0f)
+		if (game->doors[door_idx].open_ratio < DOOR_OPEN_FULL)
 			return (1);
 	}
 	return (0);
@@ -63,15 +63,15 @@ static float	wall_maths(t_game *game, t_ray *ray, float *wx)
 {
 	float	perp_dist;
 
-	if (ray->side == 0)
+	if (ray->side == AXIS_X)
 		perp_dist = (ray->map_x - game->player_x
-				+ (1 - ray->step_x) * 0.5f) / ray->ray_dir_x;
+				+ (1 - ray->step_x) * HALF_TILE_OFFSET) / ray->ray_dir_x;
 	else
 		perp_dist = (ray->map_y - game->player_y
-				+ (1 - ray->step_y) * 0.5f) / ray->ray_dir_y;
-	if (perp_dist < 0.001f)
-		perp_dist = 0.001f;
-	if (ray->side == 0)
+				+ (1 - ray->step_y) * HALF_TILE_OFFSET) / ray->ray_dir_y;
+	if (perp_dist < MIN_PERP_DIST)
+		perp_dist = MIN_PERP_DIST;
+	if (ray->side == AXIS_X)
 		*wx = game->player_y + perp_dist * ray->ray_dir_y;
 	else
 		*wx = game->player_x + perp_dist * ray->ray_dir_x;

@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 15:29:29 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/12 15:57:19 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:13:49 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,10 +106,10 @@ void	update_player_position(t_game *game)
 	float	dy;
 	float	len;
 
-	move = 0.05f;
+	move = MOVE_SPEED;
 	if (game->input.shift == 1)
-		move = 0.09f;
-	rot = 0.07f;
+		move = RUN_SPEED;
+	rot = ROT_SPEED;
 	dx = 0.0f;
 	dy = 0.0f;
 	update_movement_vector(game, &dx, &dy);

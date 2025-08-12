@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:44:13 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/12 15:16:29 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:41:39 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static void	cleanup_textures(t_game *game)
 	config->west_texture = NULL;
 	free(config->east_texture);
 	config->east_texture = NULL;
-	free_textures(game, 4);
+	free_textures(game, TEXTURE_COUNT);
 }
 
 void	cleanup_game(t_game *game)

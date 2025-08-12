@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 18:02:25 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/12 16:50:09 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:40:12 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ int	get_tex_id_for_hit(t_game *game, t_ray *ray)
 	if (ray->map_y < 0 || ray->map_x < 0)
 		return (-1);
 	cell = game->cfg->map[ray->map_y][ray->map_x];
-	if (cell == 'D')
+	if (cell == TILE_DOOR)
 		return (get_texture_index_door(game, ray->map_x, ray->map_y));
-	if (cell == '1')
+	if (cell == TILE_WALL)
 		return (get_texture_index(ray->side, ray->ray_dir_x, ray->ray_dir_y));
 	return (-1);
 }
@@ -69,14 +69,14 @@ void	update_doors(t_game *game)
 		if (game->doors[i].is_opening)
 		{
 			game->doors[i].open_ratio += speed;
-			if (game->doors[i].open_ratio > 1.0f)
-				game->doors[i].open_ratio = 1.0f;
+			if (game->doors[i].open_ratio > DOOR_OPEN_FULL)
+				game->doors[i].open_ratio = DOOR_OPEN_FULL;
 		}
 		else
 		{
 			game->doors[i].open_ratio -= speed;
-			if (game->doors[i].open_ratio < 0.0f)
-				game->doors[i].open_ratio = 0.0f;
+			if (game->doors[i].open_ratio < DOOR_INITIAL_OPEN_RATIO)
+				game->doors[i].open_ratio = DOOR_INITIAL_OPEN_RATIO;
 		}
 		i++;
 	}
@@ -89,13 +89,13 @@ int	handle_door(t_game *game, t_ray *ray)
 
 	door_idx = find_door_index(game, ray->map_x, ray->map_y);
 	if (door_idx < 0)
-		return (2);
+		return (HIT_DOOR);
 	open_ratio = game->doors[door_idx].open_ratio;
-	if (open_ratio > 0.0f && open_ratio < 1.0f)
+	if (open_ratio > DOOR_INITIAL_OPEN_RATIO && open_ratio < DOOR_OPEN_FULL)
 		return (-1);
-	if (open_ratio >= 1.0f)
+	if (open_ratio >= DOOR_OPEN_FULL)
 		return (-1);
-	return (2);
+	return (HIT_DOOR);
 }
 
 int	handle_door_hit(t_game *game, t_ray *ray, t_wall *wall, int *tex_id)
@@ -107,11 +107,11 @@ int	handle_door_hit(t_game *game, t_ray *ray, t_wall *wall, int *tex_id)
 	if (door_index < 0)
 		return (0);
 	offset = game->doors[door_index].open_ratio;
-	if (offset > 1.0f)
-		offset = 1.0f;
-	if (offset < 0.0f)
-		offset = 0.0f;
-	if (ray->side == 0)
+	if (offset > DOOR_OPEN_FULL)
+		offset = DOOR_OPEN_FULL;
+	if (offset < DOOR_INITIAL_OPEN_RATIO)
+		offset = DOOR_INITIAL_OPEN_RATIO;
+	if (ray->side == AXIS_X)
 		ray->side_dist_x -= offset * ray->step_x;
 	else
 		ray->side_dist_y -= offset * ray->step_y;

@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:26:54 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/07 19:54:26 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:37:00 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,7 @@ static void	draw_string_char(t_game *game,
 		draw_scaled_pixel(game, (struct s_point){pos.x + scale, pos.y + scale},
 			scale, CHAR_COLOR);
 		draw_scaled_pixel(game, (struct s_point){pos.x + scale, pos.y
-			+ 3 * scale},
-			scale, CHAR_COLOR);
+			+ 3 * scale}, scale, CHAR_COLOR);
 	}
 }
 
@@ -70,7 +69,7 @@ static void	draw_string(t_game *game, struct s_point pos,
 	while (c != '\0')
 	{
 		draw_string_char(game, (struct s_point){x, pos.y}, c, scale);
-		x += (3 * scale) + scale;
+		x += CHAR_SPACING;
 		i++;
 		c = str[i];
 	}
@@ -78,20 +77,15 @@ static void	draw_string(t_game *game, struct s_point pos,
 
 static void	draw_fps_text(t_game *game)
 {
-	int		scale;
-	int		x;
-	int		y;
 	char	*str;
 
-	scale = 5;
-	x = WIDTH - 100 - 60 + 5;
-	y = 10 + (20 - 5 * scale) / 2;
-	draw_string(game, (struct s_point){x, y}, "FPS:", scale);
+	draw_string(game, (struct s_point){FPS_POS_X, FPS_POS_Y},
+		FPS_LABEL, FPS_SCALE);
 	str = ft_itoa(game->fps.fps);
 	if (str)
 	{
-		draw_string(game, (struct s_point){x + 4 * (3 * scale + scale), y},
-			str, scale);
+		draw_string(game, (struct s_point){FPS_POS_X + CHAR_SPACING
+			* 4, FPS_POS_Y}, str, FPS_SCALE);
 		free(str);
 	}
 }

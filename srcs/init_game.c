@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 16:42:45 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/12 16:59:21 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:36:41 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	close_hook(void *param)
 
 static int	init_mlx_and_win(t_game *game)
 {
-	game->mlx = mlx_init(WIDTH, HEIGHT, "cub3D", true);
+	game->mlx = mlx_init(WIDTH, HEIGHT, WINDOW_TITLE, true);
 	return (game->mlx != NULL);
 }
 
@@ -40,7 +40,8 @@ static int	init_img(t_game *game)
 	game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
 	if (!game->img)
 		return (0);
-	if (mlx_image_to_window(game->mlx, game->img, 0, 0) < 0)
+	if (mlx_image_to_window(game->mlx, game->img,
+			WINDOW_IMG_POS_X, WINDOW_IMG_POS_Y) < 0)
 		return (0);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 19:26:13 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/07 19:26:48 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:19:32 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ int	handle_tile(t_game *game, t_ray *ray, int map_w, int map_h)
 		|| ray->map_y < 0 || ray->map_y >= map_h)
 		return (0);
 	tile = game->cfg->map[ray->map_y][ray->map_x];
-	if (tile == '1')
+	if (tile == TILE_WALL)
 		return (1);
-	if (tile == 'D')
+	if (tile == TILE_DOOR)
 	{
 		ret = handle_door(game, ray);
 		if (ret == -1)

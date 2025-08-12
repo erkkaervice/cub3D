@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:53:42 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/12 17:29:06 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:15:41 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,16 @@
 static void	fill_floor_ceiling(t_game *game)
 {
 	uint32_t	*p;
-	uint32_t	c;
-	uint32_t	f;
 	int			i;
 	int			lim;
 
 	p = (uint32_t *)game->img->pixels;
-	c = game->cfg->ceiling_color;
-	f = game->cfg->floor_color;
 	lim = WIDTH * HEIGHT;
 	i = 0;
 	while (i < lim / 2)
-		p[i++] = c;
+		p[i++] = CEILING_COLOR;
 	while (i < lim)
-		p[i++] = f;
+		p[i++] = FLOOR_COLOR;
 }
 
 static void	draw_column_pixels(t_game *game, t_wall *wall, int x, int tex_id)
@@ -82,14 +78,14 @@ static void	render_column(t_game *game, int x)
 
 	init_ray_basic(game, x, &ray);
 	init_ray_steps(game, &ray);
-	ray.perp_wall_dist = 1e30f;
+	ray.perp_wall_dist = RAY_MAX_DIST;
 	hit = perform_dda(game, &ray);
 	if (hit == 0)
 		return ;
 	if (hit == 2 && handle_door_hit(game, &ray, &wall, &tex_id) == 0)
 	{
 		calculate_wall(game, &ray, &wall);
-		tex_id = 4;
+		tex_id = TEX_DOOR;
 	}
 	else if (hit == 1)
 	{

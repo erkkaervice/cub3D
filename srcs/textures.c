@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:32:32 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/07 20:05:18 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:03:47 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,15 @@ static int	load_texture(mlx_t *mlx, t_texture *texture, char *path)
 int	load_textures(t_game *game)
 {
 	int		i;
-	char	*paths[5];
+	char	*paths[TEXTURE_COUNT];
 
-	paths[0] = game->cfg->north_texture;
-	paths[1] = game->cfg->south_texture;
-	paths[2] = game->cfg->west_texture;
-	paths[3] = game->cfg->east_texture;
-	paths[4] = game->cfg->door_texture;
+	paths[TEX_NORTH] = game->cfg->north_texture;
+	paths[TEX_SOUTH] = game->cfg->south_texture;
+	paths[TEX_WEST] = game->cfg->west_texture;
+	paths[TEX_EAST] = game->cfg->east_texture;
+	paths[TEX_DOOR] = game->cfg->door_texture;
 	i = 0;
-	while (i < 5)
+	while (i < TEXTURE_COUNT)
 	{
 		game->textures[i] = malloc(sizeof(t_texture));
 		if (!game->textures[i])
@@ -62,13 +62,13 @@ int	get_texture_index(int side, float ray_dir_x, float ray_dir_y)
 	if (side == 0)
 	{
 		if (ray_dir_x > 0)
-			return (1);
+			return (TEX_SOUTH);
 		else
-			return (0);
+			return (TEX_NORTH);
 	}
 	if (ray_dir_y > 0)
-		return (3);
-	return (2);
+		return (TEX_EAST);
+	return (TEX_WEST);
 }
 
 int	get_texture_index_door(t_game *game, int map_x, int map_y)
@@ -84,8 +84,8 @@ int	get_texture_index_door(t_game *game, int map_x, int map_y)
 		{
 			if (game->doors[i].open_ratio == 0.0f)
 			{
-				if (game->textures[4] && game->textures[4]->image)
-					return (4);
+				if (game->textures[TEX_DOOR] && game->textures[TEX_DOOR]->image)
+					return (TEX_DOOR);
 				return (-1);
 			}
 			else
@@ -101,7 +101,7 @@ int	get_texture_color(t_game *game, int tex_id, int tex_x, int tex_y)
 	t_texture		*tex;
 	unsigned char	*pixel;
 
-	if ((unsigned int)tex_id >= 5)
+	if ((unsigned int)tex_id >= TEXTURE_COUNT)
 		return (0);
 	tex = game->textures[tex_id];
 	if (!tex || !tex->image)
@@ -115,7 +115,7 @@ int	get_texture_color(t_game *game, int tex_id, int tex_x, int tex_y)
 	if (tex_y < 0)
 		tex_y = 0;
 	pixel = (unsigned char *)(tex->image->pixels
-			+ (tex_y * tex->image->width + tex_x) * 4);
+			+ (tex_y * tex->image->width + tex_x) * BYTES_PER_PIXEL);
 	return ((int)(pixel[0] | (pixel[1] << 8) | (pixel[2] << 16)
 		| (pixel[3] << 24)));
 }
