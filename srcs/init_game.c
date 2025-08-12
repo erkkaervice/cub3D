@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 16:42:45 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/07 19:57:27 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/12 16:59:21 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ int	init_game(t_game *game)
 		return (0);
 	if (!init_img(game))
 		return (0);
+	mouse_init(game);
+	mlx_cursor_hook(game->mlx, mouse_move, game);
 	init_dir_infos(game);
 	init_player(game);
 	game->minimap_visible = 0;

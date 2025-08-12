@@ -6,7 +6,7 @@
 #    By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/04 15:36:34 by eala-lah          #+#    #+#              #
-#    Updated: 2025/08/07 20:15:36 by eala-lah         ###   ########.fr        #
+#    Updated: 2025/08/12 17:00:56 by eala-lah         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ SRC		= \
 	map.c \
 	map_utils.c \
 	minimap.c \
+	mouse.c \
 	movement.c \
 	raycast.c \
 	render.c \

@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 14:44:35 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/12 15:49:10 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/12 17:21:23 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,14 @@ typedef struct s_fps
 	clock_t		last_time;
 }	t_fps;
 
+typedef struct s_mouse
+{
+	int			prev_x;
+	double		dx;
+	double		velocity;
+	double		sensitivity;
+}	t_mouse;
+
 typedef struct s_game
 {
 	mlx_t		*mlx;
@@ -160,6 +168,7 @@ typedef struct s_game
 	t_fps		fps;
 	t_door		*doors;
 	int			num_doors;
+	t_mouse		mouse;
 }	t_game;
 
 /* Initialization and Config */
@@ -202,6 +211,11 @@ void		free_textures(t_game *game, int count);
 
 /* Player movement */
 void		update_player_position(t_game *game);
+
+/* Mouse input */
+void		mouse_init(t_game *game);
+void		mouse_move(double x, double y, void *param);
+void		apply_mouse_look(t_game *game, double frame_time);
 
 /* Rendering */
 void		render_frame(void *param);

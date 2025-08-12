@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:53:42 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/07 20:03:50 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/12 17:29:06 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,12 +102,19 @@ static void	render_column(t_game *game, int x)
 
 void	render_frame(void *param)
 {
-	t_game	*game;
-	int		x;
+	static double	last_time;
+	t_game			*game;
+	int				x;
+	double			frame_time;
+	double			current_time;
 
 	game = (t_game *)param;
+	current_time = mlx_get_time();
+	frame_time = current_time - last_time;
+	last_time = current_time;
 	fill_floor_ceiling(game);
 	update_doors(game);
+	apply_mouse_look(game, frame_time);
 	update_player_position(game);
 	x = 0;
 	while (x < WIDTH)
