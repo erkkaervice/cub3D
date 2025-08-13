@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:53:05 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/13 18:07:35 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/13 19:42:11 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,9 @@ void		apply_mouse_look(t_game *game, double frame_time);
 void		render_frame(void *param);
 void		render_minimap(t_game *game);
 void		render_fps(t_game *game);
-void		draw_column(t_game *game, int x, t_wall *wall, t_ray *ray);
 
 /* Sprites */
+void		init_sprite(t_sprite *s, int x, int y);
 void		parse_sprites(t_game *game);
 void		render_sprites(t_game *game, float *z_buffer);
 void		init_sprite_render(t_game *g, t_sprite *s);

@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 16:42:45 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/13 16:33:02 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/13 18:17:36 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,21 @@ static void	close_hook(void *param)
 	exit(0);
 }
 
-static int	init_mlx_and_win(t_game *game)
+static int	init_mlx_win_and_img(t_game *game)
 {
 	game->mlx = mlx_init(WIDTH, HEIGHT, WINDOW_TITLE, true);
-	return (game->mlx != NULL);
+	if (!game->mlx)
+		return (0);
+	game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
+	if (!game->img)
+		return (0);
+	if (mlx_image_to_window(game->mlx, game->img,
+			WINDOW_IMG_POS_X, WINDOW_IMG_POS_Y) < 0)
+		return (0);
+	return (1);
 }
 
-static int	init_cfg_and_textures(t_game *game)
+static int	init_cfg_textures_and_doors(t_game *game)
 {
 	game->cfg = mock_config();
 	if (!game->cfg)
@@ -36,30 +44,28 @@ static int	init_cfg_and_textures(t_game *game)
 	return (1);
 }
 
-static int	init_img(t_game *game)
+static void	init_z_buffer(float *z_buffer, int size)
 {
-	game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
-	if (!game->img)
-		return (0);
-	if (mlx_image_to_window(game->mlx, game->img,
-			WINDOW_IMG_POS_X, WINDOW_IMG_POS_Y) < 0)
-		return (0);
-	return (1);
+	int	i;
+
+	i = 0;
+	while (i < size)
+	{
+		z_buffer[i] = 0.0f;
+		i++;
+	}
 }
 
 int	init_game(t_game *game)
 {
-	if (!init_mlx_and_win(game))
+	if (!init_mlx_win_and_img(game))
 		return (0);
-	if (!init_cfg_and_textures(game))
-		return (0);
-	if (!init_img(game))
+	if (!init_cfg_textures_and_doors(game))
 		return (0);
 	game->z_buffer = malloc(sizeof(float) * WIDTH);
 	if (!game->z_buffer)
 		return (0);
-	for (int i = 0; i < WIDTH; i++)
-		game->z_buffer[i] = 0.0f;
+	init_z_buffer(game->z_buffer, WIDTH);
 	mouse_init(game);
 	mlx_cursor_hook(game->mlx, mouse_move, game);
 	init_dir_infos(game);

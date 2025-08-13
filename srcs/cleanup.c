@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:44:13 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/12 19:00:21 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/13 19:43:53 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,15 @@ static void	cleanup_textures(t_game *game)
 	free_textures(game, TEXTURE_COUNT);
 }
 
+static void	cleanup_sprites(t_game *game)
+{
+	if (!game || !game->sprites)
+		return ;
+	free(game->sprites);
+	game->sprites = NULL;
+	game->num_sprites = 0;
+}
+
 void	cleanup_game(t_game *game)
 {
 	if (!game)
@@ -81,6 +90,7 @@ void	cleanup_game(t_game *game)
 	}
 	cleanup_textures(game);
 	cleanup_map(game);
+	cleanup_sprites(game);
 	if (game->doors)
 	{
 		free(game->doors);

@@ -6,17 +6,30 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:22:57 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/13 16:33:02 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/13 18:15:15 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	init_game_struct(t_game *game)
+static void	init_struct_arrays(t_game *game)
 {
 	int	i;
 
 	i = 0;
+	while (i < TEXTURE_COUNT)
+	{
+		game->textures[i] = NULL;
+		i++;
+	}
+	game->input = (t_input){0};
+	game->fps.frames = 0;
+	game->fps.fps = 0;
+	game->fps.last_time = clock();
+}
+
+void	init_game_struct(t_game *game)
+{
 	game->mlx = NULL;
 	game->img = NULL;
 	game->cfg = NULL;
@@ -26,21 +39,12 @@ void	init_game_struct(t_game *game)
 	game->dir_y = 0.0f;
 	game->plane_x = 0.0f;
 	game->plane_y = 0.0f;
-	game->input = (t_input){.w = 0, .a = 0, .s = 0, .d = 0,
-		.left = 0, .right = 0, .shift = 0};
-	game->fps.frames = 0;
-	game->fps.fps = 0;
-	game->fps.last_time = clock();
 	game->doors = NULL;
 	game->num_doors = 0;
 	game->sprites = NULL;
 	game->num_sprites = 0;
 	game->z_buffer = NULL;
-	while (i < TEXTURE_COUNT)
-	{
-		game->textures[i] = NULL;
-		i++;
-	}
+	init_struct_arrays(game);
 }
 
 void	init_dir_infos(t_game *game)

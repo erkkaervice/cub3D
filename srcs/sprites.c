@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 13:43:52 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/13 18:01:00 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/13 19:41:12 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,7 @@ void	parse_sprites(t_game *g)
 		x = -1;
 		while (g->cfg->map[y][++x])
 			if (g->cfg->map[y][x] == 'S')
-			{
-				g->sprites[i].x = x + 0.5f;
-				g->sprites[i].y = y + 0.5f;
-				g->sprites[i].perp_dist = 0;
-				g->sprites[i++].texture_id = TEX_SPRITE;
-			}
+				init_sprite(&g->sprites[i++], x, y);
 	}
 }
 
@@ -90,12 +85,14 @@ static void	sort_sprites(t_game *g)
 	{
 		j = i;
 		while (++j < g->num_sprites)
+		{
 			if (g->sprites[i].dist < g->sprites[j].dist)
 			{
 				tmp = g->sprites[i];
 				g->sprites[i] = g->sprites[j];
 				g->sprites[j] = tmp;
 			}
+		}
 	}
 }
 
