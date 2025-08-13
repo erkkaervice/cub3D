@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:52:20 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/13 16:58:25 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/13 18:05:40 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ typedef struct s_sprite
 	float	sy;
 	float	tx;
 	float	ty;
-	float	perp_dist;    // <--- add this
+	float	perp_dist;
 	int		screen_x;
 	int		height;
 	int		width;

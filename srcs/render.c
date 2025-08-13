@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:53:42 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/13 16:54:58 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/13 18:03:12 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ static void	draw_column_pixels(t_game *game, t_wall *wall, int x, int tex_id, fl
 	uint8_t		g;
 	uint8_t		b;
 	uint8_t		a;
-	int			do_blend;
 
 	if (tex_id < 0 || tex_id >= TEXTURE_COUNT)
 		return ;
@@ -56,16 +55,9 @@ static void	draw_column_pixels(t_game *game, t_wall *wall, int x, int tex_id, fl
 	pos = (wall->draw_start - HEIGHT / 2 + wall->line_height / 2) * step;
 	dst = (uint32_t *)game->img->pixels;
 	y = wall->draw_start;
-	do_blend = (tex_id == TEX_SPRITE || tex_id == TEX_DOOR);
 
 	while (y <= wall->draw_end)
 	{
-		if ((do_blend) && (wall->perp_wall_dist >= z_buffer[x]))
-		{
-			y++;
-			pos += step;
-			continue;
-		}
 		tex_y = (int)pos;
 		if (tex_y < 0)
 			tex_y = 0;
@@ -78,8 +70,11 @@ static void	draw_column_pixels(t_game *game, t_wall *wall, int x, int tex_id, fl
 		r = src & 0xFF;
 		a = (src >> 24) & 0xFF;
 
-		if (!do_blend || a == 255)
+		if (a == 255)
+		{
 			dst[y * WIDTH + x] = 0xFF000000u | (r << 16) | (g << 8) | b;
+			z_buffer[x] = wall->perp_wall_dist; // Update z-buffer per pixel
+		}
 		else if (a != 0)
 		{
 			uint32_t dstc = dst[y * WIDTH + x];
@@ -92,6 +87,8 @@ static void	draw_column_pixels(t_game *game, t_wall *wall, int x, int tex_id, fl
 			b = (uint8_t)((b * a + db * (255 - a)) / 255);
 
 			dst[y * WIDTH + x] = 0xFF000000u | (r << 16) | (g << 8) | b;
+			if (wall->perp_wall_dist < z_buffer[x])
+				z_buffer[x] = wall->perp_wall_dist; // Ensure z-buffer is closest distance
 		}
 		pos += step;
 		y++;
@@ -104,10 +101,6 @@ static void	draw_column_loop(t_game *game, int x, t_wall *wall, int tex_id, floa
 		return ;
 	if (!game->textures[tex_id] || !game->textures[tex_id]->image)
 		return ;
-	if (wall->draw_start < 0)
-		wall->draw_start = 0;
-	if (wall->draw_end >= HEIGHT)
-		wall->draw_end = HEIGHT - 1;
 	draw_column_pixels(game, wall, x, tex_id, z_buffer);
 }
 
@@ -137,11 +130,9 @@ static void	render_column(t_game *game, int x, float *z_buffer)
 		calculate_wall(game, &ray, &wall);
 		tex_id = get_texture_index(ray.side, ray.ray_dir_x, ray.ray_dir_y);
 	}
-	z_buffer[x] = ray.perp_wall_dist;
 	wall.tex_x = get_tex_x(game, &ray, wall.wall_x, tex_id);
 	draw_column_loop(game, x, &wall, tex_id, z_buffer);
 }
-
 
 void	render_frame(void *param)
 {
@@ -161,6 +152,7 @@ void	render_frame(void *param)
 	update_doors(game);
 	apply_mouse_look(game, frame_time);
 	update_player_position(game);
+
 	i = 0;
 	while (i < WIDTH)
 	{

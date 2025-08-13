@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 15:16:57 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/13 17:04:56 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/13 18:01:07 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void	init_sprite_render(t_game *g, t_sprite *s)
 	s->ty = inv_det * (-g->plane_y * s->sx + g->plane_x * s->sy);
 	if (s->ty <= 0.0001f)
 		return ;
-	s->perp_dist = s->ty;
 
 	s->screen_x = (int)((WIDTH / 2.0f) * (1.0f + s->tx / s->ty));
 	s->height = abs((int)(HEIGHT / s->ty));
@@ -61,7 +60,7 @@ void	draw_sprite_stripe(t_game *g, t_sprite *s, float *zb)
 	{
 		if (x < 0 || x >= WIDTH)
 			continue ;
-		if (s->perp_dist <= 0.0f || s->perp_dist >= zb[x])
+		if (s->dist >= zb[x])
 			continue ;
 
 		y = s->start_y - 1;
