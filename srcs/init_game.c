@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 16:42:45 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/12 18:36:41 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/13 16:33:02 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ static int	init_cfg_and_textures(t_game *game)
 	if (!game->cfg)
 		return (0);
 	init_doors(game);
+	parse_sprites(game);
 	if (!load_textures(game))
 		return (0);
 	return (1);
@@ -54,6 +55,11 @@ int	init_game(t_game *game)
 		return (0);
 	if (!init_img(game))
 		return (0);
+	game->z_buffer = malloc(sizeof(float) * WIDTH);
+	if (!game->z_buffer)
+		return (0);
+	for (int i = 0; i < WIDTH; i++)
+		game->z_buffer[i] = 0.0f;
 	mouse_init(game);
 	mlx_cursor_hook(game->mlx, mouse_move, game);
 	init_dir_infos(game);

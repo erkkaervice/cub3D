@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 15:29:29 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/12 18:13:49 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/13 17:12:45 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,22 +39,10 @@ static void	move_player(t_game *game, float dx, float dy, float speed)
 
 	new_x = game->player_x + dx * speed;
 	new_y = game->player_y + dy * speed;
-	if (can_move(game, new_x, new_y))
-	{
-		game->player_x = new_x;
-		game->player_y = new_y;
-		return ;
-	}
-	if (can_move(game, new_x, game->player_y))
-	{
-		game->player_x = new_x;
-		return ;
-	}
 	if (can_move(game, game->player_x, new_y))
-	{
 		game->player_y = new_y;
-		return ;
-	}
+	if (can_move(game, new_x, game->player_y))
+		game->player_x = new_x;
 }
 
 static void	rotate_player(t_game *game, float angle)

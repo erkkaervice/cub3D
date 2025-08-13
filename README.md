@@ -56,8 +56,6 @@ game.player_angle
  Test bonus features (doors, minimap) with parsed maps.
 
 Optional Bonus
- Mouse look support.
-
  Textured doors.
 
  Minimap zoom toggle.

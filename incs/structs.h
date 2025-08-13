@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:52:20 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/12 18:57:41 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/13 16:58:25 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_config
 	char		*east_texture;
 	char		*west_texture;
 	char		*door_texture;
+	char		*sprite_texture;
 	int			floor_color;
 	int			ceiling_color;
 	char		**map;
@@ -111,6 +112,26 @@ typedef struct s_mouse
 	double		sensitivity;
 }	t_mouse;
 
+typedef struct s_sprite
+{
+	float	x;
+	float	y;
+	float	dist;
+	int		texture_id;
+	float	sx;
+	float	sy;
+	float	tx;
+	float	ty;
+	float	perp_dist;    // <--- add this
+	int		screen_x;
+	int		height;
+	int		width;
+	int		start_x;
+	int		end_x;
+	int		start_y;
+	int		end_y;
+}	t_sprite;
+
 typedef struct s_game
 {
 	mlx_t			*mlx;
@@ -130,7 +151,10 @@ typedef struct s_game
 	t_fps			fps;
 	t_door			*doors;
 	int				num_doors;
+	t_sprite		*sprites;
+	int				num_sprites;
 	t_mouse			mouse;
+	float			*z_buffer;
 }	t_game;
 
 #endif

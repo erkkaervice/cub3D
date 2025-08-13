@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:32:32 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/12 18:03:47 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/13 16:45:17 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ static int	load_texture(mlx_t *mlx, t_texture *texture, char *path)
 	if (!texture->image)
 	{
 		mlx_delete_texture(texture->img);
+		texture->img = NULL;
 		return (0);
 	}
 	return (1);
@@ -38,6 +39,8 @@ int	load_textures(t_game *game)
 	paths[TEX_WEST] = game->cfg->west_texture;
 	paths[TEX_EAST] = game->cfg->east_texture;
 	paths[TEX_DOOR] = game->cfg->door_texture;
+	paths[TEX_SPRITE] = game->cfg->sprite_texture;
+
 	i = 0;
 	while (i < TEXTURE_COUNT)
 	{
@@ -63,8 +66,7 @@ int	get_texture_index(int side, float ray_dir_x, float ray_dir_y)
 	{
 		if (ray_dir_x > 0)
 			return (TEX_SOUTH);
-		else
-			return (TEX_NORTH);
+		return (TEX_NORTH);
 	}
 	if (ray_dir_y > 0)
 		return (TEX_EAST);
@@ -88,8 +90,7 @@ int	get_texture_index_door(t_game *game, int map_x, int map_y)
 					return (TEX_DOOR);
 				return (-1);
 			}
-			else
-				return (-1);
+			return (-1);
 		}
 		i++;
 	}
@@ -99,23 +100,25 @@ int	get_texture_index_door(t_game *game, int map_x, int map_y)
 int	get_texture_color(t_game *game, int tex_id, int tex_x, int tex_y)
 {
 	t_texture		*tex;
-	unsigned char	*pixel;
+	unsigned char	*px;
 
 	if ((unsigned int)tex_id >= TEXTURE_COUNT)
 		return (0);
 	tex = game->textures[tex_id];
-	if (!tex || !tex->image)
+	if (!tex || !tex->img || !tex->img->pixels)
 		return (0);
+
+	if (tex_x < 0) tex_x = 0;
+	if (tex_y < 0) tex_y = 0;
 	if ((unsigned int)tex_x >= (unsigned int)tex->width)
 		tex_x = tex->width - 1;
 	if ((unsigned int)tex_y >= (unsigned int)tex->height)
 		tex_y = tex->height - 1;
-	if (tex_x < 0)
-		tex_x = 0;
-	if (tex_y < 0)
-		tex_y = 0;
-	pixel = (unsigned char *)(tex->image->pixels
-			+ (tex_y * tex->image->width + tex_x) * BYTES_PER_PIXEL);
-	return ((int)(pixel[0] | (pixel[1] << 8) | (pixel[2] << 16)
-		| (pixel[3] << 24)));
+
+	px = (unsigned char *)tex->img->pixels
+		+ (tex_y * tex->width + tex_x) * BYTES_PER_PIXEL;
+
+	if (px[3] == 0)
+		return (0);
+	return ((int)(px[3] << 24 | px[0] << 16 | px[1] << 8 | px[2]));
 }

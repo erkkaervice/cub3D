@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:37:43 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/12 18:50:53 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/13 14:43:29 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define CONFIG_H
 
 /* Window and image */
-# define WINDOW_TITLE "cub3D"
+# define WINDOW_TITLE "HELLESCAPE"
 # define WINDOW_IMG_POS_X 0
 # define WINDOW_IMG_POS_Y 0
 
@@ -51,7 +51,7 @@
 # define ROT_SPEED 0.07f
 
 /* Mouse settings */
-# define MOUSE_SENSITIVITY 0.00015f
+# define MOUSE_SENSITIVITY 0.00005f
 # define MOUSE_DAMPING 0.5f
 # define MOUSE_DX_THRESHOLD 0.01f
 # define MOUSE_START_X 900
@@ -59,12 +59,13 @@
 # define MOUSE_FRAME_MULTIPLIER 60.0f
 
 /* Texture management */
-# define TEXTURE_COUNT 5
+# define TEXTURE_COUNT 6
 # define TEX_NORTH 0
 # define TEX_SOUTH 1
 # define TEX_WEST  2
 # define TEX_EAST  3
 # define TEX_DOOR  4
+# define TEX_SPRITE 5
 
 /* Texture file paths */
 # define NORTH_TEXTURE_PATH "textures/north.png"
@@ -72,10 +73,14 @@
 # define WEST_TEXTURE_PATH  "textures/west.png"
 # define EAST_TEXTURE_PATH  "textures/east.png"
 # define DOOR_TEXTURE_PATH  "textures/door.png"
+# define SPRITE_TEXTURE_PATH "textures/sprite.png"
 
 /* Map tiles */
 # define TILE_WALL '1'
 # define TILE_DOOR 'D'
+
+/* Sprite parameters */
+# define MAX_SPRITES 100
 
 /* Raycasting parameters */
 # define MAX_DDA_STEPS 1000
@@ -128,6 +133,6 @@
 /* Player starting position and direction */
 # define PLAYER_START_X 4
 # define PLAYER_START_Y 3
-# define PLAYER_START_DIR 'N'
+# define PLAYER_START_DIR 'E'
 
 #endif

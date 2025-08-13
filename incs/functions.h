@@ -6,12 +6,18 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:53:05 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/12 18:55:00 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/13 16:54:09 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FUNCTIONS_H
 # define FUNCTIONS_H
+
+void	parse_sprites(t_game *game);
+void	render_sprites(t_game *game, float *z_buffer);
+void	init_sprite_render(t_game *g, t_sprite *s);
+void	draw_sprite_stripe(t_game *g, t_sprite *s, float *zb);
+
 
 /* Initialization and Config */
 t_config	*mock_config(void);
@@ -40,7 +46,7 @@ int			handle_tile(t_game *game, t_ray *ray, int map_w, int map_h);
 /* Raycasting */
 void		init_ray_basic(t_game *game, int x, t_ray *ray);
 void		init_ray_steps(t_game *game, t_ray *ray);
-int			perform_dda(t_game *game, t_ray *ray);
+int			perform_dda(t_game *game, t_ray *ray, int x);
 void		calculate_wall(t_game *game, t_ray *ray, t_wall *wall);
 int			get_tex_x(t_game *game, t_ray *ray, float wall_x, int tex_id);
 

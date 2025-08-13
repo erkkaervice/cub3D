@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:22:57 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/12 18:34:56 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/13 16:33:02 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,11 @@ void	init_game_struct(t_game *game)
 	game->fps.frames = 0;
 	game->fps.fps = 0;
 	game->fps.last_time = clock();
+	game->doors = NULL;
+	game->num_doors = 0;
+	game->sprites = NULL;
+	game->num_sprites = 0;
+	game->z_buffer = NULL;
 	while (i < TEXTURE_COUNT)
 	{
 		game->textures[i] = NULL;

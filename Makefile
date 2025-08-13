@@ -6,7 +6,7 @@
 #    By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/04 15:36:34 by eala-lah          #+#    #+#              #
-#    Updated: 2025/08/12 19:06:09 by eala-lah         ###   ########.fr        #
+#    Updated: 2025/08/13 15:21:05 by eala-lah         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,8 @@ SRC		= \
 	movement.c \
 	raycast.c \
 	render.c \
+	sprites.c \
+	sprites_utils.c \
 	textures.c
 
 OBJ_DIR		= obj/
