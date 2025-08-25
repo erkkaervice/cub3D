@@ -38,8 +38,15 @@ typedef struct s_config
 	char		*west_texture;
 	char		*door_texture;
 	char		*sprite_texture;
-	int			floor_color;
-	int			ceiling_color;
+	char		*floor_color;
+	char		*ceiling_color;
+	bool		no;
+	bool		so;
+	bool		we;
+	bool		ea;
+	bool		f;
+	bool		c;
+	bool		player;
 	char		**map;
 	int			player_x;
 	int			player_y;

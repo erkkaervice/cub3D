@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 13:43:52 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/13 19:41:12 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/25 15:34:14 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int	count_sprites(char **map)
 	{
 		x = 0;
 		while (map[y][x])
-			if (map[y][x++] == 'S')
+			if (map[y][x++] == TILE_SPRITE)
 				c++;
 		y++;
 	}
@@ -40,6 +40,8 @@ void	parse_sprites(t_game *g)
 	g->num_sprites = count_sprites(g->cfg->map);
 	if (!g->num_sprites)
 		return ;
+	if (g->num_sprites > MAX_SPRITES)
+		g->num_sprites = MAX_SPRITES;
 	g->sprites = malloc(sizeof(t_sprite) * g->num_sprites);
 	if (!g->sprites)
 		exit(EXIT_FAILURE);
@@ -49,7 +51,7 @@ void	parse_sprites(t_game *g)
 	{
 		x = -1;
 		while (g->cfg->map[y][++x])
-			if (g->cfg->map[y][x] == 'S')
+			if (g->cfg->map[y][x] == TILE_SPRITE && i < g->num_sprites)
 				init_sprite(&g->sprites[i++], x, y);
 	}
 }

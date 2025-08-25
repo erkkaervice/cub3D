@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:53:42 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/13 19:10:43 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/25 15:11:09 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,23 +16,22 @@ static void	fill_floor_ceiling(t_game *game)
 {
 	uint32_t	*p;
 	int			i;
-	int			half;
-	int			total;
+	uint32_t	floor;
+	uint32_t	ceiling;
+	int			*rgb;
 
 	p = (uint32_t *)game->img->pixels;
-	total = WIDTH * HEIGHT;
-	half = total / 2;
+	rgb = color_atoia(game->cfg->floor_color);
+	floor = color_converter(rgb);
+	free(rgb);
+	rgb = color_atoia(game->cfg->ceiling_color);
+	ceiling = color_converter(rgb);
+	free(rgb);
 	i = 0;
-	while (i < half)
-	{
-		p[i] = CEILING_COLOR;
-		i++;
-	}
-	while (i < total)
-	{
-		p[i] = FLOOR_COLOR;
-		i++;
-	}
+	while (i < WIDTH * HEIGHT / 2)
+		p[i++] = ceiling;
+	while (i < WIDTH * HEIGHT)
+		p[i++] = floor;
 }
 
 static void	blend_write_pixel(uint32_t *dst, uint32_t src,

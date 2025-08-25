@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 18:02:25 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/12 18:40:12 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/25 15:32:49 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	get_tex_id_for_hit(t_game *game, t_ray *ray)
 		return (-1);
 	cell = game->cfg->map[ray->map_y][ray->map_x];
 	if (cell == TILE_DOOR)
-		return (get_texture_index_door(game, ray->map_x, ray->map_y));
+		return (TEX_DOOR);
 	if (cell == TILE_WALL)
 		return (get_texture_index(ray->side, ray->ray_dir_x, ray->ray_dir_y));
 	return (-1);
@@ -28,9 +28,9 @@ int	get_tex_id_for_hit(t_game *game, t_ray *ray)
 
 void	toggle_door(t_game *game)
 {
+	int		i;
 	int		x;
 	int		y;
-	int		i;
 	float	px;
 	float	py;
 
@@ -44,11 +44,9 @@ void	toggle_door(t_game *game)
 		if (game->doors[i].x == x && game->doors[i].y == y)
 		{
 			if (!game->doors[i].is_opening)
-			{
 				if (px > (float)x && px < (float)(x + 1)
 					&& py > (float)y && py < (float)(y + 1))
 					return ;
-			}
 			game->doors[i].is_opening = !game->doors[i].is_opening;
 			break ;
 		}
@@ -84,7 +82,7 @@ void	update_doors(t_game *game)
 
 int	handle_door(t_game *game, t_ray *ray)
 {
-	int		door_idx;
+	int	door_idx;
 	float	open_ratio;
 
 	door_idx = find_door_index(game, ray->map_x, ray->map_y);
@@ -100,22 +98,18 @@ int	handle_door(t_game *game, t_ray *ray)
 
 int	handle_door_hit(t_game *game, t_ray *ray, t_wall *wall, int *tex_id)
 {
-	int		door_index;
+	int	door_index;
 	float	offset;
 
 	door_index = find_door_index(game, ray->map_x, ray->map_y);
 	if (door_index < 0)
 		return (0);
 	offset = game->doors[door_index].open_ratio;
-	if (offset > DOOR_OPEN_FULL)
-		offset = DOOR_OPEN_FULL;
-	if (offset < DOOR_INITIAL_OPEN_RATIO)
-		offset = DOOR_INITIAL_OPEN_RATIO;
 	if (ray->side == AXIS_X)
 		ray->side_dist_x -= offset * ray->step_x;
 	else
 		ray->side_dist_y -= offset * ray->step_y;
 	calculate_wall(game, ray, wall);
-	*tex_id = get_texture_index_door(game, ray->map_x, ray->map_y);
+	*tex_id = TEX_DOOR;
 	return (1);
 }

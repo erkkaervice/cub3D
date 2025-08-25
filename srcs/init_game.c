@@ -32,9 +32,9 @@ static int	init_mlx_win_and_img(t_game *game)
 	return (1);
 }
 
-static int	init_cfg_textures_and_doors(t_game *game)
+static int	init_cfg_textures_and_doors(t_game *game, char *filename)
 {
-	game->cfg = mock_config();
+	game->cfg = mock_config(filename);
 	if (!game->cfg)
 		return (0);
 	init_doors(game);
@@ -56,11 +56,11 @@ static void	init_z_buffer(float *z_buffer, int size)
 	}
 }
 
-int	init_game(t_game *game)
+int	init_game(t_game *game, char *filename)
 {
 	if (!init_mlx_win_and_img(game))
 		return (0);
-	if (!init_cfg_textures_and_doors(game))
+	if (!init_cfg_textures_and_doors(game, filename))
 		return (0);
 	game->z_buffer = malloc(sizeof(float) * WIDTH);
 	if (!game->z_buffer)
