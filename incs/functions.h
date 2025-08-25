@@ -6,12 +6,17 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:53:05 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/13 19:42:11 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/25 17:55:30 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FUNCTIONS_H
 # define FUNCTIONS_H
+
+int			count_doors(t_game *game);
+int			fill_doors(t_game *game);
+int			count_and_fill_doors(t_game *game);
+int			find_door_index(t_game *game, int x, int y);
 
 /* Map parsing & validation*/
 

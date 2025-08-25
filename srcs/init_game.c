@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 16:42:45 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/13 18:17:36 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/25 18:14:15 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,20 +24,17 @@ static int	init_mlx_win_and_img(t_game *game)
 	if (!game->mlx)
 		return (0);
 	game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
-	if (!game->img)
-		return (0);
-	if (mlx_image_to_window(game->mlx, game->img,
+	if (!game->img || mlx_image_to_window(game->mlx, game->img,
 			WINDOW_IMG_POS_X, WINDOW_IMG_POS_Y) < 0)
 		return (0);
 	return (1);
 }
 
-static int	init_cfg_textures_and_doors(t_game *game, char *filename)
+static int	init_cfg_textures(t_game *game, char *filename)
 {
 	game->cfg = mock_config(filename);
 	if (!game->cfg)
 		return (0);
-	init_doors(game);
 	parse_sprites(game);
 	if (!load_textures(game))
 		return (0);
@@ -60,8 +57,9 @@ int	init_game(t_game *game, char *filename)
 {
 	if (!init_mlx_win_and_img(game))
 		return (0);
-	if (!init_cfg_textures_and_doors(game, filename))
+	if (!init_cfg_textures(game, filename))
 		return (0);
+	init_doors(game);
 	game->z_buffer = malloc(sizeof(float) * WIDTH);
 	if (!game->z_buffer)
 		return (0);

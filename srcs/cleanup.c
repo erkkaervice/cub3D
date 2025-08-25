@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:44:13 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/13 19:43:53 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/25 18:25:05 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,6 @@ void	cleanup_game(t_game *game)
 		game->cfg = NULL;
 	}
 	if (game->mlx)
-	{
 		mlx_terminate(game->mlx);
-		game->mlx = NULL;
-	}
+	game->mlx = NULL;
 }

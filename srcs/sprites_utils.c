@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 15:16:57 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/25 15:34:26 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/25 18:22:04 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,9 +89,9 @@ void	draw_sprite_stripe(t_game *g, t_sprite *s, float *zb)
 			if (y < 0 || y >= HEIGHT)
 				continue ;
 			dst[y * WIDTH + x] = blend_pixel(dst[y * WIDTH + x],
-				get_texture_color(g, TEX_SPRITE,
-					(x - s->start_x) * tex->width / s->width,
-					(y - s->start_y) * tex->height / s->height));
+					get_texture_color(g, TEX_SPRITE,
+						(x - s->start_x) * tex->width / s->width,
+						(y - s->start_y) * tex->height / s->height));
 		}
 	}
 }

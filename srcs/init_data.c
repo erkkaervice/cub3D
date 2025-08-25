@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:22:57 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/13 18:15:15 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/25 18:14:15 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,11 @@ void	init_doors(t_game *game)
 	int	x;
 	int	idx;
 
-	if (!count_and_fill_doors(game))
+	game->num_doors = count_doors(game);
+	if (game->num_doors == 0)
+		return ;
+	game->doors = malloc(sizeof(t_door) * game->num_doors);
+	if (!game->doors)
 		return ;
 	idx = 0;
 	y = 0;
@@ -97,11 +101,7 @@ void	init_doors(t_game *game)
 		{
 			if (game->cfg->map[y][x] == TILE_DOOR)
 			{
-				game->doors[idx].x = x;
-				game->doors[idx].y = y;
-				game->doors[idx].open_ratio = DOOR_INITIAL_OPEN_RATIO;
-				game->doors[idx].is_opening = 0;
-				idx++;
+				game->doors[idx++] = (t_door){x, y, DOOR_INITIAL_OPEN_RATIO, 0};
 			}
 			x++;
 		}

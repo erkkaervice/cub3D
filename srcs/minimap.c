@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:16:05 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/25 16:22:15 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/25 18:10:22 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,14 @@ static void	draw_tile(t_game *g, int x, int y, char tile)
 		c = MINIMAP_SPRITE_COLOR;
 	else
 		c = MINIMAP_FLOOR_COLOR;
-
 	i = 0;
 	while (i < MINIMAP_SCALE)
 	{
 		j = 0;
 		while (j < MINIMAP_SCALE)
 		{
-			draw_pixel(g, x * MINIMAP_SCALE + i, y * MINIMAP_SCALE + j, c);
+			draw_pixel(g, x * MINIMAP_SCALE + i,
+				y * MINIMAP_SCALE + j, c);
 			j++;
 		}
 		i++;
@@ -74,49 +74,58 @@ static void	draw_player(t_game *g, int map_start_y)
 	}
 }
 
+static void	find_map_bounds(t_game *g, int *start, int *end)
+{
+	char	*line;
+
+	*start = 0;
+	while (g->cfg->map[*start])
+	{
+		line = g->cfg->map[*start];
+		while (*line == ' ' || *line == '\t')
+			line++;
+		if (*line == TILE_WALL || *line == TILE_FLOOR
+			|| *line == TILE_DOOR || *line == TILE_SPRITE)
+			break ;
+		(*start)++;
+	}
+	*end = *start;
+	while (g->cfg->map[*end])
+	{
+		line = g->cfg->map[*end];
+		while (*line == ' ' || *line == '\t')
+			line++;
+		if (!(*line == TILE_WALL || *line == TILE_FLOOR
+				|| *line == TILE_DOOR || *line == TILE_SPRITE))
+			break ;
+		(*end)++;
+	}
+}
+
 void	render_minimap(t_game *g)
 {
-	int	y;
-	int	x;
-	int	start;
-	int	end;
-	int	row_y;
+	int		y;
+	int		x;
+	int		start;
+	int		end;
+	char	tile;
 
-	start = 0;
-	while (g->cfg->map[start])
-	{
-		if (g->cfg->map[start][0] == TILE_WALL
-			|| g->cfg->map[start][0] == TILE_FLOOR
-			|| g->cfg->map[start][0] == TILE_DOOR
-			|| g->cfg->map[start][0] == TILE_SPRITE)
-			break ;
-		start++;
-	}
-	end = start;
-	while (g->cfg->map[end])
-	{
-		if (g->cfg->map[end][0] != TILE_WALL
-			&& g->cfg->map[end][0] != TILE_FLOOR
-			&& g->cfg->map[end][0] != TILE_DOOR
-			&& g->cfg->map[end][0] != TILE_SPRITE)
-			break ;
-		end++;
-	}
-	row_y = 0;
-	y = start;
-	while (y < end)
+	if (!g || !g->cfg || !g->cfg->map)
+		return ;
+	find_map_bounds(g, &start, &end);
+	y = 0;
+	while (start + y < end)
 	{
 		x = 0;
-		while (g->cfg->map[y][x] && g->cfg->map[y][x] != '\n')
+		while (g->cfg->map[start + y][x] && g->cfg->map[start + y][x] != '\n')
 		{
-			if (g->cfg->map[y][x] == TILE_WALL
-				|| g->cfg->map[y][x] == TILE_FLOOR
-				|| g->cfg->map[y][x] == TILE_DOOR
-				|| g->cfg->map[y][x] == TILE_SPRITE)
-				draw_tile(g, x, row_y, g->cfg->map[y][x]);
+			tile = g->cfg->map[start + y][x];
+			if (tile == TILE_WALL || tile == TILE_FLOOR
+				|| tile == TILE_SPRITE || tile == TILE_SPAWN
+				|| tile == TILE_DOOR)
+				draw_tile(g, x, y, tile);
 			x++;
 		}
-		row_y++;
 		y++;
 	}
 	draw_player(g, start);

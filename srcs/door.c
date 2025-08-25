@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 18:02:25 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/25 15:32:49 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/25 18:22:22 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	update_doors(t_game *game)
 
 int	handle_door(t_game *game, t_ray *ray)
 {
-	int	door_idx;
+	int		door_idx;
 	float	open_ratio;
 
 	door_idx = find_door_index(game, ray->map_x, ray->map_y);
@@ -98,7 +98,7 @@ int	handle_door(t_game *game, t_ray *ray)
 
 int	handle_door_hit(t_game *game, t_ray *ray, t_wall *wall, int *tex_id)
 {
-	int	door_index;
+	int		door_index;
 	float	offset;
 
 	door_index = find_door_index(game, ray->map_x, ray->map_y);
