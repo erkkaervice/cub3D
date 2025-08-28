@@ -41,7 +41,9 @@ SRC		= \
 	sprites_utils.c \
 	textures.c \
 	parsing.c \
-	parsing_utils.c 
+	parsing2.c \
+	parsing_utils.c \
+	cleanup2.c 
 
 OBJ_DIR		= obj/
 OBJ_SUBDIR	= $(OBJ_DIR)cub3d/

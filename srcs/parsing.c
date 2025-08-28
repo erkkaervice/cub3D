@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 13:10:39 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/08/20 15:31:27 by dvlachos         ###   ########.fr       */
+/*   Updated: 2025/08/28 13:55:40 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,21 +75,57 @@ bool	map_parsing(t_config *cfg, char *filename)
 
 bool	map_parsing2(t_config *cfg, char *filename)
 {
-	int	i;
-	int	fd;
+	int		i;
+	int		fd;
+	int		max_len;
 
 	fd = open(filename, O_RDONLY);
-	i = 0;
 	if (fd < 0)
 		return (print_err(cfg, "Cannot reopen map file", -1));
+
+	i = 0;
 	cfg->map[i] = get_next_line(fd);
+	max_len = 0;
 	while (cfg->map[i] != NULL)
 	{
+		int len = ft_strlen(cfg->map[i]);
+		if (len > max_len)
+			max_len = len;
 		i++;
 		cfg->map[i] = get_next_line(fd);
 	}
 	cfg->map[i] = NULL;
 	close(fd);
+
+	// Normalize map rows to same length, filling gaps with ' '
+	i = 0;
+	while (cfg->map[i])
+	{
+		int len = ft_strlen(cfg->map[i]);
+		if (len < max_len)
+		{
+			char *new_line = malloc(max_len + 1);
+			if (!new_line)
+				return (print_err(cfg, "Malloc failed", -1));
+			int j = 0;
+			while (cfg->map[i][j])
+			{
+				new_line[j] = cfg->map[i][j];
+				j++;
+			}
+			while (j < max_len)
+			{
+				new_line[j] = ' ';
+				j++;
+			}
+			new_line[j] = '\0';
+			free(cfg->map[i]);
+			cfg->map[i] = new_line;
+		}
+		i++;
+	}
+
+	// Process configuration lines
 	i = 0;
 	while (cfg->map[i])
 	{
@@ -97,8 +133,10 @@ bool	map_parsing2(t_config *cfg, char *filename)
 			config_validation(cfg, cfg->map[i]);
 		i++;
 	}
+
 	if (!map_validation2(cfg))
 		return (false);
+
 	return (true);
 }
 
@@ -153,93 +191,4 @@ bool	map_validation2(t_config *cfg)
 	if (!map_started)
 		return (print_err(cfg, "Map not found after configuration", -1));
 	return (map_validation3(cfg));
-}
-
-bool	map_validation3(t_config *cfg)
-{
-	int	i;
-
-	i = 0;
-	while (is_config_line(cfg->map[i]) || is_empty_line(cfg->map[i]))
-		i++;
-	return (validate_player(cfg, i));
-}
-
-bool	validate_player(t_config *cfg, int map_start)
-{
-	int	i;
-
-	cfg->player = false;
-	while (cfg->map[map_start])
-	{
-		i = 0;
-		while (cfg->map[map_start][i])
-		{
-			if (cfg->map[map_start][i] == 'N' ||
-				cfg->map[map_start][i] == 'S' ||
-				cfg->map[map_start][i] == 'W' || cfg->map[map_start][i] == 'E')
-			{
-				cfg->player = true;
-				break ;
-			}
-			i++;
-		}
-		if (cfg->player)
-			break ;
-		map_start++;
-	}
-	if (!cfg->player)
-		return (print_err(cfg, "Player not found in map", -1));
-	cfg->player_x = i;
-	cfg->player_y = map_start;
-	cfg->player_dir = cfg->map[map_start][i];
-	return (true);
-}
-
-void	set_path(char **dest, bool *seen, char *line, t_config *cfg)
-{
-	if (*seen)
-	{
-		exit(print_err(cfg, "Error: Duplicate asset", -1));
-	}
-	*seen = true;
-	*dest = ft_strtrim(ft_strchr(line, ' '), " \t\n");
-}
-
-int	*color_atoia(const char *color_string)
-{
-	int		*rgb;
-	char	**token;
-	int		i;
-
-	i = 0;
-	rgb = malloc(sizeof(int) * 3);
-	token = ft_split(color_string, ',');
-	while (token[i] && i < 3)
-	{
-		rgb [i] = ft_atoi(token[i]);
-		if (rgb[i] < 0)
-			rgb[i] = 0;
-		if (rgb[i] > 255)
-			rgb[i] = 255;
-		i++;
-	}
-	i = 0;
-	while (token[i])
-	{
-		free(token[i++]);
-	}
-	free(token);
-	return (rgb);
-}
-
-uint32_t	color_converter(int *rgb)
-{
-	uint32_t	color;
-
-	color = 0xFF000000;
-	color |= (rgb[2] << 16);
-	color |= (rgb[1] << 8);
-	color |= rgb[0];
-	return (color);
 }

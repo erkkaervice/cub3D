@@ -6,17 +6,21 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:32:32 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/25 15:30:43 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/26 13:46:10 by dvlachos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static int	load_texture(mlx_t *mlx, t_texture *texture, char *path)
+static int	load_texture(mlx_t *mlx, t_texture *texture, char *path,
+		t_config *cfg)
 {
 	texture->img = mlx_load_png(path);
 	if (!texture->img)
+	{
+		cleanup_cfg_textures_paths(cfg);
 		return (0);
+	}
 	texture->width = texture->img->width;
 	texture->height = texture->img->height;
 	texture->image = mlx_texture_to_image(mlx, texture->img);
@@ -46,7 +50,7 @@ int	load_textures(t_game *game)
 		game->textures[i] = malloc(sizeof(t_texture));
 		if (!game->textures[i])
 			return (free_textures(game, i), 0);
-		if (!load_texture(game->mlx, game->textures[i], paths[i]))
+		if (!load_texture(game->mlx, game->textures[i], paths[i], game->cfg))
 			return (free_textures(game, i + 1), 0);
 		i++;
 	}

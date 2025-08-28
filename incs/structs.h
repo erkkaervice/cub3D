@@ -6,19 +6,21 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:52:20 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/13 18:05:40 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/28 14:05:12 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCTS_H
 # define STRUCTS_H
 
+// --- Basic Types ---
 typedef struct s_point
 {
 	int	x;
 	int	y;
 }	t_point;
 
+// --- Input ---
 typedef struct s_input
 {
 	int	w;
@@ -30,6 +32,7 @@ typedef struct s_input
 	int	shift;
 }	t_input;
 
+// --- Configuration ---
 typedef struct s_config
 {
 	char		*north_texture;
@@ -46,13 +49,14 @@ typedef struct s_config
 	bool		ea;
 	bool		f;
 	bool		c;
-	bool		player;
+	int			player;
 	char		**map;
 	int			player_x;
 	int			player_y;
 	char		player_dir;
 }	t_config;
 
+// --- Rendering ---
 typedef struct s_texture
 {
 	mlx_texture_t	*img;
@@ -96,6 +100,7 @@ typedef struct s_wall
 	float	wall_x;
 }	t_wall;
 
+// --- Doors ---
 typedef struct s_door
 {
 	int		x;
@@ -104,6 +109,7 @@ typedef struct s_door
 	int		is_opening;
 }	t_door;
 
+// --- FPS & Mouse ---
 typedef struct s_fps
 {
 	int			frames;
@@ -119,6 +125,7 @@ typedef struct s_mouse
 	double		sensitivity;
 }	t_mouse;
 
+// --- Sprites ---
 typedef struct s_sprite
 {
 	float	x;
@@ -139,6 +146,7 @@ typedef struct s_sprite
 	int		end_y;
 }	t_sprite;
 
+// --- Game State ---
 typedef struct s_game
 {
 	mlx_t			*mlx;

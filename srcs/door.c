@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 18:02:25 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/25 18:22:22 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/28 14:13:44 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	handle_door(t_game *game, t_ray *ray)
 	return (HIT_DOOR);
 }
 
-int	handle_door_hit(t_game *game, t_ray *ray, t_wall *wall, int *tex_id)
+int	door_hit(t_game *game, t_ray *ray, t_wall *wall, int *tex_id)
 {
 	int		door_index;
 	float	offset;

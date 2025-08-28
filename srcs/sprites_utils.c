@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 15:16:57 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/25 18:22:04 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/26 13:45:40 by dvlachos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,13 @@ void	init_sprite(t_sprite *s, int x, int y)
 {
 	s->x = x + 0.5f;
 	s->y = y + 0.5f;
-	s->perp_dist = 0;
+	s->perp_dist = 0.0f;
 	s->texture_id = TEX_SPRITE;
+	s->start_x = -1;
+	s->end_x = -1;
+	s->start_y = -1;
+	s->end_y = -1;
+	s->dist = 0.0f;
 }
 
 void	init_sprite_render(t_game *g, t_sprite *s)

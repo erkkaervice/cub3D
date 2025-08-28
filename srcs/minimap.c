@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:16:05 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/25 18:10:22 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/28 13:52:38 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ void	render_minimap(t_game *g)
 	int		start;
 	int		end;
 	char	tile;
+	char	*line;
 
 	if (!g || !g->cfg || !g->cfg->map)
 		return ;
@@ -116,14 +117,15 @@ void	render_minimap(t_game *g)
 	y = 0;
 	while (start + y < end)
 	{
+		line = g->cfg->map[start + y];
 		x = 0;
-		while (g->cfg->map[start + y][x] && g->cfg->map[start + y][x] != '\n')
+		while (line[x] && line[x] != '\n')
 		{
-			tile = g->cfg->map[start + y][x];
-			if (tile == TILE_WALL || tile == TILE_FLOOR
-				|| tile == TILE_SPRITE || tile == TILE_SPAWN
-				|| tile == TILE_DOOR)
-				draw_tile(g, x, y, tile);
+			tile = line[x];
+			if (tile == TILE_WALL || tile == TILE_FLOOR || tile == TILE_DOOR
+				|| tile == TILE_SPRITE || tile == DIR_NORTH || tile == DIR_SOUTH
+				|| tile == DIR_EAST || tile == DIR_WEST)
+				draw_tile(g, x, y, tile); // use x directly
 			x++;
 		}
 		y++;

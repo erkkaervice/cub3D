@@ -57,16 +57,7 @@ static void	cleanup_textures(t_game *game)
 	if (!game || !game->cfg)
 		return ;
 	config = game->cfg;
-	free(config->north_texture);
-	config->north_texture = NULL;
-	free(config->south_texture);
-	config->south_texture = NULL;
-	free(config->west_texture);
-	config->west_texture = NULL;
-	free(config->east_texture);
-	config->east_texture = NULL;
-	free(config->door_texture);
-	config->door_texture = NULL;
+	cleanup_cfg_textures_paths(config);
 	free_textures(game, TEXTURE_COUNT);
 }
 
@@ -105,4 +96,5 @@ void	cleanup_game(t_game *game)
 	if (game->mlx)
 		mlx_terminate(game->mlx);
 	game->mlx = NULL;
+	free(game->z_buffer);
 }

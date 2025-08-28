@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:53:42 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/25 15:11:09 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/28 14:14:25 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ static void	render_column(t_game *game, int x)
 	hit = perform_dda(game, &ray, x);
 	if (hit == 0)
 		return ;
-	if (hit == 2 && handle_door_hit(game, &ray, &wall, &tex_id) == 0)
+	if (hit == 2 && door_hit(game, &ray, &wall, &tex_id) == 0)
 	{
 		calculate_wall(game, &ray, &wall);
 		tex_id = TEX_DOOR;
