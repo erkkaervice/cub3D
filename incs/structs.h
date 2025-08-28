@@ -6,12 +6,14 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:52:20 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/28 14:05:12 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/28 18:41:04 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCTS_H
 # define STRUCTS_H
+
+typedef struct s_game	t_game;
 
 // --- Basic Types ---
 typedef struct s_point
@@ -100,6 +102,15 @@ typedef struct s_wall
 	float	wall_x;
 }	t_wall;
 
+typedef struct s_blit
+{
+	t_game	*game;
+	int		x;
+	int		y;
+	float	scale_x;
+	float	scale_y;
+}	t_blit;
+
 // --- Doors ---
 typedef struct s_door
 {
@@ -151,6 +162,7 @@ typedef struct s_game
 {
 	mlx_t			*mlx;
 	mlx_image_t		*img;
+	mlx_image_t		*frame;
 	t_config		*cfg;
 	float			player_x;
 	float			player_y;
@@ -170,6 +182,11 @@ typedef struct s_game
 	int				num_sprites;
 	t_mouse			mouse;
 	float			*z_buffer;
+	int				win_width;
+	int				win_height;
+	float			scale_x;
+	float			scale_y;
+	int				needs_blit;
 }	t_game;
 
 #endif

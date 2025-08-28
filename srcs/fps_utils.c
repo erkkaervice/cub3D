@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 14:50:30 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/12 18:38:02 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/28 17:00:22 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	draw_fps_pixel(t_game *game, int x, int y, int color)
 
 	if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
 		return ;
-	pixel = (uint32_t *)game->img->pixels + y * WIDTH + x;
+	pixel = (uint32_t *)game->frame->pixels + y * WIDTH + x;
 	*pixel = color;
 }
 

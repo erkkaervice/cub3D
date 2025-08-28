@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:16:05 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/28 13:52:38 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/28 17:22:58 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	draw_pixel(t_game *g, int x, int y, int color)
 
 	if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
 		return ;
-	px = (uint32_t *)g->img->pixels + y * WIDTH + x;
+	px = (uint32_t *)g->frame->pixels + y * WIDTH + x;
 	*px = color;
 }
 
@@ -104,12 +104,10 @@ static void	find_map_bounds(t_game *g, int *start, int *end)
 
 void	render_minimap(t_game *g)
 {
-	int		y;
-	int		x;
-	int		start;
-	int		end;
-	char	tile;
-	char	*line;
+	int	y;
+	int	x;
+	int	start;
+	int	end;
 
 	if (!g || !g->cfg || !g->cfg->map)
 		return ;
@@ -117,15 +115,11 @@ void	render_minimap(t_game *g)
 	y = 0;
 	while (start + y < end)
 	{
-		line = g->cfg->map[start + y];
 		x = 0;
-		while (line[x] && line[x] != '\n')
+		while (g->cfg->map[start + y][x] && g->cfg->map[start + y][x] != '\n')
 		{
-			tile = line[x];
-			if (tile == TILE_WALL || tile == TILE_FLOOR || tile == TILE_DOOR
-				|| tile == TILE_SPRITE || tile == DIR_NORTH || tile == DIR_SOUTH
-				|| tile == DIR_EAST || tile == DIR_WEST)
-				draw_tile(g, x, y, tile); // use x directly
+			if (ft_strchr("012345678NSEWDPSX", g->cfg->map[start + y][x]))
+				draw_tile(g, x, y, g->cfg->map[start + y][x]);
 			x++;
 		}
 		y++;

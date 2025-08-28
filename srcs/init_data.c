@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:22:57 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/25 18:14:15 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/28 17:23:54 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	init_game_struct(t_game *game)
 {
 	game->mlx = NULL;
 	game->img = NULL;
+	game->frame = NULL;
 	game->cfg = NULL;
 	game->player_x = 0.0f;
 	game->player_y = 0.0f;
@@ -45,6 +46,11 @@ void	init_game_struct(t_game *game)
 	game->num_sprites = 0;
 	game->z_buffer = NULL;
 	init_struct_arrays(game);
+	game->win_width = WIDTH;
+	game->win_height = HEIGHT;
+	game->scale_x = 1.0f;
+	game->scale_y = 1.0f;
+	game->needs_blit = 1;
 }
 
 void	init_dir_infos(t_game *game)

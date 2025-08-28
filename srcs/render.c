@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:53:42 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/28 14:14:25 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/28 18:38:47 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	fill_floor_ceiling(t_game *game)
 	uint32_t	ceiling;
 	int			*rgb;
 
-	p = (uint32_t *)game->img->pixels;
+	p = (uint32_t *)game->frame->pixels;
 	rgb = color_atoia(game->cfg->floor_color);
 	floor = color_converter(rgb);
 	free(rgb);
@@ -32,36 +32,6 @@ static void	fill_floor_ceiling(t_game *game)
 		p[i++] = ceiling;
 	while (i < WIDTH * HEIGHT)
 		p[i++] = floor;
-}
-
-static void	blend_write_pixel(uint32_t *dst, uint32_t src,
-	float *zbuf, float dist)
-{
-	uint32_t	dstc;
-	uint8_t		r;
-	uint8_t		g;
-	uint8_t		b;
-	uint8_t		a;
-
-	a = (src >> 24) & 0xFF;
-	if (a == 0)
-		return ;
-	b = (src >> 16) & 0xFF;
-	g = (src >> 8) & 0xFF;
-	r = src & 0xFF;
-	if (a == 255)
-	{
-		*dst = 0xFF000000u | (r << 16) | (g << 8) | b;
-		*zbuf = dist;
-		return ;
-	}
-	dstc = *dst;
-	r = (uint8_t)((r * a + ((dstc >> 16) & 0xFF) * (255 - a)) / 255);
-	g = (uint8_t)((g * a + ((dstc >> 8) & 0xFF) * (255 - a)) / 255);
-	b = (uint8_t)((b * a + (dstc & 0xFF) * (255 - a)) / 255);
-	*dst = 0xFF000000u | (r << 16) | (g << 8) | b;
-	if (dist < *zbuf)
-		*zbuf = dist;
 }
 
 static void	draw_column(t_game *game, t_wall *wall, int x, int tex_id)
@@ -85,7 +55,7 @@ static void	draw_column(t_game *game, t_wall *wall, int x, int tex_id)
 	y = wall->draw_start;
 	while (y <= wall->draw_end)
 	{
-		blend_write_pixel(((uint32_t *)game->img->pixels) + (y * WIDTH + x),
+		blend_write_pixel(((uint32_t *)game->frame->pixels) + (y * WIDTH + x),
 			get_texture_color(game, tex_id, wall->tex_x, (int)pos),
 			&game->z_buffer[x], wall->perp_wall_dist);
 		pos += step;
@@ -121,13 +91,55 @@ static void	render_column(t_game *game, int x)
 	draw_column(game, &wall, x, tex_id);
 }
 
+void	blit_scaled(t_game *game)
+{
+	int			x;
+	int			y;
+	uint32_t	*dst;
+	float		scale[4];
+
+	if (!game->frame || !game->img)
+		return ;
+	scale[0] = (float)WIDTH / (float)game->win_width;
+	scale[1] = (float)HEIGHT / (float)game->win_height;
+	dst = (uint32_t *)game->img->pixels;
+	y = 0;
+	scale[3] = 0;
+	while (y < game->win_height)
+	{
+		x = 0;
+		scale[2] = 0;
+		while (x < game->win_width)
+		{
+			dst[y * game->win_width + x]
+				= ((uint32_t *)game->frame->pixels)
+			[(int)scale[3] * WIDTH + (int)scale[2]];
+			scale[2] += scale[0];
+			x++;
+		}
+		scale[3] += scale[1];
+		y++;
+	}
+}
+
+static void	render_game_columns(t_game *game)
+{
+	int	x;
+
+	x = 0;
+	while (x < WIDTH)
+	{
+		render_column(game, x);
+		x++;
+	}
+}
+
 void	render_frame(void *param)
 {
 	static double	last_time;
 	t_game			*game;
-	int				x;
-	double			frame_time;
 	double			current_time;
+	double			frame_time;
 
 	game = (t_game *)param;
 	current_time = mlx_get_time();
@@ -137,15 +149,11 @@ void	render_frame(void *param)
 	update_doors(game);
 	apply_mouse_look(game, frame_time);
 	update_player_position(game);
-	x = 0;
-	while (x < WIDTH)
-	{
-		render_column(game, x);
-		x++;
-	}
+	render_game_columns(game);
 	render_sprites(game, game->z_buffer);
 	if (game->minimap_visible)
 		render_minimap(game);
 	if (game->fps_visible)
 		render_fps(game);
+	blit_scaled(game);
 }

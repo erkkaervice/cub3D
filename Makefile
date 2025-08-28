@@ -6,7 +6,7 @@
 #    By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/04 15:36:34 by eala-lah          #+#    #+#              #
-#    Updated: 2025/08/13 15:21:05 by eala-lah         ###   ########.fr        #
+#    Updated: 2025/08/28 17:13:37 by eala-lah         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ SRC		= \
 	door_utils.c \
 	fps.c \
 	fps_utils.c \
+	freedom.c \
 	init_data.c \
 	init_game.c \
 	keys.c \
@@ -43,7 +44,6 @@ SRC		= \
 	parsing.c \
 	parsing2.c \
 	parsing_utils.c \
-	cleanup2.c 
 
 OBJ_DIR		= obj/
 OBJ_SUBDIR	= $(OBJ_DIR)cub3d/

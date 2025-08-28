@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:53:05 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/28 14:13:44 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/28 17:54:14 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ int			perform_dda(t_game *game, t_ray *ray, int x);
 void		calculate_wall(t_game *game, t_ray *ray, t_wall *wall);
 
 // --- Rendering ---
+void		blend_write_pixel(uint32_t *dst, uint32_t src,
+				float *zbuf, float dist);
 void		render_frame(void *param);
 void		render_sprites(t_game *game, float *z_buffer);
 void		init_sprite_render(t_game *g, t_sprite *s);

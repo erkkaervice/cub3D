@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 15:16:57 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/26 13:45:40 by dvlachos         ###   ########.fr       */
+/*   Updated: 2025/08/28 16:59:46 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	draw_sprite_stripe(t_game *g, t_sprite *s, float *zb)
 	int			y;
 
 	tex = g->textures[TEX_SPRITE];
-	dst = (uint32_t *)g->img->pixels;
+	dst = (uint32_t *)g->frame->pixels;
 	x = s->start_x - 1;
 	while (++x <= s->end_x)
 	{
