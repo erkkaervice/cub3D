@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 17:54:49 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/29 17:57:32 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/29 18:13:53 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	update_sprite_behavior(t_game *g, t_sprite *s, float dt)
 	move_sprite_axis(g, s, s->x, s->y + dy * move_dist);
 }
 
-static uint32_t	blend_pixel(uint32_t dst_c, uint32_t src_c)
+static uint32_t	blend_color(uint32_t dst_c, uint32_t src_c)
 {
 	uint8_t	a;
 	uint8_t	r;
@@ -93,7 +93,7 @@ static void	draw_sprite_column(t_sprite *s, int x, uint32_t *dst)
 		if (y >= 0 && y < HEIGHT)
 		{
 			tex_y = (y - s->start_y) * tex->height / s->height;
-			dst[y * WIDTH + x] = blend_pixel(dst[y * WIDTH + x],
+			dst[y * WIDTH + x] = blend_color(dst[y * WIDTH + x],
 					get_texture_color_from_tex(tex, tex_x, tex_y));
 		}
 		y++;

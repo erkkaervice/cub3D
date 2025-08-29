@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:47:02 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/08/28 13:46:59 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/29 16:27:06 by dvlachos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@ bool	validate_player(t_config *cfg, int map_start)
 			if (cfg->map[map_start][i] == 'N' ||
 				cfg->map[map_start][i] == 'S' ||
 				cfg->map[map_start][i] == 'W' || cfg->map[map_start][i] == 'E')
-            {
+			{
 				cfg->player++;
-                cfg->player_x = i;
-                cfg->player_y = map_start;
-                cfg->player_dir = cfg->map[map_start][i];
-            }
+				cfg->player_x = i;
+				cfg->player_y = map_start;
+				cfg->player_dir = cfg->map[map_start][i];
+			}
 			i++;
 		}
 		map_start++;

@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:53:05 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/29 18:00:24 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/29 18:16:45 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void		init_game_struct(t_game *game);
 void		init_dir_infos(t_game *game);
 void		init_player(t_game *game);
 void		init_doors(t_game *game);
+void		init_mouse(t_game *game);
 
 // --- Map utilities & validation ---
 int			map_width(char *row);
@@ -36,6 +37,8 @@ bool		validate_player(t_config *cfg, int map_start);
 void		set_path(char **dest, bool *seen, char *line, t_config *cfg);
 uint32_t	color_converter(int *rgb);
 int			*color_atoia(const char *color_string);
+bool		process_config_lines2(t_config *cfg, int *i,
+				int *config_count, bool *map_started);
 
 // --- Parsing utils ---
 bool		is_map_line(char *line);
@@ -88,13 +91,14 @@ int			find_door_index(t_game *game, int x, int y);
 int			can_move(t_game *game, float x, float y);
 void		update_player_position(t_game *game);
 void		key_hook(mlx_key_data_t keydata, void *param);
-void		init_mouse(t_game *game);
+void		mouse_init(t_game *game);
 void		mouse_move(double x, double y, void *param);
 void		apply_mouse_look(t_game *game, double frame_time);
 
 // --- Sprites ---
 void		init_sprite(t_game *g, t_sprite *s, int x, int y);
 int			init_sprite_render(t_game *g, t_sprite *s);
+void		render_sprites(t_game *g, float *zb);
 void		update_sprite(t_game *g, t_sprite *s, float dt);
 void		update_sprite_behavior(t_game *g, t_sprite *s, float dt);
 void		parse_sprites(t_game *game);

@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:48:49 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/08/28 17:12:18 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/29 18:04:38 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,31 @@ void	free_partial_config(t_config *cfg)
 	}
 	free_cfg_textures(cfg);
 	free(cfg);
+}
+
+void	free_cfg_textures_paths(t_config *cfg)
+{
+	if (!cfg)
+		return ;
+	if (cfg->ceiling_color)
+		free(cfg->ceiling_color);
+	if (cfg->floor_color)
+		free(cfg->floor_color);
+	if (cfg->north_texture)
+		free(cfg->north_texture);
+	if (cfg->south_texture)
+		free(cfg->south_texture);
+	if (cfg->west_texture)
+		free(cfg->west_texture);
+	if (cfg->east_texture)
+		free(cfg->east_texture);
+	if (cfg->door_texture)
+		free(cfg->door_texture);
+	if (cfg->sprite_texture_0)
+		free(cfg->sprite_texture_0);
+	if (cfg->sprite_texture_1)
+		free(cfg->sprite_texture_1);
+	if (cfg->sprite_texture_2)
+		free(cfg->sprite_texture_2);
+	cleanup_cfg_textures_paths(cfg);
 }

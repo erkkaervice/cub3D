@@ -6,7 +6,7 @@
 #    By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/04 15:36:34 by eala-lah          #+#    #+#              #
-#    Updated: 2025/08/29 17:56:39 by eala-lah         ###   ########.fr        #
+#    Updated: 2025/08/29 18:14:55 by eala-lah         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,6 +44,7 @@ SRC		= \
 	textures.c \
 	parsing.c \
 	parsing2.c \
+	parsing3.c \
 	parsing_utils.c \
 
 OBJ_DIR		= obj/
