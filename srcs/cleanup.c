@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:44:13 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/29 16:24:50 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/29 17:10:11 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ void	cleanup_cfg_textures_paths(t_config *cfg)
 	cfg->sprite_texture_0 = NULL;
 	cfg->sprite_texture_1 = NULL;
 	cfg->sprite_texture_2 = NULL;
-
 }
 
 static void	cleanup_map_and_textures(t_game *game)

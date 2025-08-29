@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:53:42 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/28 18:38:47 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/29 18:00:24 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	fill_floor_ceiling(t_game *game)
 		p[i++] = floor;
 }
 
-static void	draw_column(t_game *game, t_wall *wall, int x, int tex_id)
+void	draw_column(t_game *game, t_wall *wall, int x, int tex_id)
 {
 	t_texture	*tex;
 	float		step;
@@ -55,7 +55,7 @@ static void	draw_column(t_game *game, t_wall *wall, int x, int tex_id)
 	y = wall->draw_start;
 	while (y <= wall->draw_end)
 	{
-		blend_write_pixel(((uint32_t *)game->frame->pixels) + (y * WIDTH + x),
+		blend_pixel(((uint32_t *)game->frame->pixels) + (y * WIDTH + x),
 			get_texture_color(game, tex_id, wall->tex_x, (int)pos),
 			&game->z_buffer[x], wall->perp_wall_dist);
 		pos += step;
@@ -63,63 +63,34 @@ static void	draw_column(t_game *game, t_wall *wall, int x, int tex_id)
 	}
 }
 
-static void	render_column(t_game *game, int x)
+void	blend_pixel(uint32_t *dst, uint32_t src,
+	float *zbuf, float dist)
 {
-	t_ray	ray;
-	t_wall	wall;
-	int		tex_id;
-	int		hit;
+	uint32_t	dstc;
+	uint8_t		r;
+	uint8_t		g;
+	uint8_t		b;
+	uint8_t		a;
 
-	game->z_buffer[x] = INFINITY;
-	init_ray_basic(game, x, &ray);
-	init_ray_steps(game, &ray);
-	ray.perp_wall_dist = RAY_MAX_DIST;
-	hit = perform_dda(game, &ray, x);
-	if (hit == 0)
+	a = (src >> 24) & 0xFF;
+	if (a == 0)
 		return ;
-	if (hit == 2 && door_hit(game, &ray, &wall, &tex_id) == 0)
+	b = (src >> 16) & 0xFF;
+	g = (src >> 8) & 0xFF;
+	r = src & 0xFF;
+	if (a == 255)
 	{
-		calculate_wall(game, &ray, &wall);
-		tex_id = TEX_DOOR;
-	}
-	else if (hit == 1)
-	{
-		calculate_wall(game, &ray, &wall);
-		tex_id = get_texture_index(ray.side, ray.ray_dir_x, ray.ray_dir_y);
-	}
-	wall.tex_x = get_tex_x(game, &ray, wall.wall_x, tex_id);
-	draw_column(game, &wall, x, tex_id);
-}
-
-void	blit_scaled(t_game *game)
-{
-	int			x;
-	int			y;
-	uint32_t	*dst;
-	float		scale[4];
-
-	if (!game->frame || !game->img)
+		*dst = 0xFF000000u | (r << 16) | (g << 8) | b;
+		*zbuf = dist;
 		return ;
-	scale[0] = (float)WIDTH / (float)game->win_width;
-	scale[1] = (float)HEIGHT / (float)game->win_height;
-	dst = (uint32_t *)game->img->pixels;
-	y = 0;
-	scale[3] = 0;
-	while (y < game->win_height)
-	{
-		x = 0;
-		scale[2] = 0;
-		while (x < game->win_width)
-		{
-			dst[y * game->win_width + x]
-				= ((uint32_t *)game->frame->pixels)
-			[(int)scale[3] * WIDTH + (int)scale[2]];
-			scale[2] += scale[0];
-			x++;
-		}
-		scale[3] += scale[1];
-		y++;
 	}
+	dstc = *dst;
+	r = (uint8_t)((r * a + ((dstc >> 16) & 0xFF) * (255 - a)) / 255);
+	g = (uint8_t)((g * a + ((dstc >> 8) & 0xFF) * (255 - a)) / 255);
+	b = (uint8_t)((b * a + (dstc & 0xFF) * (255 - a)) / 255);
+	*dst = 0xFF000000u | (r << 16) | (g << 8) | b;
+	if (dist < *zbuf)
+		*zbuf = dist;
 }
 
 static void	render_game_columns(t_game *game)
@@ -129,7 +100,7 @@ static void	render_game_columns(t_game *game)
 	x = 0;
 	while (x < WIDTH)
 	{
-		render_column(game, x);
+		raycast_column(game, x);
 		x++;
 	}
 }

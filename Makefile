@@ -6,7 +6,7 @@
 #    By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/04 15:36:34 by eala-lah          #+#    #+#              #
-#    Updated: 2025/08/28 17:13:37 by eala-lah         ###   ########.fr        #
+#    Updated: 2025/08/29 17:56:39 by eala-lah         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ MLX_FLAGS	= -L $(MLX_DIR)/build -lmlx42 -lglfw -lm -ldl -pthread
 
 SRC_DIR		= srcs/
 SRC		= \
+	blit.c \
 	cfg.c \
 	cleanup.c \
 	door.c \
@@ -28,18 +29,18 @@ SRC		= \
 	fps_utils.c \
 	freedom.c \
 	init_data.c \
+	init_entities.c \
 	init_game.c \
-	keys.c \
+	input.c \
 	main.c \
 	map.c \
-	map_utils.c \
 	minimap.c \
-	mouse.c \
 	movement.c \
 	raycast.c \
 	render.c \
-	sprites.c \
-	sprites_utils.c \
+	sprites_parsing.c \
+	sprites_logic.c \
+	sprites_behavior.c \
 	textures.c \
 	parsing.c \
 	parsing2.c \
