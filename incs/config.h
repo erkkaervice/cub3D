@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:37:43 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/28 14:19:28 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/29 14:38:24 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,15 +54,19 @@
 # define ROT_SPEED 0.07f
 
 /* --- TEXTURES --- */
-# define TEXTURE_COUNT 6
 # define TEX_NORTH 0
 # define TEX_SOUTH 1
 # define TEX_WEST  2
 # define TEX_EAST  3
 # define TEX_DOOR  4
-# define TEX_SPRITE 5
-# define DOOR_TEXTURE_PATH  "textures/door.png"
-# define SPRITE_TEXTURE_PATH "textures/sprite.png"
+# define TEX_SPRITE_0 5
+# define TEX_SPRITE_1 6
+# define TEX_SPRITE_2 7
+# define TEXTURE_COUNT 8
+# define DOOR_TEXTURE_PATH      "textures/door.png"
+# define SPRITE_TEXTURE_0_PATH  "textures/sprite1.png"
+# define SPRITE_TEXTURE_1_PATH  "textures/sprite2.png"
+# define SPRITE_TEXTURE_2_PATH  "textures/sprite3.png"
 
 /* --- MAP & SPRITES --- */
 # define TILE_WALL '1'

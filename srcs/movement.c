@@ -6,13 +6,13 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 15:29:29 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/13 17:12:45 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/29 14:00:21 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static int	can_move(t_game *game, float x, float y)
+int	can_move(t_game *game, float x, float y)
 {
 	int		ix;
 	int		iy;

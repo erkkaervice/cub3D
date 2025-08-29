@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:32:32 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/26 13:46:10 by dvlachos         ###   ########.fr       */
+/*   Updated: 2025/08/29 15:35:16 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,9 @@ int	load_textures(t_game *game)
 	paths[TEX_WEST] = game->cfg->west_texture;
 	paths[TEX_EAST] = game->cfg->east_texture;
 	paths[TEX_DOOR] = game->cfg->door_texture;
-	paths[TEX_SPRITE] = game->cfg->sprite_texture;
+	paths[TEX_SPRITE_0] = game->cfg->sprite_texture_0;
+	paths[TEX_SPRITE_1] = game->cfg->sprite_texture_1;
+	paths[TEX_SPRITE_2] = game->cfg->sprite_texture_2;
 	i = 0;
 	while (i < TEXTURE_COUNT)
 	{
@@ -68,6 +70,28 @@ int	get_texture_index(int side, float ray_dir_x, float ray_dir_y)
 	if (ray_dir_y > 0)
 		return (TEX_EAST);
 	return (TEX_WEST);
+}
+
+int	get_texture_color_from_tex(t_texture *tex, int tex_x, int tex_y)
+{
+	unsigned char	*px;
+	int				offset;
+
+	if (!tex || !tex->img || !tex->img->pixels)
+		return (0);
+	if (tex_x < 0)
+		tex_x = 0;
+	if (tex_y < 0)
+		tex_y = 0;
+	if ((unsigned int)tex_x >= (unsigned int)tex->width)
+		tex_x = tex->width - 1;
+	if ((unsigned int)tex_y >= (unsigned int)tex->height)
+		tex_y = tex->height - 1;
+	offset = (tex_y * tex->width + tex_x) * BYTES_PER_PIXEL;
+	px = (unsigned char *)tex->img->pixels + offset;
+	if (px[3] == 0)
+		return (0);
+	return ((int)(px[3] << 24 | px[0] << 16 | px[1] << 8 | px[2]));
 }
 
 int	get_texture_color(t_game *game, int tex_id, int tex_x, int tex_y)

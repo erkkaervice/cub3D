@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:44:13 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/28 17:16:10 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/29 13:33:31 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,10 @@ void	cleanup_cfg_textures_paths(t_config *cfg)
 		free(cfg->east_texture);
 	if (cfg->door_texture)
 		free(cfg->door_texture);
-	if (cfg->sprite_texture)
-		free(cfg->sprite_texture);
+	if (cfg->sprite_texture_0)
+		free(cfg->sprite_texture_0);
+	if (cfg->sprite_texture_1)
+		free(cfg->sprite_texture_1);
 	cfg->ceiling_color = NULL;
 	cfg->floor_color = NULL;
 	cfg->north_texture = NULL;
@@ -37,7 +39,8 @@ void	cleanup_cfg_textures_paths(t_config *cfg)
 	cfg->west_texture = NULL;
 	cfg->east_texture = NULL;
 	cfg->door_texture = NULL;
-	cfg->sprite_texture = NULL;
+	cfg->sprite_texture_0 = NULL;
+	cfg->sprite_texture_1 = NULL;
 }
 
 static void	cleanup_map_and_textures(t_game *game)

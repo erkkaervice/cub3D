@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 13:43:52 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/25 15:34:14 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/29 15:42:45 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	parse_sprites(t_game *g)
 		x = -1;
 		while (g->cfg->map[y][++x])
 			if (g->cfg->map[y][x] == TILE_SPRITE && i < g->num_sprites)
-				init_sprite(&g->sprites[i++], x, y);
+				init_sprite(g, &g->sprites[i++], x, y);
 	}
 }
 
@@ -61,17 +61,13 @@ void	update_sprite_distances(t_game *g)
 	int		i;
 	float	dx;
 	float	dy;
-	float	inv_det;
 
-	inv_det = 1.0f / (g->plane_x * g->dir_y - g->dir_x * g->plane_y);
 	i = 0;
 	while (i < g->num_sprites)
 	{
 		dx = g->sprites[i].x - g->player_x;
 		dy = g->sprites[i].y - g->player_y;
 		g->sprites[i].dist = sqrtf(dx * dx + dy * dy);
-		g->sprites[i].tx = inv_det * (g->dir_y * dx - g->dir_x * dy);
-		g->sprites[i].ty = inv_det * (-g->plane_y * dx + g->plane_x * dy);
 		i++;
 	}
 }
@@ -100,16 +96,28 @@ static void	sort_sprites(t_game *g)
 
 void	render_sprites(t_game *g, float *zb)
 {
-	int	i;
+	int		i;
+	float	dt;
 
-	if (!g->textures[TEX_SPRITE] || !g->textures[TEX_SPRITE]->image)
+	if (!g->num_sprites)
 		return ;
+	if (g->fps.fps > 0)
+		dt = 1.0f / g->fps.fps;
+	else
+		dt = 0.016f;
+	i = 0;
+	while (i < g->num_sprites)
+	{
+		update_sprite(g, &g->sprites[i], dt);
+		i++;
+	}
 	update_sprite_distances(g);
 	sort_sprites(g);
-	i = -1;
-	while (++i < g->num_sprites)
+	i = 0;
+	while (i < g->num_sprites)
 	{
-		init_sprite_render(g, &g->sprites[i]);
-		draw_sprite_stripe(g, &g->sprites[i], zb);
+		if (init_sprite_render(g, &g->sprites[i]))
+			draw_sprite_stripe(g, &g->sprites[i], zb);
+		i++;
 	}
 }

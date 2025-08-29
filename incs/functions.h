@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:53:05 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/28 17:54:14 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/29 15:34:16 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,13 @@ void		blend_write_pixel(uint32_t *dst, uint32_t src,
 				float *zbuf, float dist);
 void		render_frame(void *param);
 void		render_sprites(t_game *game, float *z_buffer);
-void		init_sprite_render(t_game *g, t_sprite *s);
+int			init_sprite_render(t_game *g, t_sprite *s);
 void		draw_sprite_stripe(t_game *g, t_sprite *s, float *zb);
 void		render_minimap(t_game *game);
 void		render_fps(t_game *game);
 
 // --- Player movement & Input ---
+int			can_move(t_game *game, float x, float y);
 void		update_player_position(t_game *game);
 void		key_hook(mlx_key_data_t keydata, void *param);
 void		mouse_init(t_game *game);
@@ -52,11 +53,14 @@ int			get_tex_x(t_game *game, t_ray *ray, float wall_x, int tex_id);
 int			load_textures(t_game *game);
 int			get_texture_index(int side, float ray_dir_x, float ray_dir_y);
 int			get_texture_index_door(t_game *game, int map_x, int map_y);
+int			get_texture_color_from_tex(t_texture *tex, int tex_x, int tex_y);
 int			get_texture_color(t_game *game, int tex_id, int tex_x, int tex_y);
 void		free_textures(t_game *game, int count);
 
 // --- Sprites ---
-void		init_sprite(t_sprite *s, int x, int y);
+void		init_sprite(t_game *g, t_sprite *s, int x, int y);
+int			init_sprite_render(t_game *g, t_sprite *s);
+void		update_sprite(t_game *g, t_sprite *s, float dt);
 void		parse_sprites(t_game *game);
 
 // --- Fonts & text rendering ---

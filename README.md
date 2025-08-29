@@ -60,6 +60,4 @@ Optional Bonus
 
  HUD elements.
 
- Window management.
-
  Sprite animation.

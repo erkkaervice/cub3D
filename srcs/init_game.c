@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 16:42:45 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/28 17:42:22 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/08/29 13:57:21 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,9 @@ static int	init_game_resources(t_game *game, char *filename)
 	game->cfg = mock_config(filename);
 	if (!game->cfg)
 		return (0);
-	parse_sprites(game);
 	if (!load_textures(game))
 		return (0);
+	parse_sprites(game);
 	init_doors(game);
 	game->z_buffer = malloc(sizeof(float) * WIDTH);
 	if (!game->z_buffer)
