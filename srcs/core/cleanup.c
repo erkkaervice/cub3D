@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:44:13 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/29 18:04:39 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/01 14:47:33 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ void	cleanup_cfg_textures_paths(t_config *cfg)
 
 static void	cleanup_map_and_textures(t_game *game)
 {
-	int	i;
-
 	if (!game)
 		return ;
 	if (game->img)
@@ -38,20 +36,7 @@ static void	cleanup_map_and_textures(t_game *game)
 		mlx_delete_image(game->mlx, game->frame);
 	if (game->z_buffer)
 		free(game->z_buffer);
-	if (game->textures)
-	{
-		i = 0;
-		while (i < TEXTURE_COUNT)
-		{
-			if (game->textures[i])
-			{
-				if (game->textures[i]->img)
-					mlx_delete_texture(game->textures[i]->img);
-				free(game->textures[i]);
-			}
-			i++;
-		}
-	}
+	free_textures(game, TEXTURE_COUNT);
 	cleanup_cfg_textures_paths(game->cfg);
 }
 
@@ -89,6 +74,7 @@ static void	cleanup_cfg(t_game *game)
 		}
 		free(game->cfg->map);
 	}
+	cleanup_cfg_textures_paths(game->cfg);
 	free(game->cfg);
 	game->cfg = NULL;
 }

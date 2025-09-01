@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:55:14 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/29 17:50:25 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/01 15:57:46 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,8 @@ int	perform_dda(t_game *game, t_ray *ray, int x)
 	int		step_count;
 	int		ret;
 
-	map_w = map_width(game->cfg->map[0]);
-	map_h = map_height(game->cfg->map);
+	map_w = map_dim(&game->cfg->map[0], MAP_DIM_WIDTH);
+	map_h = map_dim(game->cfg->map, MAP_DIM_HEIGHT);
 	step_count = 0;
 	while (step_count < MAX_DDA_STEPS)
 	{
@@ -112,12 +112,12 @@ void	raycast_column(t_game *game, int x)
 	hit = perform_dda(game, &ray, x);
 	if (hit == 0)
 		return ;
-	if (hit == 2 && door_hit(game, &ray, &wall, &tex_id) == 0)
+	if (hit == HIT_DOOR && door_hit(game, &ray, &wall, &tex_id) == 0)
 	{
 		calculate_wall(game, &ray, &wall);
 		tex_id = TEX_DOOR;
 	}
-	else if (hit == 1)
+	else if (hit == HIT_WALL)
 	{
 		calculate_wall(game, &ray, &wall);
 		tex_id = get_texture_index(ray.side, ray.ray_dir_x, ray.ray_dir_y);

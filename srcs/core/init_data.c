@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:22:57 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/28 17:23:54 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/01 14:49:13 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ void	init_game_struct(t_game *game)
 	init_struct_arrays(game);
 	game->win_width = WIDTH;
 	game->win_height = HEIGHT;
-	game->scale_x = 1.0f;
-	game->scale_y = 1.0f;
+	game->scale_x = SPRITE_DEFAULT_SCALE;
+	game->scale_y = SPRITE_DEFAULT_SCALE;
 	game->needs_blit = 1;
 }
 
@@ -70,8 +70,8 @@ void	init_player(t_game *game)
 	int	i;
 
 	i = 0;
-	game->player_x = game->cfg->player_x + 0.5f;
-	game->player_y = game->cfg->player_y + 0.5f;
+	game->player_x = game->cfg->player_x + HALF_TILE_OFFSET;
+	game->player_y = game->cfg->player_y + HALF_TILE_OFFSET;
 	while (i < DIR_COUNT)
 	{
 		if (game->dir_infos[i].dir == game->cfg->player_dir)
@@ -106,9 +106,7 @@ void	init_doors(t_game *game)
 		while (game->cfg->map[y][x])
 		{
 			if (game->cfg->map[y][x] == TILE_DOOR)
-			{
 				game->doors[idx++] = (t_door){x, y, DOOR_INITIAL_OPEN_RATIO, 0};
-			}
 			x++;
 		}
 		y++;

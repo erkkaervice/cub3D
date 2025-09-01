@@ -6,32 +6,29 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:22:19 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/25 15:07:30 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/01 14:47:20 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	main(int argc, char **argv)
+int	main(int ac, char **av)
 {
 	t_game	game;
 
-	if (argc == 2)
-	{
-		file_valid(argv[1], ".cub", "/.cub");
-		init_game_struct(&game);
-		if (!init_game(&game, argv[1]))
-		{
-			cleanup_game(&game);
-			return (1);
-		}
-		mlx_loop(game.mlx);
-		cleanup_game(&game);
-		return (0);
-	}
-	else
+	if (ac != 2)
 	{
 		write(2, "Error\n", 6);
 		return (1);
 	}
+	file_valid(av[1], ".cub", "/.cub");
+	init_game_struct(&game);
+	if (!init_game(&game, av[1]))
+	{
+		cleanup_game(&game);
+		return (1);
+	}
+	mlx_loop(game.mlx);
+	cleanup_game(&game);
+	return (0);
 }

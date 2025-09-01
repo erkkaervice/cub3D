@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 13:10:39 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/08/29 16:31:34 by dvlachos         ###   ########.fr       */
+/*   Updated: 2025/09/01 14:10:22 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,6 @@ bool	process_config_lines2(t_config *cfg, int *i, int *config_count,
 			if (*config_count != 6)
 				return (print_err(cfg, "Missing configuration entries", -1));
 			*map_started = true;
-			return (true);
 		}
 		else
 			return (print_err(cfg, "Invalid line before map", -1));

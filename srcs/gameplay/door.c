@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 18:02:25 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/28 14:13:44 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/01 15:54:29 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ void	toggle_door(t_game *game)
 
 	px = game->player_x;
 	py = game->player_y;
-	x = (int)(px + game->dir_x * 0.8f);
-	y = (int)(py + game->dir_y * 0.8f);
+	x = (int)(px + game->dir_x * DOOR_TOGGLE_RANGE);
+	y = (int)(py + game->dir_y * DOOR_TOGGLE_RANGE);
 	i = -1;
 	while (++i < game->num_doors)
 	{
@@ -55,24 +55,22 @@ void	toggle_door(t_game *game)
 
 void	update_doors(t_game *game)
 {
-	int		i;
-	float	speed;
+	int	i;
 
 	if (!game || !game->doors)
 		return ;
-	speed = 0.02f;
 	i = 0;
 	while (i < game->num_doors)
 	{
 		if (game->doors[i].is_opening)
 		{
-			game->doors[i].open_ratio += speed;
+			game->doors[i].open_ratio += DOOR_OPEN_SPEED;
 			if (game->doors[i].open_ratio > DOOR_OPEN_FULL)
 				game->doors[i].open_ratio = DOOR_OPEN_FULL;
 		}
 		else
 		{
-			game->doors[i].open_ratio -= speed;
+			game->doors[i].open_ratio -= DOOR_OPEN_SPEED;
 			if (game->doors[i].open_ratio < DOOR_INITIAL_OPEN_RATIO)
 				game->doors[i].open_ratio = DOOR_INITIAL_OPEN_RATIO;
 		}

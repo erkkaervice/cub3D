@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/08/04 15:36:34 by eala-lah          #+#    #+#              #
-#    Updated: 2025/08/29 18:14:55 by eala-lah         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME		= cub3D
 INCS		= -I ./incs/ -I ./libft/inc/ -I ./mlx/include/
 LIBFT_DIR	= libft/
@@ -18,50 +6,50 @@ MLX_DIR		= mlx/
 MLX_LIB		= $(MLX_DIR)/build/libmlx42.a
 MLX_FLAGS	= -L $(MLX_DIR)/build -lmlx42 -lglfw -lm -ldl -pthread
 
-SRC_DIR		= srcs/
+SRC_DIR		= srcs
 SRC		= \
-	blit.c \
-	cfg.c \
-	cleanup.c \
-	door.c \
-	door_utils.c \
-	fps.c \
-	fps_utils.c \
-	freedom.c \
-	init_data.c \
-	init_entities.c \
-	init_game.c \
-	input.c \
-	main.c \
-	map.c \
-	minimap.c \
-	movement.c \
-	raycast.c \
-	render.c \
-	sprites_parsing.c \
-	sprites_logic.c \
-	sprites_behavior.c \
-	textures.c \
-	parsing.c \
-	parsing2.c \
-	parsing3.c \
-	parsing_utils.c \
+	core/main.c \
+	core/init_data.c \
+	core/init_entities.c \
+	core/init_game.c \
+	core/cleanup.c \
+	core/freedom.c \
+	\
+	parsing/map.c \
+	parsing/parsing.c \
+	parsing/parsing2.c \
+	parsing/parsing3.c \
+	parsing/parsing_utils.c \
+	\
+	graphics/blit.c \
+	graphics/render.c \
+	graphics/raycast.c \
+	graphics/textures.c \
+	\
+	gameplay/input.c \
+	gameplay/movement.c \
+	gameplay/door.c \
+	gameplay/door_utils.c \
+	\
+	hud/minimap.c \
+	hud/fps.c \
+	hud/fps_utils.c \
+	\
+	sprites/sprites_parsing.c \
+	sprites/sprites_logic.c \
+	sprites/sprites_behavior.c \
 
-OBJ_DIR		= obj/
-OBJ_SUBDIR	= $(OBJ_DIR)cub3d/
-OBJS		= $(addprefix $(OBJ_SUBDIR), $(SRC:.c=.o))
+OBJ_DIR		= obj
+OBJS		= $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
 CC		= gcc
 CFLAGS		= -Wall -Wextra -Werror $(INCS) -g
 GIT_FLAGS	= git clone --depth 1
 
-all: $(LIBFT) $(MLX_LIB) $(OBJ_SUBDIR) $(NAME)
+all: $(LIBFT) $(MLX_LIB) $(OBJ_DIR) $(NAME)
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR) 2> /dev/null || { echo "Failed to create object directory." >&2; exit 1; }
-
-$(OBJ_SUBDIR): | $(OBJ_DIR)
-	@mkdir -p $(OBJ_SUBDIR) 2> /dev/null || { echo "Failed to create object subdirectory." >&2; exit 1; }
 
 $(LIBFT):
 	@if [ ! -d "$(LIBFT_DIR)" ]; then \
@@ -77,7 +65,8 @@ $(MLX_LIB):
 	@cmake -B $(MLX_DIR)/build -S $(MLX_DIR) > /dev/null 2>&1 || { echo "Failed to configure MLX42 with CMake." >&2; exit 1; }
 	@cmake --build $(MLX_DIR)/build > /dev/null 2>&1 || { echo "Failed to build MLX42." >&2; exit 1; }
 
-$(OBJ_SUBDIR)%.o: $(SRC_DIR)%.c incs/cub3d.h
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c incs/cub3d.h | $(OBJ_DIR)
+	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@ 2> /dev/stderr || { echo "Failed to compile $<." >&2; exit 1; }
 
 $(NAME): $(OBJS) $(MLX_LIB)

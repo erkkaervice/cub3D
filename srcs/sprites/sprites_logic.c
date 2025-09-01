@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 15:16:57 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/29 17:55:46 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/01 16:06:10 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	compute_sprite_transform(t_game *g, t_sprite *s)
 	spx = s->x - g->player_x;
 	spy = s->y - g->player_y;
 	inv_det = g->plane_x * g->dir_y - g->dir_x * g->plane_y;
-	if (fabsf(inv_det) < 1e-8f)
+	if (fabsf(inv_det) < EPSILON_INV_DET)
 		return (0);
 	inv_det = 1.0f / inv_det;
 	s->tx = inv_det * (g->dir_y * spx - g->dir_x * spy);
@@ -59,9 +59,7 @@ void	compute_sprite_bounds(t_sprite *s)
 
 static int	check_los_point(t_game *g, int mx, int my)
 {
-	if (is_wall_or_door(g, mx, my))
-		return (0);
-	return (1);
+	return (!is_wall_or_door(g, mx, my));
 }
 
 static int	sprite_has_los(t_game *g, t_sprite *s)
@@ -79,7 +77,7 @@ static int	sprite_has_los(t_game *g, t_sprite *s)
 	len = sqrtf(dx * dx + dy * dy);
 	if (len <= 0.0f)
 		return (0);
-	step = 0.1f;
+	step = SPRITE_LOS_STEP;
 	t = step;
 	while (t < len)
 	{
@@ -96,14 +94,13 @@ void	update_sprite(t_game *g, t_sprite *s, float dt)
 	float		dx;
 	float		dy;
 	float		len;
-	const float	stop_dist = 0.5f;
 
 	if (!g || !s)
 		return ;
 	dx = g->player_x - s->x;
 	dy = g->player_y - s->y;
 	len = sqrtf(dx * dx + dy * dy);
-	if (len <= stop_dist)
+	if (len <= SPRITE_STOP_DIST)
 	{
 		s->stopped = 1;
 		s->frame_index = 2;

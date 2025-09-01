@@ -6,20 +6,27 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 17:54:49 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/29 18:13:53 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/01 16:06:20 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static void	move_sprite_axis(t_game *g, t_sprite *s, float nx, float ny)
+static void	move_sprite_axis(t_game *game, t_sprite *s, float nx, float ny)
 {
-	const float	coll = 0.4f;
+	const float	coll = SPRITE_COLLISION_MARGIN;
+	float		check_x[2];
+	float		check_y[2];
 
-	if (can_move(g, nx + coll, ny + coll)
-		&& can_move(g, nx - coll, ny + coll)
-		&& can_move(g, nx + coll, ny - coll)
-		&& can_move(g, nx - coll, ny - coll))
+	check_x[0] = nx - coll;
+	check_x[1] = nx + coll;
+	check_y[0] = ny - coll;
+	check_y[1] = ny + coll;
+	if (can_move(game, nx, ny)
+		&& can_move(game, check_x[1], check_y[1])
+		&& can_move(game, check_x[0], check_y[1])
+		&& can_move(game, check_x[1], check_y[0])
+		&& can_move(game, check_x[0], check_y[0]))
 	{
 		s->x = nx;
 		s->y = ny;
@@ -32,24 +39,23 @@ void	update_sprite_behavior(t_game *g, t_sprite *s, float dt)
 	float		dy;
 	float		len;
 	float		move_dist;
-	const float	stop_dist = 0.5f;
 
 	dx = g->player_x - s->x;
 	dy = g->player_y - s->y;
 	s->anim_timer += dt;
-	if (s->anim_timer > 0.2f)
+	if (s->anim_timer > SPRITE_ANIM_INTERVAL)
 	{
 		s->frame_index = (s->frame_index + 1) % 2;
 		s->anim_timer = 0.0f;
 	}
 	len = sqrtf(dx * dx + dy * dy);
-	if (len <= stop_dist)
+	if (len <= SPRITE_STOP_DIST)
 		return ;
 	dx /= len;
 	dy /= len;
-	move_dist = s->speed * 0.016f;
-	if (move_dist > len - stop_dist)
-		move_dist = len - stop_dist;
+	move_dist = s->speed * FRAME_DT;
+	if (move_dist > len - SPRITE_STOP_DIST)
+		move_dist = len - SPRITE_STOP_DIST;
 	move_sprite_axis(g, s, s->x + dx * move_dist, s->y + dy * move_dist);
 	move_sprite_axis(g, s, s->x + dx * move_dist, s->y);
 	move_sprite_axis(g, s, s->x, s->y + dy * move_dist);

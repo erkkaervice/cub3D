@@ -3,24 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   config.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: eala-lah <eala-lah@student.hive.fi>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:37:43 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/29 14:38:24 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/01 16:00:00 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONFIG_H
 # define CONFIG_H
 
-/* --- WINDOW --- */
-# define WINDOW_TITLE "HELLESCAPE"
+/* --- WINDOW & RENDERING --- */
+# define WINDOW_TITLE "NOT TODAY SATAN!"
 # define WIDTH 1800
 # define HEIGHT 1600
 # define WINDOW_IMG_POS_X 0
 # define WINDOW_IMG_POS_Y 0
+# define ZBUFFER_SIZE WIDTH
+# define BYTES_PER_PIXEL 4
 
-/* --- COLORS & HUD --- */
+/* --- HUD & COLORS --- */
 # define MINIMAP_SCALE 15
 # define MINIMAP_SIZE 10
 # define MINIMAP_WALL_COLOR 0xFFFFFF88
@@ -34,8 +36,12 @@
 # define FPS_LABEL "FPS:"
 # define CHAR_COLOR 0xFFFFFF
 # define CHAR_SPACING 20
+# define FONT_ROWS 5
+# define FONT_COLS 3
+# define FONT_DIGITS_COUNT 10
+# define FONT_LETTERS_COUNT 3
 
-/* --- INPUT --- */
+/* --- INPUT & MOUSE --- */
 # define KEY_MINIMAP_TOGGLE MLX_KEY_M
 # define KEY_FPS_TOGGLE MLX_KEY_F
 # define MOUSE_SENSITIVITY 0.00005f
@@ -44,6 +50,7 @@
 # define MOUSE_START_X 900
 # define MOUSE_START_Y 800
 # define MOUSE_FRAME_MULTIPLIER 60.0f
+# define MOUSE_HIDDEN_MODE MLX_MOUSE_HIDDEN
 
 /* --- PLAYER --- */
 # define PLAYER_START_X 4
@@ -68,15 +75,30 @@
 # define SPRITE_TEXTURE_1_PATH  "textures/sprite2.png"
 # define SPRITE_TEXTURE_2_PATH  "textures/sprite3.png"
 
-/* --- MAP & SPRITES --- */
+/* --- MAP --- */
 # define TILE_WALL '1'
 # define TILE_DOOR 'D'
 # define TILE_SPRITE 'X'
 # define TILE_FLOOR '0'
 # define MAX_SPRITES 100
 # define MAX_DOORS 50
+
+/* --- SPRITES --- */
 # define SPRITE_DEFAULT_SCALE 1.0f
 # define SPRITE_DEFAULT_COLOR 0xFFFFFFFF
+# define SPRITE_INITIAL_PERP_DIST 0.0f
+# define SPRITE_INITIAL_TEXTURE TEX_SPRITE_0
+# define SPRITE_INITIAL_COORD -1
+# define SPRITE_INITIAL_DIST 0.0f
+# define SPRITE_INITIAL_FRAME_INDEX 0
+# define SPRITE_INITIAL_ANIM_TIMER 0.0f
+# define SPRITE_DEFAULT_SPEED 1.5f
+# define SPRITE_CHASING_DEFAULT 0
+# define FRAME_DT 0.016f
+# define SPRITE_ANIM_INTERVAL 0.2f
+# define SPRITE_STOP_DIST 0.5f
+# define SPRITE_LOS_STEP 0.1f
+# define SPRITE_COLLISION_MARGIN 0.4f
 
 /* --- RAYCASTING --- */
 # define MAX_DDA_STEPS 1000
@@ -88,13 +110,26 @@
 # define HIT_NONE 0
 # define HIT_WALL 1
 # define HIT_DOOR 2
+# define DELTA_DIST_INFINITY INFINITY
+# define CAMERA_PLANE_SCALE 2.0f
+# define CAMERA_PLANE_OFFSET 1.0f
+# define EPSILON_INV_DET 1e-8f
 
 /* --- DOORS --- */
 # define DOOR_OPEN_FULL 1.0f
 # define DOOR_INITIAL_OPEN_RATIO 0.0f
+# define DOOR_OPEN_SPEED 0.05f
+# define DOOR_TOGGLE_RANGE 0.8f
+# define DOOR_PASSABLE_THRESHOLD 0.5f
 
-/* --- IMAGE --- */
-# define BYTES_PER_PIXEL 4
+/* --- MAP DIM MODE --- */
+# define MAP_DIM_HEIGHT 0
+# define MAP_DIM_WIDTH  1
+
+/* --- ALPHA HELPERS --- */
+# define ALPHA_TRANSPARENT 0
+# define ALPHA_OPAQUE 255
+# define ALPHA_MASK 0xFF000000u
 
 /* --- DIRECTIONS --- */
 # define DIR_COUNT 4

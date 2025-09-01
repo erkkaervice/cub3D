@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 17:14:34 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/29 17:28:45 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/01 14:52:30 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	init_sprite(t_game *g, t_sprite *s, int x, int y)
 {
-	s->x = x + 0.5f;
-	s->y = y + 0.5f;
+	s->x = x + HALF_TILE_OFFSET;
+	s->y = y + HALF_TILE_OFFSET;
 	s->perp_dist = 0.0f;
 	s->texture_id = TEX_SPRITE_0;
 	s->start_x = -1;
@@ -37,7 +37,7 @@ int	init_sprite_render(t_game *g, t_sprite *s)
 	if (!compute_sprite_transform(g, s))
 		return (0);
 	compute_sprite_bounds(s);
-	if (s->perp_dist <= 0.0f)
+	if (s->perp_dist <= MIN_PERP_DIST)
 		return (0);
 	return (1);
 }
@@ -54,21 +54,11 @@ void	init_ray_basic(t_game *game, int x, t_ray *ray)
 	if (ray->ray_dir_x == 0.0f)
 		ray->delta_dist_x = INFINITY;
 	else
-	{
-		camera_x = ray->ray_dir_x;
-		if (camera_x < 0.0f)
-			camera_x = -camera_x;
-		ray->delta_dist_x = 1.0f / camera_x;
-	}
+		ray->delta_dist_x = 1.0f / fabsf(ray->ray_dir_x);
 	if (ray->ray_dir_y == 0.0f)
 		ray->delta_dist_y = INFINITY;
 	else
-	{
-		camera_x = ray->ray_dir_y;
-		if (camera_x < 0.0f)
-			camera_x = -camera_x;
-		ray->delta_dist_y = 1.0f / camera_x;
-	}
+		ray->delta_dist_y = 1.0f / fabsf(ray->ray_dir_y);
 }
 
 void	init_ray_steps(t_game *game, t_ray *ray)
