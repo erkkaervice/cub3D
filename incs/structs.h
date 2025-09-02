@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:52:20 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/01 15:40:00 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/02 20:20:00 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,10 @@
 
 typedef struct s_game	t_game;
 
-/* --- Basic Types --- */
+/* ========================================================================== */
+/*                                BASIC TYPES                                 */
+/* ========================================================================== */
+
 typedef struct s_point
 {
 	int	x;
@@ -36,9 +39,23 @@ typedef struct s_input
 	int	fps_toggle;
 }	t_input;
 
-/* --- Configuration --- */
+/* ========================================================================== */
+/*                              CONFIGURATION                                 */
+/* ========================================================================== */
+
 typedef struct s_config
 {
+	int			player;
+	int			player_x;
+	int			player_y;
+	char		player_dir;
+	char		**map;
+	bool		no;
+	bool		so;
+	bool		we;
+	bool		ea;
+	bool		f;
+	bool		c;
 	char		*north_texture;
 	char		*south_texture;
 	char		*east_texture;
@@ -49,26 +66,18 @@ typedef struct s_config
 	char		*sprite_texture_2;
 	char		*floor_color;
 	char		*ceiling_color;
-	bool		no;
-	bool		so;
-	bool		we;
-	bool		ea;
-	bool		f;
-	bool		c;
-	int			player;
-	char		**map;
-	int			player_x;
-	int			player_y;
-	char		player_dir;
 }	t_config;
 
-/* --- Rendering & Textures --- */
+/* ========================================================================== */
+/*                          RENDERING & TEXTURES                              */
+/* ========================================================================== */
+
 typedef struct s_texture
 {
-	mlx_texture_t	*img;
-	mlx_image_t		*image;
 	int				width;
 	int				height;
+	mlx_texture_t	*img;
+	mlx_image_t		*image;
 }	t_texture;
 
 typedef struct s_dir_info
@@ -82,28 +91,28 @@ typedef struct s_dir_info
 
 typedef struct s_ray
 {
-	float	ray_dir_x;
-	float	ray_dir_y;
 	int		map_x;
 	int		map_y;
+	int		step_x;
+	int		step_y;
+	int		side;
+	float	ray_dir_x;
+	float	ray_dir_y;
 	float	side_dist_x;
 	float	side_dist_y;
 	float	delta_dist_x;
 	float	delta_dist_y;
-	int		step_x;
-	int		step_y;
-	int		side;
 	float	perp_wall_dist;
 }	t_ray;
 
 typedef struct s_wall
 {
 	float	perp_wall_dist;
+	float	wall_x;
 	int		line_height;
 	int		draw_start;
 	int		draw_end;
 	int		tex_x;
-	float	wall_x;
 }	t_wall;
 
 typedef struct s_blit
@@ -115,7 +124,10 @@ typedef struct s_blit
 	float	scale_y;
 }	t_blit;
 
-/* --- Doors --- */
+/* ========================================================================== */
+/*                                   DOORS                                    */
+/* ========================================================================== */
+
 typedef struct s_door
 {
 	int		x;
@@ -124,7 +136,10 @@ typedef struct s_door
 	int		is_opening;
 }	t_door;
 
-/* --- FPS & Mouse --- */
+/* ========================================================================== */
+/*                               FPS & MOUSE                                  */
+/* ========================================================================== */
+
 typedef struct s_fps
 {
 	int			frames;
@@ -140,18 +155,25 @@ typedef struct s_mouse
 	double		sensitivity;
 }	t_mouse;
 
-/* --- Sprites --- */
+/* ========================================================================== */
+/*                                  SPRITES                                   */
+/* ========================================================================== */
+
 typedef struct s_sprite
 {
+	int			texture_id;
+	t_texture	*frames[3];
+	int			frame_index;
+
 	float		x;
 	float		y;
 	float		dist;
-	int			texture_id;
+	float		perp_dist;
 	float		sx;
 	float		sy;
 	float		tx;
 	float		ty;
-	float		perp_dist;
+
 	int			screen_x;
 	int			height;
 	int			width;
@@ -159,8 +181,7 @@ typedef struct s_sprite
 	int			end_x;
 	int			start_y;
 	int			end_y;
-	t_texture	*frames[3];
-	int			frame_index;
+
 	float		anim_timer;
 	float		speed;
 	int			active;
@@ -168,36 +189,49 @@ typedef struct s_sprite
 	int			stopped;
 }	t_sprite;
 
-/* --- Game State --- */
+/* ========================================================================== */
+/*                                GAME STATE                                  */
+/* ========================================================================== */
+
 typedef struct s_game
 {
-	mlx_t			*mlx;
-	mlx_image_t		*img;
-	mlx_image_t		*frame;
-	t_config		*cfg;
-	float			player_x;
-	float			player_y;
-	float			dir_x;
-	float			dir_y;
-	float			plane_x;
-	float			plane_y;
-	t_texture		*textures[TEXTURE_COUNT];
-	t_dir_info		dir_infos[DIR_COUNT];
-	t_input			input;
-	int				minimap_visible;
-	int				fps_visible;
-	t_fps			fps;
-	t_door			*doors;
-	int				num_doors;
-	t_sprite		*sprites;
-	int				num_sprites;
-	t_mouse			mouse;
-	float			*z_buffer;
-	int				win_width;
-	int				win_height;
-	float			scale_x;
-	float			scale_y;
-	int				needs_blit;
+	t_config	*cfg;
+
+	float		player_x;
+	float		player_y;
+	float		dir_x;
+	float		dir_y;
+	float		plane_x;
+	float		plane_y;
+
+	t_texture	*textures[TEXTURE_COUNT];
+	t_dir_info	dir_infos[DIR_COUNT];
+
+	t_input		input;
+
+	int			win_width;
+	int			win_height;
+	int			minimap_visible;
+	int			fps_visible;
+
+	t_fps		fps;
+
+	t_door		*doors;
+	int			num_doors;
+
+	t_sprite	*sprites;
+	int			num_sprites;
+
+	t_mouse		mouse;
+
+	mlx_t		*mlx;
+	mlx_image_t	*img;
+	mlx_image_t	*frame;
+
+	float		*z_buffer;
+	float		scale_x;
+	float		scale_y;
+	int			needs_blit;
 }	t_game;
 
 #endif

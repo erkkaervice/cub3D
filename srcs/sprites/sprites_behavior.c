@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sprites_behavior.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: eala-lah <eala-lah@student.hive.fi>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 17:54:49 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/02 17:15:48 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/02 20:00:00 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ static void	move_sprite_axis(t_game *game, t_sprite *s, float nx, float ny)
 
 void	update_sprite_behavior(t_game *g, t_sprite *s, float dt)
 {
-	float		dx;
-	float		dy;
-	float		len;
-	float		move_dist;
+	float	dx;
+	float	dy;
+	float	len;
+	float	move_dist;
 
 	dx = g->player_x - s->x;
 	dy = g->player_y - s->y;
@@ -82,7 +82,7 @@ static uint32_t	blend_color(uint32_t dst_c, uint32_t src_c)
 	return (0xFF000000u | (r << 16) | (gc << 8) | b);
 }
 
-static void	draw_sprite_column(t_sprite *s, int x, uint32_t *dst)
+static void	draw_sprite_column(t_sprite *s, int x, uint32_t *dst, t_game *g)
 {
 	t_texture	*tex;
 	int			y;
@@ -96,10 +96,10 @@ static void	draw_sprite_column(t_sprite *s, int x, uint32_t *dst)
 	y = s->start_y;
 	while (y <= s->end_y)
 	{
-		if (y >= 0 && y < WINDOW_HEIGHT)
+		if (y >= 0 && y < (int)g->win_height)
 		{
 			tex_y = (y - s->start_y) * tex->height / s->height;
-			dst[y * WINDOW_WIDTH + x] = blend_color(dst[y * WINDOW_WIDTH + x],
+			dst[y * g->win_width + x] = blend_color(dst[y * g->win_width + x],
 					get_texture_color_from_tex(tex, tex_x, tex_y));
 		}
 		y++;
@@ -117,8 +117,8 @@ void	draw_sprite_stripe(t_game *g, t_sprite *s, float *zb)
 	x = s->start_x;
 	while (x <= s->end_x)
 	{
-		if (x >= 0 && x < WINDOW_WIDTH && s->perp_dist < zb[x])
-			draw_sprite_column(s, x, dst);
+		if (x >= 0 && x < g->win_width && s->perp_dist < zb[x])
+			draw_sprite_column(s, x, dst, g);
 		x++;
 	}
 }

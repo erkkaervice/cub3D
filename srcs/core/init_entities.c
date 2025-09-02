@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 17:14:34 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/02 18:31:18 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/02 19:22:29 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	init_sprite_render(t_game *g, t_sprite *s)
 {
 	if (!compute_sprite_transform(g, s))
 		return (0);
-	compute_sprite_bounds(s);
+	compute_sprite_bounds(g, s);
 	if (s->perp_dist <= RAY_MIN_PERP_DIST)
 		return (0);
 	return (1);
@@ -91,8 +91,7 @@ void	init_mouse(t_game *game)
 {
 	game->mouse.dx = 0.0;
 	game->mouse.sensitivity = MOUSE_SENSITIVITY;
-	game->mouse.prev_x = game->frame->width / 2;
+	game->mouse.prev_x = game->win_width / 2;
 	mlx_set_cursor_mode(game->mlx, MLX_MOUSE_HIDDEN);
-	mlx_set_mouse_pos(game->mlx, game->frame->width / 2,
-		game->frame->height / 2);
+	mlx_set_mouse_pos(game->mlx, game->win_width / 2, game->win_height / 2);
 }

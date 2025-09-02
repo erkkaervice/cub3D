@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:22:57 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/02 16:30:46 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/02 19:14:23 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,6 @@ void	init_game_struct(t_game *game)
 	game->num_sprites = 0;
 	game->z_buffer = NULL;
 	init_struct_arrays(game);
-	game->win_width = WINDOW_WIDTH;
-	game->win_height = WINDOW_HEIGHT;
 	game->scale_x = SPRITE_DEFAULT_SCALE;
 	game->scale_y = SPRITE_DEFAULT_SCALE;
 	game->needs_blit = 1;

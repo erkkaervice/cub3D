@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:26:54 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/02 18:09:16 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/02 19:10:51 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,8 @@ static void	draw_fps_text(t_game *game)
 
 	text_width = FPS_CHAR_SPACING * (int)ft_strlen(FPS_LABEL);
 	text_width += FPS_CHAR_SPACING * 3;
-	label_x = WINDOW_WIDTH - text_width - 8;
-	value_x = WINDOW_WIDTH - FPS_CHAR_SPACING * 3 - 8;
+	label_x = game->win_width - text_width - 8;
+	value_x = game->win_width - FPS_CHAR_SPACING * 3 - 8;
 	draw_string(game, (struct s_point){label_x, FPS_POS_Y},
 		FPS_LABEL, FPS_SCALE);
 	str = ft_itoa(game->fps.fps);

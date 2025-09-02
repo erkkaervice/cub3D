@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 16:42:45 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/02 18:30:56 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/02 19:14:42 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ static int	init_mlx_win_and_img(t_game *game)
 		mlx_terminate(game->mlx);
 		return (0);
 	}
-	game->win_width = game->frame->width;
-	game->win_height = game->frame->height;
+	game->win_width = WINDOW_WIDTH;
+	game->win_height = WINDOW_HEIGHT;
 	game->needs_blit = 1;
 	mlx_resize_hook(game->mlx, resize_hook, game);
 	return (1);
