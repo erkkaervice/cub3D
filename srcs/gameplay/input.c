@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   keys.c                                             :+:      :+:    :+:   */
+/*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 15:25:54 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/29 17:27:02 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/02 18:00:19 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,26 @@
 
 static void	set_key(t_input *input, int key, int value)
 {
-	if (key == MLX_KEY_W)
-		input->w = value;
-	else if (key == MLX_KEY_A)
-		input->a = value;
-	else if (key == MLX_KEY_S)
-		input->s = value;
-	else if (key == MLX_KEY_D)
-		input->d = value;
-	else if (key == MLX_KEY_LEFT)
-		input->left = value;
-	else if (key == MLX_KEY_RIGHT)
-		input->right = value;
-	else if (key == MLX_KEY_LEFT_SHIFT || key == MLX_KEY_RIGHT_SHIFT)
-		input->shift = value;
+	if (key == KEY_MOVE_FORWARD)
+		input->move_forward = value;
+	else if (key == KEY_MOVE_BACKWARD)
+		input->move_backward = value;
+	else if (key == KEY_MOVE_LEFT)
+		input->move_left = value;
+	else if (key == KEY_MOVE_RIGHT)
+		input->move_right = value;
+	else if (key == KEY_ROTATE_LEFT)
+		input->rotate_left = value;
+	else if (key == KEY_ROTATE_RIGHT)
+		input->rotate_right = value;
+	else if (key == KEY_RUN)
+		input->run = value;
+	else if (key == KEY_INTERACT)
+		input->interact = value;
+	else if (key == KEY_MM_TOGGLE)
+		input->minimap_toggle = value;
+	else if (key == KEY_FPS_TOGGLE)
+		input->fps_toggle = value;
 }
 
 void	key_hook(mlx_key_data_t keydata, void *param)
@@ -39,11 +45,11 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 	{
 		if (keydata.key == MLX_KEY_ESCAPE)
 			mlx_close_window(game->mlx);
-		else if (keydata.key == KEY_MINIMAP_TOGGLE)
+		else if (keydata.key == KEY_MM_TOGGLE)
 			game->minimap_visible = !game->minimap_visible;
 		else if (keydata.key == KEY_FPS_TOGGLE)
 			game->fps_visible = !game->fps_visible;
-		else if (keydata.key == MLX_KEY_E)
+		else if (keydata.key == KEY_INTERACT)
 			toggle_door(game);
 		else
 			set_key(&game->input, keydata.key, 1);
@@ -56,13 +62,17 @@ void	mouse_move(double x, double y, void *param)
 {
 	t_game	*game;
 	double	diff;
+	int		center_x;
+	int		center_y;
 
 	(void)y;
 	game = (t_game *)param;
+	center_x = game->win_width / 2;
+	center_y = game->win_height / 2;
 	diff = x - game->mouse.prev_x;
 	game->mouse.dx += diff;
-	game->mouse.prev_x = MOUSE_START_X;
-	mlx_set_mouse_pos(game->mlx, MOUSE_START_X, MOUSE_START_Y);
+	game->mouse.prev_x = center_x;
+	mlx_set_mouse_pos(game->mlx, center_x, center_y);
 }
 
 void	apply_mouse_look(t_game *game, double frame_time)

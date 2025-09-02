@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 13:43:52 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/01 16:05:48 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/02 17:15:15 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ void	parse_sprites(t_game *g)
 	g->num_sprites = count_sprites(g->cfg->map);
 	if (!g->num_sprites)
 		return ;
-	if (g->num_sprites > MAX_SPRITES)
-		g->num_sprites = MAX_SPRITES;
+	if (g->num_sprites > MAP_MAX_SPRITES)
+		g->num_sprites = MAP_MAX_SPRITES;
 	g->sprites = malloc(sizeof(t_sprite) * g->num_sprites);
 	if (!g->sprites)
 		exit(EXIT_FAILURE);
@@ -104,7 +104,7 @@ void	render_sprites(t_game *g, float *zb)
 	if (g->fps.fps > 0)
 		dt = 1.0f / g->fps.fps;
 	else
-		dt = FRAME_DT;
+		dt = SPRITE_FRAME_DT;
 	i = 0;
 	while (i < g->num_sprites)
 	{

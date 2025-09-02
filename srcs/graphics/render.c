@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:53:42 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/29 18:00:24 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/02 18:12:38 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,37 +28,37 @@ static void	fill_floor_ceiling(t_game *game)
 	ceiling = color_converter(rgb);
 	free(rgb);
 	i = 0;
-	while (i < WIDTH * HEIGHT / 2)
+	while (i < game->win_width * game->win_height / 2)
 		p[i++] = ceiling;
-	while (i < WIDTH * HEIGHT)
+	while (i < game->win_width * game->win_height)
 		p[i++] = floor;
 }
 
-void	draw_column(t_game *game, t_wall *wall, int x, int tex_id)
+void	draw_column(t_game *g, t_wall *w, int x, int t)
 {
 	t_texture	*tex;
 	float		step;
-	float		pos;
+	float		p;
 	int			y;
 
-	if (tex_id < 0 || tex_id >= TEXTURE_COUNT)
+	if (t < 0 || t >= TEXTURE_COUNT)
 		return ;
-	tex = game->textures[tex_id];
+	tex = g->textures[t];
 	if (!tex || !tex->image || tex->height <= 0)
 		return ;
-	if (wall->draw_start < 0)
-		wall->draw_start = 0;
-	if (wall->draw_end >= HEIGHT)
-		wall->draw_end = HEIGHT - 1;
-	step = (float)tex->height / (float)wall->line_height;
-	pos = (wall->draw_start - HEIGHT / 2 + wall->line_height / 2) * step;
-	y = wall->draw_start;
-	while (y <= wall->draw_end)
+	if (w->draw_start < 0)
+		w->draw_start = 0;
+	if (w->draw_end >= g->win_height)
+		w->draw_end = g->win_height - 1;
+	step = (float)tex->height / (float)w->line_height;
+	p = (w->draw_start - g->win_height / 2 + w->line_height / 2) * step;
+	y = w->draw_start;
+	while (y <= w->draw_end)
 	{
-		blend_pixel(((uint32_t *)game->frame->pixels) + (y * WIDTH + x),
-			get_texture_color(game, tex_id, wall->tex_x, (int)pos),
-			&game->z_buffer[x], wall->perp_wall_dist);
-		pos += step;
+		blend_pixel(((uint32_t *)g->frame->pixels) + y * g->win_width + x,
+			get_texture_color(g, t, w->tex_x, (int)p), &g->z_buffer[x],
+			w->perp_wall_dist);
+		p += step;
 		y++;
 	}
 }
@@ -98,7 +98,7 @@ static void	render_game_columns(t_game *game)
 	int	x;
 
 	x = 0;
-	while (x < WIDTH)
+	while (x < game->win_width)
 	{
 		raycast_column(game, x);
 		x++;

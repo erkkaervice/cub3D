@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 18:02:25 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/01 15:54:29 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/02 17:39:42 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,14 @@ void	update_doors(t_game *game)
 		if (game->doors[i].is_opening)
 		{
 			game->doors[i].open_ratio += DOOR_OPEN_SPEED;
-			if (game->doors[i].open_ratio > DOOR_OPEN_FULL)
-				game->doors[i].open_ratio = DOOR_OPEN_FULL;
+			if (game->doors[i].open_ratio > DOOR_OPEN_RATIO_FULL)
+				game->doors[i].open_ratio = DOOR_OPEN_RATIO_FULL;
 		}
 		else
 		{
 			game->doors[i].open_ratio -= DOOR_OPEN_SPEED;
-			if (game->doors[i].open_ratio < DOOR_INITIAL_OPEN_RATIO)
-				game->doors[i].open_ratio = DOOR_INITIAL_OPEN_RATIO;
+			if (game->doors[i].open_ratio < DOOR_OPEN_RATIO_START)
+				game->doors[i].open_ratio = DOOR_OPEN_RATIO_START;
 		}
 		i++;
 	}
@@ -85,13 +85,13 @@ int	handle_door(t_game *game, t_ray *ray)
 
 	door_idx = find_door_index(game, ray->map_x, ray->map_y);
 	if (door_idx < 0)
-		return (HIT_DOOR);
+		return (RAY_HIT_DOOR);
 	open_ratio = game->doors[door_idx].open_ratio;
-	if (open_ratio > DOOR_INITIAL_OPEN_RATIO && open_ratio < DOOR_OPEN_FULL)
+	if (open_ratio > DOOR_OPEN_RATIO_START && open_ratio < DOOR_OPEN_RATIO_FULL)
 		return (-1);
-	if (open_ratio >= DOOR_OPEN_FULL)
+	if (open_ratio >= DOOR_OPEN_RATIO_FULL)
 		return (-1);
-	return (HIT_DOOR);
+	return (RAY_HIT_DOOR);
 }
 
 int	door_hit(t_game *game, t_ray *ray, t_wall *wall, int *tex_id)

@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 17:54:49 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/01 16:06:20 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/02 17:15:48 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	update_sprite_behavior(t_game *g, t_sprite *s, float dt)
 		return ;
 	dx /= len;
 	dy /= len;
-	move_dist = s->speed * FRAME_DT;
+	move_dist = s->speed * SPRITE_FRAME_DT;
 	if (move_dist > len - SPRITE_STOP_DIST)
 		move_dist = len - SPRITE_STOP_DIST;
 	move_sprite_axis(g, s, s->x + dx * move_dist, s->y + dy * move_dist);
@@ -96,10 +96,10 @@ static void	draw_sprite_column(t_sprite *s, int x, uint32_t *dst)
 	y = s->start_y;
 	while (y <= s->end_y)
 	{
-		if (y >= 0 && y < HEIGHT)
+		if (y >= 0 && y < WINDOW_HEIGHT)
 		{
 			tex_y = (y - s->start_y) * tex->height / s->height;
-			dst[y * WIDTH + x] = blend_color(dst[y * WIDTH + x],
+			dst[y * WINDOW_WIDTH + x] = blend_color(dst[y * WINDOW_WIDTH + x],
 					get_texture_color_from_tex(tex, tex_x, tex_y));
 		}
 		y++;
@@ -117,7 +117,7 @@ void	draw_sprite_stripe(t_game *g, t_sprite *s, float *zb)
 	x = s->start_x;
 	while (x <= s->end_x)
 	{
-		if (x >= 0 && x < WIDTH && s->perp_dist < zb[x])
+		if (x >= 0 && x < WINDOW_WIDTH && s->perp_dist < zb[x])
 			draw_sprite_column(s, x, dst);
 		x++;
 	}

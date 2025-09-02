@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 19:27:01 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/25 16:55:25 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/02 17:13:22 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ float	get_wall_x_with_door(t_game *game, t_ray *ray, float perp_wall_dist)
 	int		door_idx;
 	float	open_ratio;
 
-	if (ray->side == 0)
+	if (ray->side == AXIS_X)
 		wall_x = game->player_y + perp_wall_dist * ray->ray_dir_y;
 	else
 		wall_x = game->player_x + perp_wall_dist * ray->ray_dir_x;
@@ -43,7 +43,7 @@ float	get_wall_x_with_door(t_game *game, t_ray *ray, float perp_wall_dist)
 	if (door_idx < 0)
 		return (wall_x);
 	open_ratio = game->doors[door_idx].open_ratio;
-	if (ray->side == 0)
+	if (ray->side == AXIS_X)
 		wall_x -= open_ratio * ray->step_x;
 	else
 		wall_x -= open_ratio * ray->step_y;
@@ -90,7 +90,7 @@ int	fill_doors(t_game *game)
 				game->doors[idx].x = x;
 				game->doors[idx].y = y;
 				game->doors[idx].is_opening = 0;
-				game->doors[idx].open_ratio = DOOR_INITIAL_OPEN_RATIO;
+				game->doors[idx].open_ratio = DOOR_OPEN_RATIO_START;
 				idx++;
 			}
 		}

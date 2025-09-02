@@ -22,16 +22,18 @@ typedef struct s_point
 	int	y;
 }	t_point;
 
-/* --- Input --- */
 typedef struct s_input
 {
-	int	w;
-	int	a;
-	int	s;
-	int	d;
-	int	left;
-	int	right;
-	int	shift;
+	int	move_forward;
+	int	move_backward;
+	int	move_left;
+	int	move_right;
+	int	rotate_left;
+	int	rotate_right;
+	int	run;
+	int	interact;
+	int	minimap_toggle;
+	int	fps_toggle;
 }	t_input;
 
 /* --- Configuration --- */

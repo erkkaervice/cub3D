@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:26:54 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/01 15:58:36 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/02 18:09:16 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static void	setup_fonts(const char **digits_arr, const char **letters_arr)
 	int	i;
 
 	i = 0;
-	while (i < 10)
+	while (i < FONT_DIGITS_COUNT)
 	{
 		digits_arr[i] = get_font_digits()[i];
 		i++;
@@ -30,8 +30,8 @@ static void	setup_fonts(const char **digits_arr, const char **letters_arr)
 static void	draw_string_char(t_game *game,
 	struct s_point pos, char c, int scale)
 {
-	static const char	*digits_arr[10];
-	static const char	*letters_arr[3];
+	static const char	*digits_arr[FONT_DIGITS_COUNT];
+	static const char	*letters_arr[FONT_LETTERS_COUNT];
 	static int			init = 0;
 
 	if (!init)
@@ -50,9 +50,9 @@ static void	draw_string_char(t_game *game,
 	else if (c == ':')
 	{
 		draw_scaled_pixel(game, (struct s_point){pos.x + scale, pos.y + scale},
-			scale, CHAR_COLOR);
+			scale, FPS_CHAR_COLOR);
 		draw_scaled_pixel(game, (struct s_point){pos.x + scale, pos.y
-			+ 3 * scale}, scale, CHAR_COLOR);
+			+ 3 * scale}, scale, FPS_CHAR_COLOR);
 	}
 }
 
@@ -69,7 +69,7 @@ static void	draw_string(t_game *game, struct s_point pos,
 	while (c != '\0')
 	{
 		draw_string_char(game, (struct s_point){x, pos.y}, c, scale);
-		x += CHAR_SPACING;
+		x += FPS_CHAR_SPACING;
 		i++;
 		c = str[i];
 	}
@@ -78,14 +78,21 @@ static void	draw_string(t_game *game, struct s_point pos,
 static void	draw_fps_text(t_game *game)
 {
 	char	*str;
+	int		text_width;
+	int		label_x;
+	int		value_x;
 
-	draw_string(game, (struct s_point){FPS_POS_X, FPS_POS_Y},
+	text_width = FPS_CHAR_SPACING * (int)ft_strlen(FPS_LABEL);
+	text_width += FPS_CHAR_SPACING * 3;
+	label_x = WINDOW_WIDTH - text_width - 8;
+	value_x = WINDOW_WIDTH - FPS_CHAR_SPACING * 3 - 8;
+	draw_string(game, (struct s_point){label_x, FPS_POS_Y},
 		FPS_LABEL, FPS_SCALE);
 	str = ft_itoa(game->fps.fps);
 	if (str)
 	{
-		draw_string(game, (struct s_point){FPS_POS_X + CHAR_SPACING
-			* 4, FPS_POS_Y}, str, FPS_SCALE);
+		draw_string(game, (struct s_point){value_x, FPS_POS_Y},
+			str, FPS_SCALE);
 		free(str);
 	}
 }

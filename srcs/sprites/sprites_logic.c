@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 15:16:57 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/01 16:06:10 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/02 17:15:28 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	compute_sprite_transform(t_game *g, t_sprite *s)
 	spx = s->x - g->player_x;
 	spy = s->y - g->player_y;
 	inv_det = g->plane_x * g->dir_y - g->dir_x * g->plane_y;
-	if (fabsf(inv_det) < EPSILON_INV_DET)
+	if (fabsf(inv_det) < SAFE_INV_DET_EPS)
 		return (0);
 	inv_det = 1.0f / inv_det;
 	s->tx = inv_det * (g->dir_y * spx - g->dir_x * spy);
@@ -29,32 +29,32 @@ int	compute_sprite_transform(t_game *g, t_sprite *s)
 	if (s->ty <= 0.0f)
 		return (0);
 	s->perp_dist = s->ty;
-	s->screen_x = (int)((WIDTH / 2.0f) * (1.0f + s->tx / s->ty));
+	s->screen_x = (int)((WINDOW_WIDTH / 2.0f) * (1.0f + s->tx / s->ty));
 	return (1);
 }
 
 void	compute_sprite_bounds(t_sprite *s)
 {
-	s->height = (int)fabsf(HEIGHT / s->ty);
+	s->height = (int)fabsf(WINDOW_HEIGHT / s->ty);
 	if (s->height < 1)
 		s->height = 1;
-	if (s->height > HEIGHT)
-		s->height = HEIGHT;
+	if (s->height > WINDOW_HEIGHT)
+		s->height = WINDOW_HEIGHT;
 	s->width = s->height;
-	if (s->width > WIDTH)
-		s->width = WIDTH;
-	s->start_y = -s->height / 2 + HEIGHT / 2;
+	if (s->width > WINDOW_WIDTH)
+		s->width = WINDOW_WIDTH;
+	s->start_y = -s->height / 2 + WINDOW_HEIGHT / 2;
 	if (s->start_y < 0)
 		s->start_y = 0;
-	s->end_y = s->height / 2 + HEIGHT / 2;
-	if (s->end_y >= HEIGHT)
-		s->end_y = HEIGHT - 1;
+	s->end_y = s->height / 2 + WINDOW_HEIGHT / 2;
+	if (s->end_y >= WINDOW_HEIGHT)
+		s->end_y = WINDOW_HEIGHT - 1;
 	s->start_x = -s->width / 2 + s->screen_x;
 	if (s->start_x < 0)
 		s->start_x = 0;
 	s->end_x = s->width / 2 + s->screen_x;
-	if (s->end_x >= WIDTH)
-		s->end_x = WIDTH - 1;
+	if (s->end_x >= WINDOW_WIDTH)
+		s->end_x = WINDOW_WIDTH - 1;
 }
 
 static int	check_los_point(t_game *g, int mx, int my)

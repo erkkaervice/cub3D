@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: eala-lah <eala-lah@student.hive.fi>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:52:06 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/01 15:54:39 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/02 19:20:00 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ t_config	*map_config(char *filename)
 	ft_bzero(cfg, sizeof(t_config));
 	if (!map_parsing(cfg, filename))
 		return (free_partial_config(&cfg), NULL);
-	cfg->door_texture = ft_strdup(DOOR_TEXTURE_PATH);
-	cfg->sprite_texture_0 = ft_strdup(SPRITE_TEXTURE_0_PATH);
-	cfg->sprite_texture_1 = ft_strdup(SPRITE_TEXTURE_1_PATH);
-	cfg->sprite_texture_2 = ft_strdup(SPRITE_TEXTURE_2_PATH);
+	cfg->door_texture = ft_strdup(TEX_PATH_DOOR);
+	cfg->sprite_texture_0 = ft_strdup(TEX_PATH_SPRITE_0);
+	cfg->sprite_texture_1 = ft_strdup(TEX_PATH_SPRITE_1);
+	cfg->sprite_texture_2 = ft_strdup(TEX_PATH_SPRITE_2);
 	if (!cfg->door_texture || !cfg->sprite_texture_0
 		|| !cfg->sprite_texture_1 || !cfg->sprite_texture_2)
 		return (free_partial_config(&cfg), NULL);
@@ -77,7 +77,7 @@ int	is_wall_or_door(t_game *game, int x, int y)
 		door_idx = find_door_index(game, x, y);
 		if (door_idx < 0)
 			return (1);
-		if (game->doors[door_idx].open_ratio < DOOR_OPEN_FULL)
+		if (game->doors[door_idx].open_ratio < DOOR_OPEN_RATIO_FULL)
 			return (1);
 	}
 	return (0);
@@ -89,12 +89,12 @@ static float	wall_maths(t_game *game, t_ray *ray, float *wx)
 
 	if (ray->side == AXIS_X)
 		perp_dist = (ray->map_x - game->player_x
-				+ (1 - ray->step_x) * HALF_TILE_OFFSET) / ray->ray_dir_x;
+				+ (1 - ray->step_x) * RAY_HALF_TILE_OFFSET) / ray->ray_dir_x;
 	else
 		perp_dist = (ray->map_y - game->player_y
-				+ (1 - ray->step_y) * HALF_TILE_OFFSET) / ray->ray_dir_y;
-	if (perp_dist < MIN_PERP_DIST)
-		perp_dist = MIN_PERP_DIST;
+				+ (1 - ray->step_y) * RAY_HALF_TILE_OFFSET) / ray->ray_dir_y;
+	if (perp_dist < RAY_MIN_PERP_DIST)
+		perp_dist = RAY_MIN_PERP_DIST;
 	if (ray->side == AXIS_X)
 		*wx = game->player_y + perp_dist * ray->ray_dir_y;
 	else
@@ -112,15 +112,15 @@ void	calculate_wall(t_game *game, t_ray *ray, t_wall *wall)
 	float	wx;
 
 	perp = wall_maths(game, ray, &wx);
-	h = (int)(HEIGHT / perp);
+	h = (int)(game->win_height / perp);
 	if (h < 1)
 		h = 1;
-	ds = -h / 2 + HEIGHT / 2;
+	ds = -h / 2 + game->win_height / 2;
 	if (ds < 0)
 		ds = 0;
-	de = h / 2 + HEIGHT / 2;
-	if (de >= HEIGHT)
-		de = HEIGHT - 1;
+	de = h / 2 + game->win_height / 2;
+	if (de >= game->win_height)
+		de = game->win_height - 1;
 	wall->perp_wall_dist = perp;
 	wall->line_height = h;
 	wall->draw_start = ds;

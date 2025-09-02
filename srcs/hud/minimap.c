@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:16:05 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/01 15:58:08 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/02 18:03:32 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,22 +19,22 @@ static void	draw_tile_pixel(t_game *g, int x, int y, char tile)
 	int	c;
 
 	if (tile == TILE_WALL)
-		c = MINIMAP_WALL_COLOR;
+		c = MM_WALL_COLOR;
 	else if (tile == TILE_DOOR)
-		c = MINIMAP_DOOR_COLOR;
+		c = MM_DOOR_COLOR;
 	else
-		c = MINIMAP_FLOOR_COLOR;
+		c = MM_FLOOR_COLOR;
 	i = 0;
-	while (i < MINIMAP_SCALE)
+	while (i < MM_SCALE)
 	{
 		j = 0;
-		while (j < MINIMAP_SCALE)
+		while (j < MM_SCALE)
 		{
-			if (x * MINIMAP_SCALE + i >= 0 && x * MINIMAP_SCALE + i < WIDTH
-				&& y * MINIMAP_SCALE + j >= 0 && y * MINIMAP_SCALE + j < HEIGHT)
+			if (x * MM_SCALE + i >= 0 && x * MM_SCALE + i < (int)g->frame->width
+				&& y * MM_SCALE + j >= 0 && y
+				* MM_SCALE + j < (int)g->frame->height)
 				((uint32_t *)g->frame->pixels)
-				[(y * MINIMAP_SCALE + j)
-					* WIDTH + (x * MINIMAP_SCALE + i)] = c;
+				[(y * MM_SCALE + j) * g->frame->width + (x * MM_SCALE + i)] = c;
 			j++;
 		}
 		i++;
@@ -75,17 +75,19 @@ static void	draw_entity(t_game *g, float x, float y, int color)
 	int	px;
 	int	py;
 
-	size = MINIMAP_SCALE / 2;
+	size = MM_SCALE / 2;
 	i = 0;
 	while (i < size)
 	{
 		j = 0;
 		while (j < size)
 		{
-			px = (int)(x * MINIMAP_SCALE) + i;
-			py = (int)(y * MINIMAP_SCALE) + j;
-			if (px >= 0 && px < WIDTH && py >= 0 && py < HEIGHT)
-				((uint32_t *)g->frame->pixels)[py * WIDTH + px] = color;
+			px = (int)(x * MM_SCALE) + i;
+			py = (int)(y * MM_SCALE) + j;
+			if (px >= 0 && px < (int)g->frame->width && py >= 0
+				&& py < (int)g->frame->height)
+				((uint32_t *)g->frame->pixels)
+				[py * g->frame->width + px] = color;
 			j++;
 		}
 		i++;
@@ -104,9 +106,7 @@ static void	draw_map(t_game *g, int start, int end)
 		while (g->cfg->map[start + y][x] && g->cfg->map[start + y][x] != '\n')
 		{
 			if (ft_strchr("012345678NSEWDPX", g->cfg->map[start + y][x]))
-			{
 				draw_tile_pixel(g, x, y, g->cfg->map[start + y][x]);
-			}
 			x++;
 		}
 		y++;
@@ -125,12 +125,12 @@ void	render_minimap(t_game *g)
 	find_map_bounds(g, &start, &end);
 	draw_map(g, start, end);
 	py = g->player_y - start;
-	draw_entity(g, g->player_x, py, MINIMAP_PLAYER_COLOR);
+	draw_entity(g, g->player_x, py, MM_PLAYER_COLOR);
 	i = 0;
 	while (i < g->num_sprites)
 	{
 		py = g->sprites[i].y - start;
-		draw_entity(g, g->sprites[i].x, py, MINIMAP_SPRITE_COLOR);
+		draw_entity(g, g->sprites[i].x, py, MM_SPRITE_COLOR);
 		i++;
 	}
 }

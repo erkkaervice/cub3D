@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 16:42:45 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/01 15:54:48 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/02 18:30:56 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,20 @@ static void	resize_hook(int32_t w, int32_t h, void *param)
 	if (game->img)
 		mlx_delete_image(game->mlx, game->img);
 	game->img = mlx_new_image(game->mlx, w, h);
-	if (!game->img || mlx_image_to_window(game->mlx, game->img,
-			WINDOW_IMG_POS_X, WINDOW_IMG_POS_Y) < 0)
+	if (!game->img || mlx_image_to_window(game->mlx, game->img, 0, 0) < 0)
 		exit(1);
 	game->needs_blit = 1;
 }
 
 static int	init_mlx_win_and_img(t_game *game)
 {
-	game->mlx = mlx_init(WIDTH, HEIGHT, WINDOW_TITLE, true);
+	game->mlx = mlx_init(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, true);
 	if (!game->mlx)
 		return (0);
-	game->frame = mlx_new_image(game->mlx, WIDTH, HEIGHT);
-	game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
+	game->frame = mlx_new_image(game->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
+	game->img = mlx_new_image(game->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
 	if (!game->frame || !game->img
-		|| mlx_image_to_window(game->mlx, game->img,
-			WINDOW_IMG_POS_X, WINDOW_IMG_POS_Y) < 0)
+		|| mlx_image_to_window(game->mlx, game->img, 0, 0) < 0)
 	{
 		if (game->img)
 			mlx_delete_image(game->mlx, game->img);
@@ -54,8 +52,8 @@ static int	init_mlx_win_and_img(t_game *game)
 		mlx_terminate(game->mlx);
 		return (0);
 	}
-	game->win_width = WIDTH;
-	game->win_height = HEIGHT;
+	game->win_width = game->frame->width;
+	game->win_height = game->frame->height;
 	game->needs_blit = 1;
 	mlx_resize_hook(game->mlx, resize_hook, game);
 	return (1);
@@ -73,7 +71,7 @@ static int	init_game_resources(t_game *game, char *filename)
 	}
 	parse_sprites(game);
 	init_doors(game);
-	game->z_buffer = malloc(sizeof(float) * WIDTH);
+	game->z_buffer = malloc(sizeof(float) * game->win_width);
 	if (!game->z_buffer)
 	{
 		free_partial_config(&game->cfg);
@@ -81,7 +79,7 @@ static int	init_game_resources(t_game *game, char *filename)
 		return (0);
 	}
 	i = -1;
-	while (++i < WIDTH)
+	while (++i < game->win_width)
 		game->z_buffer[i] = 0.0f;
 	return (1);
 }

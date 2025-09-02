@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 17:14:34 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/01 14:52:30 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/02 18:31:18 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	init_sprite(t_game *g, t_sprite *s, int x, int y)
 {
-	s->x = x + HALF_TILE_OFFSET;
-	s->y = y + HALF_TILE_OFFSET;
+	s->x = x + RAY_HALF_TILE_OFFSET;
+	s->y = y + RAY_HALF_TILE_OFFSET;
 	s->perp_dist = 0.0f;
 	s->texture_id = TEX_SPRITE_0;
 	s->start_x = -1;
@@ -25,11 +25,11 @@ void	init_sprite(t_game *g, t_sprite *s, int x, int y)
 	s->dist = 0.0f;
 	s->frame_index = 0;
 	s->anim_timer = 0.0f;
-	s->speed = 1.5f;
+	s->speed = SPRITE_DEFAULT_SPEED;
 	s->frames[0] = g->textures[TEX_SPRITE_0];
 	s->frames[1] = g->textures[TEX_SPRITE_1];
 	s->frames[2] = g->textures[TEX_SPRITE_2];
-	s->chasing = 0;
+	s->chasing = SPRITE_DEFAULT_CHASING;
 }
 
 int	init_sprite_render(t_game *g, t_sprite *s)
@@ -37,7 +37,7 @@ int	init_sprite_render(t_game *g, t_sprite *s)
 	if (!compute_sprite_transform(g, s))
 		return (0);
 	compute_sprite_bounds(s);
-	if (s->perp_dist <= MIN_PERP_DIST)
+	if (s->perp_dist <= RAY_MIN_PERP_DIST)
 		return (0);
 	return (1);
 }
@@ -46,7 +46,7 @@ void	init_ray_basic(t_game *game, int x, t_ray *ray)
 {
 	float	camera_x;
 
-	camera_x = 2.0f * x / (float)WIDTH - 1.0f;
+	camera_x = 2.0f * x / (float)game->win_width - 1.0f;
 	ray->ray_dir_x = game->dir_x + game->plane_x * camera_x;
 	ray->ray_dir_y = game->dir_y + game->plane_y * camera_x;
 	ray->map_x = (int)game->player_x;
@@ -91,7 +91,8 @@ void	init_mouse(t_game *game)
 {
 	game->mouse.dx = 0.0;
 	game->mouse.sensitivity = MOUSE_SENSITIVITY;
-	game->mouse.prev_x = MOUSE_START_X;
+	game->mouse.prev_x = game->frame->width / 2;
 	mlx_set_cursor_mode(game->mlx, MLX_MOUSE_HIDDEN);
-	mlx_set_mouse_pos(game->mlx, MOUSE_START_X, MOUSE_START_Y);
+	mlx_set_mouse_pos(game->mlx, game->frame->width / 2,
+		game->frame->height / 2);
 }

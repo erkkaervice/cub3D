@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:55:14 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/01 15:57:46 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/02 17:45:30 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,13 @@ int	handle_tile(t_game *game, t_ray *ray, int map_w, int map_h)
 
 	if (ray->map_x < 0 || ray->map_x >= map_w
 		|| ray->map_y < 0 || ray->map_y >= map_h)
-		return (0);
+		return (-1);
 	tile = game->cfg->map[ray->map_y][ray->map_x];
 	if (tile == TILE_WALL)
 		return (1);
 	if (tile == TILE_DOOR)
 	{
 		ret = handle_door(game, ray);
-		if (ret == -1)
-			return (-1);
 		return (ret);
 	}
 	return (-1);
@@ -95,7 +93,7 @@ int	perform_dda(t_game *game, t_ray *ray, int x)
 		step_count++;
 	}
 	game->z_buffer[x] = ray->perp_wall_dist;
-	return (0);
+	return (RAY_HIT_NONE);
 }
 
 void	raycast_column(t_game *game, int x)
@@ -110,14 +108,14 @@ void	raycast_column(t_game *game, int x)
 	init_ray_steps(game, &ray);
 	ray.perp_wall_dist = RAY_MAX_DIST;
 	hit = perform_dda(game, &ray, x);
-	if (hit == 0)
+	if (hit == RAY_HIT_NONE)
 		return ;
-	if (hit == HIT_DOOR && door_hit(game, &ray, &wall, &tex_id) == 0)
+	if (hit == RAY_HIT_DOOR && door_hit(game, &ray, &wall, &tex_id) == 0)
 	{
 		calculate_wall(game, &ray, &wall);
 		tex_id = TEX_DOOR;
 	}
-	else if (hit == HIT_WALL)
+	else if (hit == RAY_HIT_WALL)
 	{
 		calculate_wall(game, &ray, &wall);
 		tex_id = get_texture_index(ray.side, ray.ray_dir_x, ray.ray_dir_y);
