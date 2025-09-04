@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:53:42 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/02 18:12:38 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/04 17:33:38 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ static void	fill_floor_ceiling(t_game *game)
 	p = (uint32_t *)game->frame->pixels;
 	rgb = color_atoia(game->cfg->floor_color);
 	floor = color_converter(rgb);
-	free(rgb);
+	ft_free((char **)&rgb);
 	rgb = color_atoia(game->cfg->ceiling_color);
 	ceiling = color_converter(rgb);
-	free(rgb);
+	ft_free((char **)&rgb);
 	i = 0;
 	while (i < game->win_width * game->win_height / 2)
 		p[i++] = ceiling;
@@ -63,8 +63,7 @@ void	draw_column(t_game *g, t_wall *w, int x, int t)
 	}
 }
 
-void	blend_pixel(uint32_t *dst, uint32_t src,
-	float *zbuf, float dist)
+void	blend_pixel(uint32_t *dst, uint32_t src, float *zbuf, float dist)
 {
 	uint32_t	dstc;
 	uint8_t		r;

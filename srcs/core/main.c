@@ -17,10 +17,7 @@ int	main(int ac, char **av)
 	t_game	game;
 
 	if (ac != 2)
-	{
-		write(2, "Error\n", 6);
-		return (1);
-	}
+		ft_error("Error");
 	file_valid(av[1], ".cub", "/.cub");
 	init_game_struct(&game);
 	if (!init_game(&game, av[1]))

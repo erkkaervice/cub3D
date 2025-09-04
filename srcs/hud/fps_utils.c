@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 14:50:30 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/02 19:10:12 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/04 17:36:58 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,7 @@ void	draw_fps_pixel(t_game *game, int x, int y, int color)
 	*pixel = color;
 }
 
-void	draw_scaled_pixel(t_game *game, struct s_point pos,
-	int scale, int color)
+void	draw_scaled_pixel(t_game *game, struct s_point pos, int scale, int color)
 {
 	int	dx;
 	int	dy;
@@ -41,8 +40,7 @@ void	draw_scaled_pixel(t_game *game, struct s_point pos,
 	}
 }
 
-void	draw_char(t_game *game, struct s_point pos,
-	const char bmap[FONT_ROWS], int scale)
+void	draw_char(t_game *game, struct s_point pos, const char bmap[FONT_ROWS], int scale)
 {
 	int	row;
 	int	col;
@@ -54,8 +52,7 @@ void	draw_char(t_game *game, struct s_point pos,
 		while (col < FONT_COLS)
 		{
 			if (bmap[row] & (1 << (FONT_COLS - 1 - col)))
-				draw_scaled_pixel(game, (struct s_point){pos.x + col * scale,
-					pos.y + row * scale}, scale, FPS_CHAR_COLOR);
+				draw_scaled_pixel(game, (struct s_point){pos.x + col * scale, pos.y + row * scale}, scale, FPS_CHAR_COLOR);
 			col++;
 		}
 		row++;

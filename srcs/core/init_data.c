@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:22:57 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/02 19:14:23 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/04 17:28:54 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	init_doors(t_game *game)
 	game->num_doors = count_doors(game);
 	if (game->num_doors == 0)
 		return ;
-	game->doors = malloc(sizeof(t_door) * game->num_doors);
+	game->doors = ft_calloc(game->num_doors, sizeof(t_door));
 	if (!game->doors)
 		return ;
 	idx = 0;

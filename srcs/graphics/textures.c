@@ -6,14 +6,13 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:32:32 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/08/29 15:35:16 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/04 17:33:01 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static int	load_texture(mlx_t *mlx, t_texture *texture, char *path,
-		t_config *cfg)
+static int	load_texture(mlx_t *mlx, t_texture *texture, char *path, t_config *cfg)
 {
 	texture->img = mlx_load_png(path);
 	if (!texture->img)
@@ -49,7 +48,7 @@ int	load_textures(t_game *game)
 	i = 0;
 	while (i < TEXTURE_COUNT)
 	{
-		game->textures[i] = malloc(sizeof(t_texture));
+		game->textures[i] = ft_calloc(1, sizeof(t_texture));
 		if (!game->textures[i])
 			return (free_textures(game, i), 0);
 		if (!load_texture(game->mlx, game->textures[i], paths[i], game->cfg))

@@ -37,25 +37,25 @@ static void	free_cfg_paths(t_config *cfg)
 	if (!cfg)
 		return ;
 	if (cfg->ceiling_color)
-		free(cfg->ceiling_color);
+		ft_free(&cfg->ceiling_color);
 	if (cfg->floor_color)
-		free(cfg->floor_color);
+		ft_free(&cfg->floor_color);
 	if (cfg->north_texture)
-		free(cfg->north_texture);
+		ft_free(&cfg->north_texture);
 	if (cfg->south_texture)
-		free(cfg->south_texture);
+		ft_free(&cfg->south_texture);
 	if (cfg->west_texture)
-		free(cfg->west_texture);
+		ft_free(&cfg->west_texture);
 	if (cfg->east_texture)
-		free(cfg->east_texture);
+		ft_free(&cfg->east_texture);
 	if (cfg->door_texture)
-		free(cfg->door_texture);
+		ft_free(&cfg->door_texture);
 	if (cfg->sprite_texture_0)
-		free(cfg->sprite_texture_0);
+		ft_free(&cfg->sprite_texture_0);
 	if (cfg->sprite_texture_1)
-		free(cfg->sprite_texture_1);
+		ft_free(&cfg->sprite_texture_1);
 	if (cfg->sprite_texture_2)
-		free(cfg->sprite_texture_2);
+		ft_free(&cfg->sprite_texture_2);
 	cleanup_cfg_textures_paths(cfg);
 }
 
@@ -71,7 +71,7 @@ void	free_partial_config(t_config **cfg_ptr)
 	if (cfg->map)
 	{
 		while (cfg->map[i])
-			free(cfg->map[i++]);
+			ft_free(&cfg->map[i++]);
 		free(cfg->map);
 		cfg->map = NULL;
 	}

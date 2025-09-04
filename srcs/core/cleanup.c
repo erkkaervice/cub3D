@@ -68,10 +68,7 @@ static void	cleanup_cfg(t_game *game)
 	{
 		i = 0;
 		while (game->cfg->map[i])
-		{
-			free(game->cfg->map[i]);
-			i++;
-		}
+			ft_free(&game->cfg->map[i++]);
 		free(game->cfg->map);
 	}
 	cleanup_cfg_textures_paths(game->cfg);

@@ -34,26 +34,15 @@ t_config	*map_config(char *filename)
 
 int	map_dim(char **map, int mode)
 {
-	int	i;
-	int	len;
-
 	if (!map)
 		return (0);
 	if (mode == MAP_DIM_HEIGHT)
-	{
-		i = 0;
-		while (map[i])
-			i++;
-		return (i);
-	}
+		return (ft_array_len((void **)map));
 	else if (mode == MAP_DIM_WIDTH)
 	{
 		if (!map[0])
 			return (0);
-		len = 0;
-		while (map[0][len])
-			len++;
-		return (len);
+		return ((int)ft_strlen(map[0]));
 	}
 	return (0);
 }

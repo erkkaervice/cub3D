@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 19:27:01 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/02 17:13:22 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/04 17:31:23 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int	count_and_fill_doors(t_game *game)
 	int	count;
 
 	count = count_doors(game);
-	game->doors = malloc(sizeof(t_door) * count);
+	game->doors = ft_calloc(count, sizeof(t_door));
 	if (!game->doors)
 		return (0);
 	game->num_doors = count;

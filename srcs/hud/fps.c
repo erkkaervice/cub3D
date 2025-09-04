@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:26:54 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/02 19:10:51 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/04 17:36:41 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@ static void	setup_fonts(const char **digits_arr, const char **letters_arr)
 	letters_arr[2] = get_font_letters()[2];
 }
 
-static void	draw_string_char(t_game *game,
-	struct s_point pos, char c, int scale)
+static void	draw_string_char(t_game *game, struct s_point pos, char c, int scale)
 {
 	static const char	*digits_arr[FONT_DIGITS_COUNT];
 	static const char	*letters_arr[FONT_LETTERS_COUNT];
@@ -51,13 +50,12 @@ static void	draw_string_char(t_game *game,
 	{
 		draw_scaled_pixel(game, (struct s_point){pos.x + scale, pos.y + scale},
 			scale, FPS_CHAR_COLOR);
-		draw_scaled_pixel(game, (struct s_point){pos.x + scale, pos.y
-			+ 3 * scale}, scale, FPS_CHAR_COLOR);
+		draw_scaled_pixel(game, (struct s_point){pos.x + scale, pos.y + 3 * scale},
+			scale, FPS_CHAR_COLOR);
 	}
 }
 
-static void	draw_string(t_game *game, struct s_point pos,
-	const char *str, int scale)
+static void	draw_string(t_game *game, struct s_point pos, const char *str, int scale)
 {
 	int		i;
 	int		x;
@@ -86,14 +84,12 @@ static void	draw_fps_text(t_game *game)
 	text_width += FPS_CHAR_SPACING * 3;
 	label_x = game->win_width - text_width - 8;
 	value_x = game->win_width - FPS_CHAR_SPACING * 3 - 8;
-	draw_string(game, (struct s_point){label_x, FPS_POS_Y},
-		FPS_LABEL, FPS_SCALE);
+	draw_string(game, (struct s_point){label_x, FPS_POS_Y}, FPS_LABEL, FPS_SCALE);
 	str = ft_itoa(game->fps.fps);
 	if (str)
 	{
-		draw_string(game, (struct s_point){value_x, FPS_POS_Y},
-			str, FPS_SCALE);
-		free(str);
+		draw_string(game, (struct s_point){value_x, FPS_POS_Y}, str, FPS_SCALE);
+		ft_free((char **)&str);
 	}
 }
 
