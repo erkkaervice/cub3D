@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 13:02:06 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/08/28 13:44:05 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/04 17:55:59 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,18 +66,18 @@ int	print_err(t_config *cfg, char *error, int fd)
 	return (0);
 }
 
-void	free_cfg_textures(t_config *cfg)
+void	free_cfg_tex(t_config *cfg)
 {
 	if (cfg->ceiling_color)
 		free(cfg->ceiling_color);
-	if (cfg->north_texture)
-		free(cfg->north_texture);
-	if (cfg->west_texture)
-		free(cfg->west_texture);
-	if (cfg->east_texture)
-		free(cfg->east_texture);
-	if (cfg->south_texture)
-		free(cfg->south_texture);
+	if (cfg->north_tex)
+		free(cfg->north_tex);
+	if (cfg->west_tex)
+		free(cfg->west_tex);
+	if (cfg->east_tex)
+		free(cfg->east_tex);
+	if (cfg->south_tex)
+		free(cfg->south_tex);
 	if (cfg->floor_color)
 		free(cfg->floor_color);
 }

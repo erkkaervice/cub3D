@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:22:19 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/02 20:00:00 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/04 18:00:00 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,18 @@
 
 int	main(int ac, char **av)
 {
-	t_game	game;
+	t_game	g;
 
 	if (ac != 2)
 		ft_error("Error");
 	file_valid(av[1], ".cub", "/.cub");
-	init_game_struct(&game);
-	if (!init_game(&game, av[1]))
+	init_game_struct(&g);
+	if (!init_game(&g, av[1]))
 	{
-		cleanup_game(&game);
+		cleanup_game(&g);
 		return (1);
 	}
-	mlx_loop(game.mlx);
-	cleanup_game(&game);
+	mlx_loop(g.mlx);
+	cleanup_game(&g);
 	return (0);
 }

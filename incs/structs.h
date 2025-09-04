@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:52:20 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/02 20:20:00 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/04 18:00:00 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,40 +45,40 @@ typedef struct s_input
 
 typedef struct s_config
 {
-	int			player;
-	int			player_x;
-	int			player_y;
-	char		player_dir;
-	char		**map;
-	bool		no;
-	bool		so;
-	bool		we;
-	bool		ea;
-	bool		f;
-	bool		c;
-	char		*north_texture;
-	char		*south_texture;
-	char		*east_texture;
-	char		*west_texture;
-	char		*door_texture;
-	char		*sprite_texture_0;
-	char		*sprite_texture_1;
-	char		*sprite_texture_2;
-	char		*floor_color;
-	char		*ceiling_color;
+	int		player;
+	int		player_x;
+	int		player_y;
+	char	player_dir;
+	char	**map;
+	bool	no;
+	bool	so;
+	bool	we;
+	bool	ea;
+	bool	f;
+	bool	c;
+	char	*north_tex;
+	char	*south_tex;
+	char	*east_tex;
+	char	*west_tex;
+	char	*door_tex;
+	char	*sprite_tex_0;
+	char	*sprite_tex_1;
+	char	*sprite_tex_2;
+	char	*floor_color;
+	char	*ceiling_color;
 }	t_config;
 
 /* ========================================================================== */
 /*                          RENDERING & TEXTURES                              */
 /* ========================================================================== */
 
-typedef struct s_texture
+typedef struct s_tex
 {
 	int				width;
 	int				height;
 	mlx_texture_t	*img;
 	mlx_image_t		*image;
-}	t_texture;
+}	t_tex;
 
 typedef struct s_dir_info
 {
@@ -142,17 +142,17 @@ typedef struct s_door
 
 typedef struct s_fps
 {
-	int			frames;
-	int			fps;
-	clock_t		last_time;
+	int		frames;
+	int		fps;
+	clock_t	last_time;
 }	t_fps;
 
 typedef struct s_mouse
 {
-	int			prev_x;
-	double		dx;
-	double		velocity;
-	double		sensitivity;
+	int		prev_x;
+	double	dx;
+	double	velocity;
+	double	sensitivity;
 }	t_mouse;
 
 /* ========================================================================== */
@@ -161,32 +161,32 @@ typedef struct s_mouse
 
 typedef struct s_sprite
 {
-	int			texture_id;
-	t_texture	*frames[3];
-	int			frame_index;
+	int		tex_id;
+	t_tex	*frames[3];
+	int		frame_index;
 
-	float		x;
-	float		y;
-	float		dist;
-	float		perp_dist;
-	float		sx;
-	float		sy;
-	float		tx;
-	float		ty;
+	float	x;
+	float	y;
+	float	dist;
+	float	perp_dist;
+	float	sx;
+	float	sy;
+	float	tx;
+	float	ty;
 
-	int			screen_x;
-	int			height;
-	int			width;
-	int			start_x;
-	int			end_x;
-	int			start_y;
-	int			end_y;
+	int		screen_x;
+	int		height;
+	int		width;
+	int		start_x;
+	int		end_x;
+	int		start_y;
+	int		end_y;
 
-	float		anim_timer;
-	float		speed;
-	int			active;
-	int			chasing;
-	int			stopped;
+	float	anim_timer;
+	float	speed;
+	int		active;
+	int		chasing;
+	int		stopped;
 }	t_sprite;
 
 /* ========================================================================== */
@@ -204,7 +204,7 @@ typedef struct s_game
 	float		plane_x;
 	float		plane_y;
 
-	t_texture	*textures[TEXTURE_COUNT];
+	t_tex		*tex[TEX_COUNT];
 	t_dir_info	dir_infos[DIR_COUNT];
 
 	t_input		input;

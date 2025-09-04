@@ -6,13 +6,13 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 13:43:52 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/02 19:07:05 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/04 18:24:50 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static int	count_sprites(char **map)
+static int	count_sprites(char **m)
 {
 	int	c;
 	int	y;
@@ -20,11 +20,11 @@ static int	count_sprites(char **map)
 
 	c = 0;
 	y = 0;
-	while (map[y])
+	while (m[y])
 	{
 		x = 0;
-		while (map[y][x])
-			if (map[y][x++] == TILE_SPRITE)
+		while (m[y][x])
+			if (m[y][x++] == TILE_SPRITE)
 				c++;
 		y++;
 	}

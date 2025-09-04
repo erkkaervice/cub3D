@@ -12,7 +12,7 @@
 
 #include "cub3d.h"
 
-t_config	*map_config(char *filename)
+t_config	*map_config(char *f)
 {
 	t_config	*cfg;
 
@@ -20,14 +20,14 @@ t_config	*map_config(char *filename)
 	if (!cfg)
 		return (NULL);
 	ft_bzero(cfg, sizeof(t_config));
-	if (!map_parsing(cfg, filename))
+	if (!map_parsing(cfg, f))
 		return (free_partial_config(&cfg), NULL);
-	cfg->door_texture = ft_strdup(TEX_PATH_DOOR);
-	cfg->sprite_texture_0 = ft_strdup(TEX_PATH_SPRITE_0);
-	cfg->sprite_texture_1 = ft_strdup(TEX_PATH_SPRITE_1);
-	cfg->sprite_texture_2 = ft_strdup(TEX_PATH_SPRITE_2);
-	if (!cfg->door_texture || !cfg->sprite_texture_0
-		|| !cfg->sprite_texture_1 || !cfg->sprite_texture_2)
+	cfg->door_tex = ft_strdup(TEX_PATH_DOOR);
+	cfg->sprite_tex_0 = ft_strdup(TEX_PATH_SPRITE_0);
+	cfg->sprite_tex_1 = ft_strdup(TEX_PATH_SPRITE_1);
+	cfg->sprite_tex_2 = ft_strdup(TEX_PATH_SPRITE_2);
+	if (!cfg->door_tex || !cfg->sprite_tex_0
+		|| !cfg->sprite_tex_1 || !cfg->sprite_tex_2)
 		return (free_partial_config(&cfg), NULL);
 	return (cfg);
 }
@@ -47,52 +47,52 @@ int	map_dim(char **map, int mode)
 	return (0);
 }
 
-int	is_wall_or_door(t_game *game, int x, int y)
+int	is_wall_or_door(t_game *g, int x, int y)
 {
-	int		height;
-	char	tile;
-	int		door_idx;
+	int		h;
+	char	t;
+	int		d_idx;
 
-	height = map_dim(game->cfg->map, MAP_DIM_HEIGHT);
-	if (y < 0 || y >= height)
+	h = map_dim(g->cfg->map, MAP_DIM_HEIGHT);
+	if (y < 0 || y >= h)
 		return (1);
-	if (x < 0 || x >= map_dim(&game->cfg->map[y], MAP_DIM_WIDTH))
+	if (x < 0 || x >= map_dim(&g->cfg->map[y], MAP_DIM_WIDTH))
 		return (1);
-	tile = game->cfg->map[y][x];
-	if (tile == TILE_WALL)
+	t = g->cfg->map[y][x];
+	if (t == TILE_WALL)
 		return (1);
-	if (tile == TILE_DOOR)
+	if (t == TILE_DOOR)
 	{
-		door_idx = find_door_index(game, x, y);
-		if (door_idx < 0)
+		d_idx = find_door_index(g, x, y);
+		if (d_idx < 0)
 			return (1);
-		if (game->doors[door_idx].open_ratio < DOOR_OPEN_RATIO_FULL)
+		if (g->doors[d_idx].open_ratio < DOOR_OPEN_RATIO_FULL)
 			return (1);
 	}
 	return (0);
 }
 
-static float	wall_maths(t_game *game, t_ray *ray, float *wx)
+static float	wall_maths(t_game *g, t_ray *r, float *wx)
 {
-	float	perp_dist;
+	float	perp;
 
-	if (ray->side == AXIS_X)
-		perp_dist = (ray->map_x - game->player_x
-				+ (1 - ray->step_x) * RAY_HALF_TILE_OFFSET) / ray->ray_dir_x;
+	if (r->side == AXIS_X)
+		perp = (r->map_x - g->player_x
+				+ (1 - r->step_x) * RAY_HALF_TILE_OFFSET) / r->ray_dir_x;
 	else
-		perp_dist = (ray->map_y - game->player_y
-				+ (1 - ray->step_y) * RAY_HALF_TILE_OFFSET) / ray->ray_dir_y;
-	if (perp_dist < RAY_MIN_PERP_DIST)
-		perp_dist = RAY_MIN_PERP_DIST;
-	if (ray->side == AXIS_X)
-		*wx = game->player_y + perp_dist * ray->ray_dir_y;
+		perp = (r->map_y - g->player_y
+				+ (1 - r->step_y) * RAY_HALF_TILE_OFFSET) / r->ray_dir_y;
+	if (perp < RAY_MIN_PERP_DIST)
+		perp = RAY_MIN_PERP_DIST;
+	if (r->side == AXIS_X)
+		*wx = g->player_y + perp * r->ray_dir_y;
 	else
-		*wx = game->player_x + perp_dist * ray->ray_dir_x;
+		*wx = g->player_x + perp * r->ray_dir_x;
 	*wx -= (int)*wx;
-	return (perp_dist);
+	return (perp);
 }
 
-void	calculate_wall(t_game *game, t_ray *ray, t_wall *wall)
+void	calculate_wall(t_game *g, t_ray *r, t_wall *w)
 {
 	float	perp;
 	int		h;
@@ -100,19 +100,19 @@ void	calculate_wall(t_game *game, t_ray *ray, t_wall *wall)
 	int		de;
 	float	wx;
 
-	perp = wall_maths(game, ray, &wx);
-	h = (int)(game->win_height / perp);
+	perp = wall_maths(g, r, &wx);
+	h = (int)(g->win_height / perp);
 	if (h < 1)
 		h = 1;
-	ds = -h / 2 + game->win_height / 2;
+	ds = -h / 2 + g->win_height / 2;
 	if (ds < 0)
 		ds = 0;
-	de = h / 2 + game->win_height / 2;
-	if (de >= game->win_height)
-		de = game->win_height - 1;
-	wall->perp_wall_dist = perp;
-	wall->line_height = h;
-	wall->draw_start = ds;
-	wall->draw_end = de;
-	wall->wall_x = wx;
+	de = h / 2 + g->win_height / 2;
+	if (de >= g->win_height)
+		de = g->win_height - 1;
+	w->perp_wall_dist = perp;
+	w->line_height = h;
+	w->draw_start = ds;
+	w->draw_end = de;
+	w->wall_x = wx;
 }

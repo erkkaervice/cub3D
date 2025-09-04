@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 17:14:34 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/04 17:28:39 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/04 18:07:20 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	init_sprite(t_game *g, t_sprite *s, int x, int y)
 	s->x = x + RAY_HALF_TILE_OFFSET;
 	s->y = y + RAY_HALF_TILE_OFFSET;
 	s->perp_dist = 0.0f;
-	s->texture_id = TEX_SPRITE_0;
+	s->tex_id = TEX_SPRITE_0;
 	s->start_x = -1;
 	s->end_x = -1;
 	s->start_y = -1;
@@ -26,9 +26,9 @@ void	init_sprite(t_game *g, t_sprite *s, int x, int y)
 	s->frame_index = 0;
 	s->anim_timer = 0.0f;
 	s->speed = SPRITE_DEFAULT_SPEED;
-	s->frames[0] = g->textures[TEX_SPRITE_0];
-	s->frames[1] = g->textures[TEX_SPRITE_1];
-	s->frames[2] = g->textures[TEX_SPRITE_2];
+	s->frames[0] = g->tex[TEX_SPRITE_0];
+	s->frames[1] = g->tex[TEX_SPRITE_1];
+	s->frames[2] = g->tex[TEX_SPRITE_2];
 	s->chasing = SPRITE_DEFAULT_CHASING;
 }
 
@@ -42,15 +42,15 @@ int	init_sprite_render(t_game *g, t_sprite *s)
 	return (1);
 }
 
-void	init_ray_basic(t_game *game, int x, t_ray *ray)
+void	init_ray_basic(t_game *g, int x, t_ray *ray)
 {
 	float	camera_x;
 
-	camera_x = 2.0f * x / (float)game->win_width - 1.0f;
-	ray->ray_dir_x = game->dir_x + game->plane_x * camera_x;
-	ray->ray_dir_y = game->dir_y + game->plane_y * camera_x;
-	ray->map_x = (int)game->player_x;
-	ray->map_y = (int)game->player_y;
+	camera_x = 2.0f * x / (float)g->win_width - 1.0f;
+	ray->ray_dir_x = g->dir_x + g->plane_x * camera_x;
+	ray->ray_dir_y = g->dir_y + g->plane_y * camera_x;
+	ray->map_x = (int)g->player_x;
+	ray->map_y = (int)g->player_y;
 	if (ray->ray_dir_x == 0.0f)
 		ray->delta_dist_x = INFINITY;
 	else
@@ -61,37 +61,37 @@ void	init_ray_basic(t_game *game, int x, t_ray *ray)
 		ray->delta_dist_y = 1.0f / fabsf(ray->ray_dir_y);
 }
 
-void	init_ray_steps(t_game *game, t_ray *ray)
+void	init_ray_steps(t_game *g, t_ray *ray)
 {
 	if (ray->ray_dir_x < 0.0f)
 	{
 		ray->step_x = -1;
-		ray->side_dist_x = (game->player_x - ray->map_x) * ray->delta_dist_x;
+		ray->side_dist_x = (g->player_x - ray->map_x) * ray->delta_dist_x;
 	}
 	else
 	{
 		ray->step_x = 1;
-		ray->side_dist_x = (ray->map_x + 1.0f - game->player_x)
+		ray->side_dist_x = (ray->map_x + 1.0f - g->player_x)
 			* ray->delta_dist_x;
 	}
 	if (ray->ray_dir_y < 0.0f)
 	{
 		ray->step_y = -1;
-		ray->side_dist_y = (game->player_y - ray->map_y) * ray->delta_dist_y;
+		ray->side_dist_y = (g->player_y - ray->map_y) * ray->delta_dist_y;
 	}
 	else
 	{
 		ray->step_y = 1;
-		ray->side_dist_y = (ray->map_y + 1.0f - game->player_y)
+		ray->side_dist_y = (ray->map_y + 1.0f - g->player_y)
 			* ray->delta_dist_y;
 	}
 }
 
-void	init_mouse(t_game *game)
+void	init_mouse(t_game *g)
 {
-	game->mouse.dx = 0.0;
-	game->mouse.sensitivity = MOUSE_SENSITIVITY;
-	game->mouse.prev_x = game->win_width / 2;
-	mlx_set_cursor_mode(game->mlx, MLX_MOUSE_HIDDEN);
-	mlx_set_mouse_pos(game->mlx, game->win_width / 2, game->win_height / 2);
+	g->mouse.dx = 0.0;
+	g->mouse.sensitivity = MOUSE_SENSITIVITY;
+	g->mouse.prev_x = g->win_width / 2;
+	mlx_set_cursor_mode(g->mlx, MLX_MOUSE_HIDDEN);
+	mlx_set_mouse_pos(g->mlx, g->win_width / 2, g->win_height / 2);
 }

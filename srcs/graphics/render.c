@@ -6,13 +6,13 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:53:42 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/04 17:33:38 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/04 18:26:52 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static void	fill_floor_ceiling(t_game *game)
+static void	fill_floor_ceiling(t_game *g)
 {
 	uint32_t	*p;
 	int			i;
@@ -20,30 +20,30 @@ static void	fill_floor_ceiling(t_game *game)
 	uint32_t	ceiling;
 	int			*rgb;
 
-	p = (uint32_t *)game->frame->pixels;
-	rgb = color_atoia(game->cfg->floor_color);
+	p = (uint32_t *)g->frame->pixels;
+	rgb = color_atoia(g->cfg->floor_color);
 	floor = color_converter(rgb);
 	ft_free((char **)&rgb);
-	rgb = color_atoia(game->cfg->ceiling_color);
+	rgb = color_atoia(g->cfg->ceiling_color);
 	ceiling = color_converter(rgb);
 	ft_free((char **)&rgb);
 	i = 0;
-	while (i < game->win_width * game->win_height / 2)
+	while (i < g->win_width * g->win_height / 2)
 		p[i++] = ceiling;
-	while (i < game->win_width * game->win_height)
+	while (i < g->win_width * g->win_height)
 		p[i++] = floor;
 }
 
 void	draw_column(t_game *g, t_wall *w, int x, int t)
 {
-	t_texture	*tex;
-	float		step;
-	float		p;
-	int			y;
+	t_tex	*tex;
+	float	step;
+	float	p;
+	int		y;
 
-	if (t < 0 || t >= TEXTURE_COUNT)
+	if (t < 0 || t >= TEX_COUNT)
 		return ;
-	tex = g->textures[t];
+	tex = g->tex[t];
 	if (!tex || !tex->image || tex->height <= 0)
 		return ;
 	if (w->draw_start < 0)
@@ -56,7 +56,7 @@ void	draw_column(t_game *g, t_wall *w, int x, int t)
 	while (y <= w->draw_end)
 	{
 		blend_pixel(((uint32_t *)g->frame->pixels) + y * g->win_width + x,
-			get_texture_color(g, t, w->tex_x, (int)p), &g->z_buffer[x],
+			get_tex_color(g, t, w->tex_x, (int)p), &g->z_buffer[x],
 			w->perp_wall_dist);
 		p += step;
 		y++;
@@ -92,14 +92,14 @@ void	blend_pixel(uint32_t *dst, uint32_t src, float *zbuf, float dist)
 		*zbuf = dist;
 }
 
-static void	render_game_columns(t_game *game)
+static void	render_game_columns(t_game *g)
 {
 	int	x;
 
 	x = 0;
-	while (x < game->win_width)
+	while (x < g->win_width)
 	{
-		raycast_column(game, x);
+		raycast_column(g, x);
 		x++;
 	}
 }
@@ -107,23 +107,23 @@ static void	render_game_columns(t_game *game)
 void	render_frame(void *param)
 {
 	static double	last_time;
-	t_game			*game;
+	t_game			*g;
 	double			current_time;
 	double			frame_time;
 
-	game = (t_game *)param;
+	g = (t_game *)param;
 	current_time = mlx_get_time();
 	frame_time = current_time - last_time;
 	last_time = current_time;
-	fill_floor_ceiling(game);
-	update_doors(game);
-	apply_mouse_look(game, frame_time);
-	update_player_position(game);
-	render_game_columns(game);
-	render_sprites(game, game->z_buffer);
-	if (game->minimap_visible)
-		render_minimap(game);
-	if (game->fps_visible)
-		render_fps(game);
-	blit_scaled(game);
+	fill_floor_ceiling(g);
+	update_doors(g);
+	apply_mouse_look(g, frame_time);
+	update_player_position(g);
+	render_game_columns(g);
+	render_sprites(g, g->z_buffer);
+	if (g->minimap_visible)
+		render_minimap(g);
+	if (g->fps_visible)
+		render_fps(g);
+	blit_scaled(g);
 }

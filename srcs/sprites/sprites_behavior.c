@@ -12,7 +12,7 @@
 
 #include "cub3d.h"
 
-static void	move_sprite_axis(t_game *game, t_sprite *s, float nx, float ny)
+static void	move_sprite_axis(t_game *g, t_sprite *s, float nx, float ny)
 {
 	const float	coll = SPRITE_COLLISION_MARGIN;
 	float		check_x[2];
@@ -22,11 +22,11 @@ static void	move_sprite_axis(t_game *game, t_sprite *s, float nx, float ny)
 	check_x[1] = nx + coll;
 	check_y[0] = ny - coll;
 	check_y[1] = ny + coll;
-	if (can_move(game, nx, ny)
-		&& can_move(game, check_x[1], check_y[1])
-		&& can_move(game, check_x[0], check_y[1])
-		&& can_move(game, check_x[1], check_y[0])
-		&& can_move(game, check_x[0], check_y[0]))
+	if (can_move(g, nx, ny)
+		&& can_move(g, check_x[1], check_y[1])
+		&& can_move(g, check_x[0], check_y[1])
+		&& can_move(g, check_x[1], check_y[0])
+		&& can_move(g, check_x[0], check_y[0]))
 	{
 		s->x = nx;
 		s->y = ny;
@@ -84,23 +84,23 @@ static uint32_t	blend_color(uint32_t dst_c, uint32_t src_c)
 
 static void	draw_sprite_column(t_sprite *s, int x, uint32_t *dst, t_game *g)
 {
-	t_texture	*tex;
-	int			y;
-	int			tex_x;
-	int			tex_y;
+	t_tex	*t;
+	int		y;
+	int		tex_x;
+	int		tex_y;
 
-	tex = s->frames[s->frame_index];
-	if (!tex || !tex->img || !tex->img->pixels)
+	t = s->frames[s->frame_index];
+	if (!t || !t->img || !t->img->pixels)
 		return ;
-	tex_x = (x - s->start_x) * tex->width / s->width;
+	tex_x = (x - s->start_x) * t->width / s->width;
 	y = s->start_y;
 	while (y <= s->end_y)
 	{
 		if (y >= 0 && y < (int)g->win_height)
 		{
-			tex_y = (y - s->start_y) * tex->height / s->height;
+			tex_y = (y - s->start_y) * t->height / s->height;
 			dst[y * g->win_width + x] = blend_color(dst[y * g->win_width + x],
-					get_texture_color_from_tex(tex, tex_x, tex_y));
+					get_tex_color_from_tex(t, tex_x, tex_y));
 		}
 		y++;
 	}

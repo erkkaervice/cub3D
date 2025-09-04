@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 13:10:39 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/09/01 14:10:22 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/04 17:55:59 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,13 +76,13 @@ void	config_validation(t_config *cfg, char *config_line)
 	while (*config_line == ' ' || *config_line == '\t')
 		config_line++;
 	if (ft_strncmp("NO ", config_line, 3) == 0)
-		set_path(&cfg->north_texture, &cfg->no, config_line, cfg);
+		set_path(&cfg->north_tex, &cfg->no, config_line, cfg);
 	else if (ft_strncmp("WE ", config_line, 3) == 0)
-		set_path(&cfg->west_texture, &cfg->we, config_line, cfg);
+		set_path(&cfg->west_tex, &cfg->we, config_line, cfg);
 	else if (ft_strncmp("EA ", config_line, 3) == 0)
-		set_path(&cfg->east_texture, &cfg->ea, config_line, cfg);
+		set_path(&cfg->east_tex, &cfg->ea, config_line, cfg);
 	else if (ft_strncmp("SO ", config_line, 3) == 0)
-		set_path(&cfg->south_texture, &cfg->so, config_line, cfg);
+		set_path(&cfg->south_tex, &cfg->so, config_line, cfg);
 	else if (ft_strncmp("F ", config_line, 2) == 0)
 		set_path(&cfg->floor_color, &cfg->f, config_line, cfg);
 	else if (ft_strncmp("C ", config_line, 2) == 0)

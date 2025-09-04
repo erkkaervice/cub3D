@@ -6,23 +6,23 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 14:50:30 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/04 17:36:58 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/04 18:31:04 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	draw_fps_pixel(t_game *game, int x, int y, int color)
+void	draw_fps_pixel(t_game *g, int x, int y, int color)
 {
 	uint32_t	*pixel;
 
-	if (x < 0 || x >= game->win_width || y < 0 || y >= game->win_height)
+	if (x < 0 || x >= g->win_width || y < 0 || y >= g->win_height)
 		return ;
-	pixel = (uint32_t *)game->frame->pixels + y * game->win_width + x;
+	pixel = (uint32_t *)g->frame->pixels + y * g->win_width + x;
 	*pixel = color;
 }
 
-void	draw_scaled_pixel(t_game *game, struct s_point pos, int scale, int color)
+void	draw_scaled_pixel(t_game *g, struct s_point pos, int scale, int color)
 {
 	int	dx;
 	int	dy;
@@ -33,14 +33,15 @@ void	draw_scaled_pixel(t_game *game, struct s_point pos, int scale, int color)
 		dx = 0;
 		while (dx < scale)
 		{
-			draw_fps_pixel(game, pos.x + dx, pos.y + dy, color);
+			draw_fps_pixel(g, pos.x + dx, pos.y + dy, color);
 			dx++;
 		}
 		dy++;
 	}
 }
 
-void	draw_char(t_game *game, struct s_point pos, const char bmap[FONT_ROWS], int scale)
+void	draw_char(t_game *g, struct s_point pos,
+	const char bmap[FONT_ROWS], int scale)
 {
 	int	row;
 	int	col;
@@ -52,7 +53,9 @@ void	draw_char(t_game *game, struct s_point pos, const char bmap[FONT_ROWS], int
 		while (col < FONT_COLS)
 		{
 			if (bmap[row] & (1 << (FONT_COLS - 1 - col)))
-				draw_scaled_pixel(game, (struct s_point){pos.x + col * scale, pos.y + row * scale}, scale, FPS_CHAR_COLOR);
+				draw_scaled_pixel(g, (struct s_point)
+				{pos.x + col * scale, pos.y + row * scale},
+					scale, FPS_CHAR_COLOR);
 			col++;
 		}
 		row++;

@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:16:05 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/04 17:36:16 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/04 18:29:43 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ static void	draw_tile_pixel(t_game *g, int x, int y, char tile)
 		while (j < MM_SCALE)
 		{
 			if (x * MM_SCALE + i >= 0 && x * MM_SCALE + i < (int)g->frame->width
-				&& y * MM_SCALE + j >= 0 && y * MM_SCALE + j < (int)g->frame->height)
+				&& y * MM_SCALE + j >= 0 && y
+				* MM_SCALE + j < (int)g->frame->height)
 				((uint32_t *)g->frame->pixels)
 				[(y * MM_SCALE + j) * g->frame->width + (x * MM_SCALE + i)] = c;
 			j++;
