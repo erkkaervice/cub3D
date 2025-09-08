@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 16:42:45 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/04 18:06:54 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/08 17:13:53 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,28 @@ static void	close_hook(void *param)
 
 static void	resize_hook(int32_t w, int32_t h, void *param)
 {
-	t_game	*g;
+	t_game	*game;
+	float	*new_zbuf;
 
-	g = (t_game *)param;
+	game = (t_game *)param;
 	if (w <= 0 || h <= 0)
 		return ;
-	g->win_width = w;
-	g->win_height = h;
-	if (g->img)
-		mlx_delete_image(g->mlx, g->img);
-	g->img = mlx_new_image(g->mlx, w, h);
-	if (!g->img || mlx_image_to_window(g->mlx, g->img, 0, 0) < 0)
-		ft_error("Failed to create image");
-	g->needs_blit = 1;
+	game->win_width = w;
+	game->win_height = h;
+	if (game->img)
+		mlx_delete_image(game->mlx, game->img);
+	game->img = mlx_new_image(game->mlx, w, h);
+	if (!game->img)
+		exit(1);
+	if (mlx_image_to_window(game->mlx, game->img, 0, 0) < 0)
+		exit(1);
+	new_zbuf = ft_calloc(w, sizeof(float));
+	if (!new_zbuf)
+		exit(1);
+	if (game->z_buffer)
+		free(game->z_buffer);
+	game->z_buffer = new_zbuf;
+	game->needs_blit = 1;
 }
 
 static int	init_mlx_win_and_img(t_game *g)

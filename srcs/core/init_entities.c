@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 17:14:34 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/04 18:07:20 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/08 16:00:46 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	init_ray_basic(t_game *g, int x, t_ray *ray)
 {
 	float	camera_x;
 
-	camera_x = 2.0f * x / (float)g->win_width - 1.0f;
+	camera_x = 2.0f * x / (float)g->frame->width - 1.0f;
 	ray->ray_dir_x = g->dir_x + g->plane_x * camera_x;
 	ray->ray_dir_y = g->dir_y + g->plane_y * camera_x;
 	ray->map_x = (int)g->player_x;
@@ -91,7 +91,7 @@ void	init_mouse(t_game *g)
 {
 	g->mouse.dx = 0.0;
 	g->mouse.sensitivity = MOUSE_SENSITIVITY;
-	g->mouse.prev_x = g->win_width / 2;
+	g->mouse.prev_x = g->frame->width / 2;
 	mlx_set_cursor_mode(g->mlx, MLX_MOUSE_HIDDEN);
-	mlx_set_mouse_pos(g->mlx, g->win_width / 2, g->win_height / 2);
+	mlx_set_mouse_pos(g->mlx, g->frame->width / 2, g->frame->height / 2);
 }

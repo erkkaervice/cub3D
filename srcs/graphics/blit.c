@@ -6,24 +6,31 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 17:38:06 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/04 18:19:59 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/08 17:14:33 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static void	blit_scaled_row(uint32_t *dst, t_game *g, float *scale, int y)
+static void	blit_scaled_row(uint32_t *dst, t_game *g, int y)
 {
-	int	x;
+	int		x;
+	int		src_x;
+	int		src_y;
 
+	if (!dst || !g || !g->frame || !g->frame->pixels)
+		return ;
+	src_y = y * g->frame->height / g->win_height;
+	if ((unsigned int)src_y >= g->frame->height)
+		src_y = g->frame->height - 1;
 	x = 0;
-	scale[2] = 0;
 	while (x < g->win_width)
 	{
-		dst[y * g->win_width + x]
-			= ((uint32_t *)g->frame->pixels)
-		[(int)scale[3] * g->win_width + (int)scale[2]];
-		scale[2] += scale[0];
+		src_x = x * g->frame->width / g->win_width;
+		if ((unsigned int)src_x >= g->frame->width)
+			src_x = g->frame->width - 1;
+		dst[y * g->win_width + x] = ((uint32_t *)g->frame->pixels)
+		[src_y * g->frame->width + src_x];
 		x++;
 	}
 }
@@ -32,19 +39,14 @@ void	blit_scaled(t_game *g)
 {
 	int			y;
 	uint32_t	*dst;
-	float		scale[4];
 
-	if (!g->frame || !g->img)
+	if (!g || !g->frame || !g->frame->pixels || !g->img || !g->img->pixels)
 		return ;
-	scale[0] = (float)g->frame->width / (float)g->win_width;
-	scale[1] = (float)g->frame->height / (float)g->win_height;
 	dst = (uint32_t *)g->img->pixels;
 	y = 0;
-	scale[3] = 0;
 	while (y < g->win_height)
 	{
-		blit_scaled_row(dst, g, scale, y);
-		scale[3] += scale[1];
+		blit_scaled_row(dst, g, y);
 		y++;
 	}
 }

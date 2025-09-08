@@ -82,25 +82,34 @@ static uint32_t	blend_color(uint32_t dst_c, uint32_t src_c)
 	return (0xFF000000u | (r << 16) | (gc << 8) | b);
 }
 
-static void	draw_sprite_column(t_sprite *s, int x, uint32_t *dst, t_game *g)
+static void	draw_sprite_column(t_sprite *s, int win_x, uint32_t *dst, t_game *g)
 {
 	t_tex	*t;
 	int		y;
 	int		tex_x;
 	int		tex_y;
+	int		frame_x;
+	int		w_scaled;
 
 	t = s->frames[s->frame_index];
 	if (!t || !t->img || !t->img->pixels)
 		return ;
-	tex_x = (x - s->start_x) * t->width / s->width;
+	frame_x = win_x * g->frame->width / g->win_width;
+	if (frame_x < 0 || frame_x >= (int)g->frame->width)
+		return ;
+	w_scaled = s->width * g->frame->width / g->win_width;
+	tex_x = (frame_x - s->start_x * g->frame->width / g->win_width)
+		* t->width / w_scaled;
 	y = s->start_y;
 	while (y <= s->end_y)
 	{
 		if (y >= 0 && y < (int)g->win_height)
 		{
 			tex_y = (y - s->start_y) * t->height / s->height;
-			dst[y * g->win_width + x] = blend_color(dst[y * g->win_width + x],
-					get_tex_color_from_tex(t, tex_x, tex_y));
+			dst[y * g->frame->width + frame_x] = blend_color(
+				dst[y * g->frame->width + frame_x],
+				get_tex_color_from_tex(t, tex_x, tex_y)
+			);
 		}
 		y++;
 	}
@@ -110,6 +119,7 @@ void	draw_sprite_stripe(t_game *g, t_sprite *s, float *zb)
 {
 	uint32_t	*dst;
 	int			x;
+	int			frame_x;
 
 	if (!g || !g->frame || !s || !zb)
 		return ;
@@ -117,7 +127,9 @@ void	draw_sprite_stripe(t_game *g, t_sprite *s, float *zb)
 	x = s->start_x;
 	while (x <= s->end_x)
 	{
-		if (x >= 0 && x < g->win_width && s->perp_dist < zb[x])
+		frame_x = x * g->frame->width / g->win_width;
+		if (frame_x >= 0 && frame_x < (int)g->frame->width
+			&& s->perp_dist < zb[frame_x])
 			draw_sprite_column(s, x, dst, g);
 		x++;
 	}

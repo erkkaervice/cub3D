@@ -16,19 +16,24 @@ t_config	*map_config(char *f)
 {
 	t_config	*cfg;
 
-	cfg = malloc(sizeof(t_config));
+	cfg = ft_calloc(1, sizeof(t_config));
 	if (!cfg)
 		return (NULL);
-	ft_bzero(cfg, sizeof(t_config));
 	if (!map_parsing(cfg, f))
-		return (free_partial_config(&cfg), NULL);
+	{
+		free_partial_config(&cfg);
+		return (NULL);
+	}
 	cfg->door_tex = ft_strdup(TEX_PATH_DOOR);
 	cfg->sprite_tex_0 = ft_strdup(TEX_PATH_SPRITE_0);
 	cfg->sprite_tex_1 = ft_strdup(TEX_PATH_SPRITE_1);
 	cfg->sprite_tex_2 = ft_strdup(TEX_PATH_SPRITE_2);
 	if (!cfg->door_tex || !cfg->sprite_tex_0
 		|| !cfg->sprite_tex_1 || !cfg->sprite_tex_2)
-		return (free_partial_config(&cfg), NULL);
+	{
+		free_partial_config(&cfg);
+		return (NULL);
+	}
 	return (cfg);
 }
 
@@ -100,16 +105,18 @@ void	calculate_wall(t_game *g, t_ray *r, t_wall *w)
 	int		de;
 	float	wx;
 
+	if (!g || !r || !w || !g->frame)
+		return ;
 	perp = wall_maths(g, r, &wx);
-	h = (int)(g->win_height / perp);
+	h = (int)((float)g->frame->height / perp);
 	if (h < 1)
 		h = 1;
-	ds = -h / 2 + g->win_height / 2;
+	ds = -h / 2 + g->frame->height / 2;
 	if (ds < 0)
 		ds = 0;
-	de = h / 2 + g->win_height / 2;
-	if (de >= g->win_height)
-		de = g->win_height - 1;
+	de = h / 2 + g->frame->height / 2;
+	if (de >= (int)g->frame->height)
+		de = g->frame->height - 1;
 	w->perp_wall_dist = perp;
 	w->line_height = h;
 	w->draw_start = ds;

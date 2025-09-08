@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:53:42 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/04 18:26:52 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/08 17:14:47 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ static void	fill_floor_ceiling(t_game *g)
 	uint32_t	ceiling;
 	int			*rgb;
 
+	if (!g || !g->frame || !g->frame->pixels)
+		return ;
 	p = (uint32_t *)g->frame->pixels;
 	rgb = color_atoia(g->cfg->floor_color);
 	floor = color_converter(rgb);
@@ -28,9 +30,9 @@ static void	fill_floor_ceiling(t_game *g)
 	ceiling = color_converter(rgb);
 	ft_free((char **)&rgb);
 	i = 0;
-	while (i < g->win_width * g->win_height / 2)
+	while (i < (int)(g->frame->width * g->frame->height / 2))
 		p[i++] = ceiling;
-	while (i < g->win_width * g->win_height)
+	while (i < (int)(g->frame->width * g->frame->height))
 		p[i++] = floor;
 }
 
@@ -38,28 +40,28 @@ void	draw_column(t_game *g, t_wall *w, int x, int t)
 {
 	t_tex	*tex;
 	float	step;
-	float	p;
+	float	pos;
 	int		y;
 
-	if (t < 0 || t >= TEX_COUNT)
+	if (!g || !g->frame || !g->frame->pixels || t < 0 || t >= TEX_COUNT
+		|| x < 0 || x >= (int)g->frame->width)
 		return ;
 	tex = g->tex[t];
 	if (!tex || !tex->image || tex->height <= 0)
 		return ;
 	if (w->draw_start < 0)
 		w->draw_start = 0;
-	if (w->draw_end >= g->win_height)
-		w->draw_end = g->win_height - 1;
+	if (w->draw_end >= (int)g->frame->height)
+		w->draw_end = g->frame->height - 1;
 	step = (float)tex->height / (float)w->line_height;
-	p = (w->draw_start - g->win_height / 2 + w->line_height / 2) * step;
-	y = w->draw_start;
-	while (y <= w->draw_end)
+	pos = (w->draw_start - g->frame->height / 2 + w->line_height / 2) * step;
+	y = w->draw_start - 1;
+	while (++y <= w->draw_end)
 	{
-		blend_pixel(((uint32_t *)g->frame->pixels) + y * g->win_width + x,
-			get_tex_color(g, t, w->tex_x, (int)p), &g->z_buffer[x],
+		blend_pixel(((uint32_t *)g->frame->pixels) + y * g->frame->width + x,
+			get_tex_color(g, t, w->tex_x, (int)pos), &g->z_buffer[x],
 			w->perp_wall_dist);
-		p += step;
-		y++;
+		pos += step;
 	}
 }
 
@@ -96,6 +98,8 @@ static void	render_game_columns(t_game *g)
 {
 	int	x;
 
+	if (!g)
+		return ;
 	x = 0;
 	while (x < g->win_width)
 	{
@@ -112,6 +116,8 @@ void	render_frame(void *param)
 	double			frame_time;
 
 	g = (t_game *)param;
+	if (!g)
+		return ;
 	current_time = mlx_get_time();
 	frame_time = current_time - last_time;
 	last_time = current_time;

@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 15:25:54 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/04 18:10:04 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/08 15:08:56 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ void	mouse_move(double x, double y, void *param)
 
 	(void)y;
 	g = (t_game *)param;
-	center_x = g->win_width / 2;
-	center_y = g->win_height / 2;
+	center_x = g->frame->width / 2;
+	center_y = g->frame->height / 2;
 	diff = x - g->mouse.prev_x;
 	g->mouse.dx += diff;
 	g->mouse.prev_x = center_x;
