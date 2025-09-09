@@ -67,23 +67,25 @@ int	*color_atoia(const char *color_string)
 
 	i = 0;
 	rgb = malloc(sizeof(int) * 3);
+	if (!rgb)
+		return (NULL);
 	token = ft_split(color_string, ',');
-	while (token[i] && i < 3)
-	{
-		rgb [i] = ft_atoi(token[i]);
-		if (rgb[i] < 0)
-			rgb[i] = 0;
-		if (rgb[i] > 255)
-			rgb[i] = 255;
-		i++;
-	}
-	i = 0;
+	if (!token)
+		return (free(rgb), NULL);
 	while (token[i])
+		i++;
+	if (i != 3)
+		return (free(rgb), free_split(token), NULL);
+	i = 0;
+	while (i < 3)
 	{
-		free(token[i++]);
+		if (!is_valid_number(token[i]))
+			return (free(rgb), free_split(token), NULL);
+		rgb[i] = ft_atoi(token[i]);
+		if (rgb[i] < 0 || rgb[i++] > 255)
+			return (free(rgb), free_split(token), NULL);
 	}
-	free(token);
-	return (rgb);
+	return (free_split(token), rgb);
 }
 
 uint32_t	color_converter(int *rgb)
