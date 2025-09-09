@@ -58,14 +58,14 @@ void	free_config(t_config **cfg_ptr)
 	*cfg_ptr = NULL;
 }
 
-void	free_textures(t_game *g, int count)
+void	free_textures(t_game *g)
 {
 	int	i;
 
 	if (!g || !g->tex)
 		return ;
 	i = 0;
-	while (i < count)
+	while (i < TEX_COUNT)
 	{
 		if (g->tex[i])
 		{
@@ -92,7 +92,7 @@ static void	free_game_resources(t_game *g)
 		free(g->sprites);
 	if (g->doors)
 		free(g->doors);
-	free_textures(g, TEX_COUNT);
+	free_textures(g);
 }
 
 void	cleanup_game(t_game *g)

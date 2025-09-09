@@ -12,35 +12,6 @@
 
 #include "cub3d.h"
 
-static int	map_is_enclosed(t_config *cfg, int i)
-{
-	int		j;
-
-	while (cfg->map[i + 1])
-	{
-		j = 0;
-		while (cfg->map[i][j])
-		{
-			while (cfg->map[i][j] == ' ' || cfg->map[i][j] == '\t')
-				j++;
-			if (cfg->map[i][j] == '0')
-			{
-				if (cfg->map[i][j + 1] == '\0' || cfg->map[i][j + 1] == ' '
-					|| cfg->map[i][j + 1] == '\n' || cfg->map[i][j + 1] == '\t'
-					|| cfg->map[i - 1][j] == '\0' || cfg->map[i + 1][j] == '\0'
-					|| cfg->map[i - 1][j] == ' ' || cfg->map[i + 1][j] == ' '
-					|| cfg->map[i + 1][j] == '\n' || cfg->map[i - 1][j] == '\n'
-					|| j == 0 || cfg->map[i][j - 1] == ' '
-					|| cfg->map[i][j - 1] == '\t')
-					return (print_err(cfg, "Map is not closed", -1));
-			}
-			j++;
-		}
-		i++;
-	}
-	return (check_last_line(cfg->map[i]));
-}
-
 static int	read_map_lines(t_config *cfg, char *filename)
 {
 	int		fd;
@@ -61,11 +32,6 @@ static int	read_map_lines(t_config *cfg, char *filename)
 	}
 	cfg->map[i] = NULL;
 	close(fd);
-	i = 0;
-	while (!is_map_line(cfg->map[i]))
-		i++;
-	if (!map_is_enclosed(cfg, i))
-		return (-1);
 	return (max_len);
 }
 
@@ -116,7 +82,7 @@ bool	map_parsing2(t_config *cfg, char *filename)
 
 	max_len = read_map_lines(cfg, filename);
 	if (max_len < 0)
-		return (print_err(cfg, NULL, -1));
+		return (print_err(cfg, "File open failed", -1));
 	if (!pad_map_lines(cfg, max_len))
 		return (false);
 	process_config_lines(cfg);

@@ -121,7 +121,6 @@ bool	map_validation2(t_config *cfg)
 	int		i;
 	int		config_count;
 	bool	map_started;
-	int		*rgb;
 
 	i = 0;
 	config_count = 0;
@@ -130,15 +129,5 @@ bool	map_validation2(t_config *cfg)
 		return (false);
 	if (!map_started)
 		return (print_err(cfg, "Map not found after configuration", -1));
-	rgb = color_atoia(cfg->floor_color);
-	if (!rgb)
-		return (print_err(cfg, "Error with color config", -1));
-	free(rgb);
-	rgb = NULL;
-	rgb = color_atoia(cfg->ceiling_color);
-	if (!rgb)
-		return (print_err(cfg, "Error with color config", -1));
-	free(rgb);
-	rgb = NULL;
 	return (map_validation3(cfg));
 }

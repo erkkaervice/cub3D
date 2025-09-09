@@ -14,23 +14,18 @@
 
 bool	is_map_line(char *line)
 {
-	bool	has_map_char;
-
-	has_map_char = false;
 	while (*line == ' ' || *line == '\t')
 		line++;
-	if (*line == '\0' || *line == '\n')
-		return (false);
 	while (*line)
 	{
-		if (*line == '0' || *line == '1' || *line == 'N' || *line == 'S'
-			|| *line == 'E' || *line == 'W' || *line == 'D' || *line == 'X')
-			has_map_char = true;
-		else if (*line != ' ' && *line != '\t' && *line != '\n')
+		if (*line != ' ' && *line != '0' && *line != '1'
+			&& *line != 'N' && *line != 'S' && *line != 'E'
+			&& *line != 'W' && *line != 'D' && *line != 'X'
+			&& *line != '\n')
 			return (false);
 		line++;
 	}
-	return (has_map_char);
+	return (true);
 }
 
 bool	is_config_line(char *line)
@@ -64,12 +59,6 @@ bool	is_empty_line(char *line)
 int	print_err(t_config *cfg, char *error, int fd)
 {
 	(void)cfg;
-	if (!error)
-	{
-		if (fd >= 0)
-			close (fd);
-		return (0);
-	}
 	if (*error)
 		ft_putendl_fd(error, 2);
 	if (fd >= 0)

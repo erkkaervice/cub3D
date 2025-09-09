@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:22:57 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/08 15:47:46 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/09 14:04:03 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,11 @@ void	init_player(t_game *g)
 {
 	int	i;
 
-	i = 0;
+	if (!g || !g->cfg)
+		return ;
 	g->player_x = g->cfg->player_x + RAY_HALF_TILE_OFFSET;
 	g->player_y = g->cfg->player_y + RAY_HALF_TILE_OFFSET;
+	i = 0;
 	while (i < DIR_COUNT)
 	{
 		if (g->dir_infos[i].dir == g->cfg->player_dir)
@@ -88,7 +90,7 @@ void	init_doors(t_game *g)
 {
 	int	y;
 	int	x;
-	int	idx;
+	int	i;
 
 	g->num_doors = count_doors(g);
 	if (g->num_doors == 0)
@@ -96,7 +98,7 @@ void	init_doors(t_game *g)
 	g->doors = ft_calloc(g->num_doors, sizeof(t_door));
 	if (!g->doors)
 		return ;
-	idx = 0;
+	i = 0;
 	y = 0;
 	while (g->cfg->map[y])
 	{
@@ -104,7 +106,7 @@ void	init_doors(t_game *g)
 		while (g->cfg->map[y][x])
 		{
 			if (g->cfg->map[y][x] == TILE_DOOR)
-				g->doors[idx++] = (t_door){x, y, DOOR_OPEN_RATIO_START, 0};
+				g->doors[i++] = (t_door){x, y, DOOR_OPEN_RATIO_START, 0};
 			x++;
 		}
 		y++;

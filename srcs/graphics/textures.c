@@ -50,9 +50,9 @@ int	load_tex(t_game *g)
 	{
 		g->tex[i] = ft_calloc(1, sizeof(t_tex));
 		if (!g->tex[i])
-			return (free_textures(g, i), 0);
+			return (free_textures(g), 0);
 		if (!load_tex_file(g->mlx, g->tex[i], paths[i], g->cfg))
-			return (free_textures(g, i + 1), 0);
+			return (free_textures(g), 0);
 		i++;
 	}
 	return (1);
@@ -63,12 +63,12 @@ int	get_tex_index(int side, float ray_dir_x, float ray_dir_y)
 	if (side == 0)
 	{
 		if (ray_dir_x > 0)
-			return (TEX_SOUTH);
-		return (TEX_NORTH);
+			return (TEX_EAST);
+		return (TEX_WEST);
 	}
 	if (ray_dir_y > 0)
-		return (TEX_EAST);
-	return (TEX_WEST);
+		return (TEX_SOUTH);
+	return (TEX_NORTH);
 }
 
 int	get_tex_color_from_tex(t_tex *t, int tex_x, int tex_y)

@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 16:42:45 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/09 13:17:37 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/09 14:22:41 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ static int	init_game_resources(t_game *g, char *f)
 	if (!g->z_buffer)
 	{
 		free_config(&g->cfg);
-		free_textures(g, TEX_COUNT);
+		free_textures(g);
 		return (0);
 	}
 	i = 0;

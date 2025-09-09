@@ -61,7 +61,7 @@ void		free_split(char **split);
 void		cleanup_game(t_game *g);
 void		free_config(t_config **cfg_ptr);
 void		cleanup_cfg_tex_paths(t_config *cfg);
-void		free_textures(t_game *g, int count);
+void		free_textures(t_game *g);
 void		free_config_textures(t_config *cfg);
 
 /* ************************************************************************** */
