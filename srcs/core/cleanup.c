@@ -12,8 +12,10 @@
 
 #include "cub3d.h"
 
-static void	free_config_textures(t_config *cfg)
+void	free_config_textures(t_config *cfg)
 {
+	if (!cfg)
+		return ;
 	if (cfg->ceiling_color)
 		ft_free(&cfg->ceiling_color);
 	if (cfg->floor_color)

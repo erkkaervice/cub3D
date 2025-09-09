@@ -18,7 +18,9 @@ SRC		= \
 	parsing/parsing.c \
 	parsing/parsing2.c \
 	parsing/parsing3.c \
+	parsing/parsing4.c \
 	parsing/parsing_utils.c \
+	parsing/parsing_utils2.c \
 	\
 	graphics/blit.c \
 	graphics/render.c \

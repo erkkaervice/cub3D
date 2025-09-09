@@ -17,7 +17,7 @@ static int	load_tex_file(mlx_t *mlx, t_tex *t, char *path, t_config *cfg)
 	t->img = mlx_load_png(path);
 	if (!t->img)
 	{
-		free_config(&cfg);
+		free_config_textures(cfg);
 		return (0);
 	}
 	t->width = t->img->width;

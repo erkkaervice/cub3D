@@ -51,6 +51,9 @@ bool		is_config_line(char *line);
 bool		is_empty_line(char *line);
 int			print_err(t_config *cfg, char *line, int fd);
 void		free_cfg_tex(t_config *cfg);
+bool		is_valid_number(const char *s);
+int			check_last_line(char	*last_line);
+void		free_split(char **split);
 
 /* ************************************************************************** */
 /*                               Cleanup                                      */
@@ -59,6 +62,7 @@ void		cleanup_game(t_game *g);
 void		free_config(t_config **cfg_ptr);
 void		cleanup_cfg_tex_paths(t_config *cfg);
 void		free_textures(t_game *g, int count);
+void		free_config_textures(t_config *cfg);
 
 /* ************************************************************************** */
 /*                               Raycasting                                   */
