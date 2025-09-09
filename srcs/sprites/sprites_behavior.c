@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 17:54:49 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/02 20:00:00 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/09 20:30:00 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,34 +82,30 @@ static uint32_t	blend_color(uint32_t dst_c, uint32_t src_c)
 	return (0xFF000000u | (r << 16) | (gc << 8) | b);
 }
 
-static void	draw_sprite_column(t_sprite *s, int win_x, uint32_t *dst, t_game *g)
+static void	draw_sprite_column(t_game *g, t_sprite *s,
+					uint32_t *dst, int xi)
 {
 	t_tex	*t;
 	int		y;
-	int		tex_x;
-	int		tex_y;
-	int		frame_x;
-	int		w_scaled;
+	int		tx;
+	int		ty;
+	int		yi;
 
 	t = s->frames[s->frame_index];
-	if (!t || !t->img || !t->img->pixels)
+	if (!t || !t->img || !t->img->pixels || s->width <= 0 || s->height <= 0)
 		return ;
-	frame_x = win_x * g->frame->width / g->win_width;
-	if (frame_x < 0 || frame_x >= (int)g->frame->width)
-		return ;
-	w_scaled = s->width * g->frame->width / g->win_width;
-	tex_x = (frame_x - s->start_x * g->frame->width / g->win_width)
-		* t->width / w_scaled;
+	tx = (xi * g->win_width / g->frame->width - s->start_x)
+		* t->width / s->width;
 	y = s->start_y;
 	while (y <= s->end_y)
 	{
 		if (y >= 0 && y < (int)g->win_height)
 		{
-			tex_y = (y - s->start_y) * t->height / s->height;
-			dst[y * g->frame->width + frame_x] = blend_color(
-				dst[y * g->frame->width + frame_x],
-				get_tex_color_from_tex(t, tex_x, tex_y)
-			);
+			ty = (y - s->start_y) * t->height / s->height;
+			yi = y * g->frame->height / g->win_height;
+			dst[yi * g->frame->width + xi] = blend_color(
+					dst[yi * g->frame->width + xi],
+					get_tex_color_from_tex(t, tx, ty));
 		}
 		y++;
 	}
@@ -118,19 +114,20 @@ static void	draw_sprite_column(t_sprite *s, int win_x, uint32_t *dst, t_game *g)
 void	draw_sprite_stripe(t_game *g, t_sprite *s, float *zb)
 {
 	uint32_t	*dst;
-	int			x;
-	int			frame_x;
+	int			wx;
+	int			xi;
 
 	if (!g || !g->frame || !s || !zb)
 		return ;
+	if (s->start_x > s->end_x || s->start_y > s->end_y)
+		return ;
 	dst = (uint32_t *)g->frame->pixels;
-	x = s->start_x;
-	while (x <= s->end_x)
+	wx = s->start_x;
+	while (wx <= s->end_x)
 	{
-		frame_x = x * g->frame->width / g->win_width;
-		if (frame_x >= 0 && frame_x < (int)g->frame->width
-			&& s->perp_dist < zb[frame_x])
-			draw_sprite_column(s, x, dst, g);
-		x++;
+		xi = wx * g->frame->width / g->win_width;
+		if (xi >= 0 && xi < (int)g->frame->width && s->perp_dist < zb[xi])
+			draw_sprite_column(g, s, dst, xi);
+		wx++;
 	}
 }
