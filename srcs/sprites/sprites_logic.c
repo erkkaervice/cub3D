@@ -18,6 +18,8 @@ int	compute_sprite_transform(t_game *g, t_sprite *s)
 	float	spy;
 	float	inv_det;
 
+	if (!g || !s)
+		return (0);
 	spx = s->x - g->player_x;
 	spy = s->y - g->player_y;
 	inv_det = g->plane_x * g->dir_y - g->dir_x * g->plane_y;

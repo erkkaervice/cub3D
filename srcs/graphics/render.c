@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:53:42 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/08 17:14:47 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:04:39 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,17 @@ static void	fill_floor_ceiling(t_game *g)
 	uint32_t	ceiling;
 	int			*rgb;
 
-	if (!g || !g->frame || !g->frame->pixels)
+	if (!g || !g->frame || !g->frame->pixels || !g->cfg)
 		return ;
 	p = (uint32_t *)g->frame->pixels;
 	rgb = color_atoia(g->cfg->floor_color);
+	if (!rgb)
+		return ;
 	floor = color_converter(rgb);
 	ft_free((char **)&rgb);
 	rgb = color_atoia(g->cfg->ceiling_color);
+	if (!rgb)
+		return ;
 	ceiling = color_converter(rgb);
 	ft_free((char **)&rgb);
 	i = 0;

@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 16:42:45 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/09 14:22:41 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:09:39 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,7 @@ static void	resize_hook(int32_t w, int32_t h, void *param)
 	if (game->img)
 		mlx_delete_image(game->mlx, game->img);
 	game->img = mlx_new_image(game->mlx, w, h);
-	if (!game->img)
-		exit(1);
-	if (mlx_image_to_window(game->mlx, game->img, 0, 0) < 0)
+	if (!game->img || mlx_image_to_window(game->mlx, game->img, 0, 0) < 0)
 		exit(1);
 	new_zbuf = ft_calloc(w, sizeof(float));
 	if (!new_zbuf)
@@ -51,8 +49,7 @@ static int	init_mlx_win_and_img(t_game *g)
 		return (0);
 	g->frame = mlx_new_image(g->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
 	g->img = mlx_new_image(g->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
-	if (!g->frame || !g->img
-		|| mlx_image_to_window(g->mlx, g->img, 0, 0) < 0)
+	if (!g->frame || !g->img)
 	{
 		if (g->img)
 			mlx_delete_image(g->mlx, g->img);
@@ -61,6 +58,8 @@ static int	init_mlx_win_and_img(t_game *g)
 		mlx_terminate(g->mlx);
 		return (0);
 	}
+	if (mlx_image_to_window(g->mlx, g->img, 0, 0) < 0)
+		exit(1);
 	g->win_width = WINDOW_WIDTH;
 	g->win_height = WINDOW_HEIGHT;
 	g->needs_blit = 1;
@@ -70,8 +69,6 @@ static int	init_mlx_win_and_img(t_game *g)
 
 static int	init_game_resources(t_game *g, char *f)
 {
-	int	i;
-
 	g->cfg = map_config(f);
 	if (!g->cfg || !load_tex(g))
 	{
@@ -86,12 +83,6 @@ static int	init_game_resources(t_game *g, char *f)
 		free_config(&g->cfg);
 		free_textures(g);
 		return (0);
-	}
-	i = 0;
-	while (i < g->win_width)
-	{
-		g->z_buffer[i] = 0.0f;
-		i++;
 	}
 	return (1);
 }

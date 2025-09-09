@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 15:29:29 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/04 18:09:30 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:02:28 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	can_move(t_game *g, float x, float y)
 	int		ix;
 	int		iy;
 
+	if (!g || !g->cfg || !g->cfg->map)
+		return (0);
 	ix = (int)x;
 	iy = (int)y;
 	if (x < 0.0f || y < 0.0f)

@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 17:38:06 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/08 17:14:33 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:06:23 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ static void	blit_scaled_row(uint32_t *dst, t_game *g, int y)
 	int		src_x;
 	int		src_y;
 
-	if (!dst || !g || !g->frame || !g->frame->pixels)
+	if (!dst || !g || !g->frame || !g->frame->pixels
+		|| (unsigned int)y >= (unsigned int)g->win_height)
 		return ;
 	src_y = y * g->frame->height / g->win_height;
 	if ((unsigned int)src_y >= g->frame->height)

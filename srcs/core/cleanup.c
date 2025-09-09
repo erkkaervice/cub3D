@@ -100,8 +100,7 @@ void	cleanup_game(t_game *g)
 	if (!g)
 		return ;
 	free_game_resources(g);
-	if (g->cfg)
-		free_config(&g->cfg);
+	free_config(&g->cfg);
 	if (g->mlx)
 		mlx_terminate(g->mlx);
 	g->mlx = NULL;

@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 18:02:25 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/09 13:55:03 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:02:57 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int	find_door_index(t_game *g, int x, int y)
 {
 	int	i;
 
+	if (!g || !g->doors)
+		return (-1);
 	i = 0;
 	while (i < g->num_doors)
 	{

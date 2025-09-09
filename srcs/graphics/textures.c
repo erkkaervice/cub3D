@@ -14,6 +14,8 @@
 
 static int	load_tex_file(mlx_t *mlx, t_tex *t, char *path, t_config *cfg)
 {
+	if (!mlx || !t || !path || !cfg)
+		return (0);
 	t->img = mlx_load_png(path);
 	if (!t->img)
 	{

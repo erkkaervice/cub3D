@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 18:02:25 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/04 18:14:25 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:02:47 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ void	toggle_door(t_game *g)
 	float	px;
 	float	py;
 
+	if (!g || !g->doors)
+		return ;
 	px = g->player_x;
 	py = g->player_y;
 	x = (int)(px + g->dir_x * DOOR_TOGGLE_RANGE);

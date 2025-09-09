@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:22:57 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/09 14:04:03 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/09 14:59:28 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,6 @@ void	init_player(t_game *g)
 {
 	int	i;
 
-	if (!g || !g->cfg)
-		return ;
 	g->player_x = g->cfg->player_x + RAY_HALF_TILE_OFFSET;
 	g->player_y = g->cfg->player_y + RAY_HALF_TILE_OFFSET;
 	i = 0;
@@ -80,7 +78,7 @@ void	init_player(t_game *g)
 			g->dir_y = g->dir_infos[i].dir_y;
 			g->plane_x = g->dir_infos[i].plane_x;
 			g->plane_y = g->dir_infos[i].plane_y;
-			break ;
+			return ;
 		}
 		i++;
 	}

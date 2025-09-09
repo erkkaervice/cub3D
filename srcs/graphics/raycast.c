@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:55:14 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/08 15:49:59 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:08:01 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ int	perform_dda(t_game *g, t_ray *r, int x)
 	int		step_count;
 	int		ret;
 
+	if (!g || !r)
+		return (RAY_HIT_NONE);
 	map_w = map_dim(&g->cfg->map[0], MAP_DIM_WIDTH);
 	map_h = map_dim(g->cfg->map, MAP_DIM_HEIGHT);
 	step_count = 0;
@@ -86,13 +88,12 @@ int	perform_dda(t_game *g, t_ray *r, int x)
 			step_ray(r, AXIS_Y);
 		ret = handle_tile(g, r, map_w, map_h);
 		if (ret != -1)
-		{
-			g->z_buffer[x] = r->perp_wall_dist;
-			return (ret);
-		}
+			break ;
 		step_count++;
 	}
 	g->z_buffer[x] = r->perp_wall_dist;
+	if (ret != -1)
+		return (ret);
 	return (RAY_HIT_NONE);
 }
 
