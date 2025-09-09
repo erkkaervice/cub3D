@@ -21,7 +21,7 @@ t_config	*map_config(char *f)
 		return (NULL);
 	if (!map_parsing(cfg, f))
 	{
-		free_partial_config(&cfg);
+		free_config(&cfg);
 		return (NULL);
 	}
 	cfg->door_tex = ft_strdup(TEX_PATH_DOOR);
@@ -31,7 +31,7 @@ t_config	*map_config(char *f)
 	if (!cfg->door_tex || !cfg->sprite_tex_0
 		|| !cfg->sprite_tex_1 || !cfg->sprite_tex_2)
 	{
-		free_partial_config(&cfg);
+		free_config(&cfg);
 		return (NULL);
 	}
 	return (cfg);

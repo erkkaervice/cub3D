@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:53:05 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/02 20:10:00 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/09 21:10:00 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,9 @@ void		free_cfg_tex(t_config *cfg);
 /*                               Cleanup                                      */
 /* ************************************************************************** */
 void		cleanup_game(t_game *g);
+void		free_config(t_config **cfg_ptr);
 void		cleanup_cfg_tex_paths(t_config *cfg);
-void		free_partial_config(t_config **cfg_ptr);
+void		free_textures(t_game *g, int count);
 
 /* ************************************************************************** */
 /*                               Raycasting                                   */
@@ -87,7 +88,6 @@ int			get_tex_index_door(t_game *g, int map_x, int map_y);
 int			get_tex_x(t_game *g, t_ray *r, float wall_x, int tex_id);
 int			get_tex_color_from_tex(t_tex *tex, int tex_x, int tex_y);
 int			get_tex_color(t_game *g, int tex_id, int tex_x, int tex_y);
-void		free_tex(t_game *g, int count);
 
 /* ************************************************************************** */
 /*                              Door management                               */

@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 16:42:45 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/08 17:13:53 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/09/09 13:17:37 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static int	init_game_resources(t_game *g, char *f)
 	g->cfg = map_config(f);
 	if (!g->cfg || !load_tex(g))
 	{
-		free_partial_config(&g->cfg);
+		free_config(&g->cfg);
 		return (0);
 	}
 	parse_sprites(g);
@@ -83,8 +83,8 @@ static int	init_game_resources(t_game *g, char *f)
 	g->z_buffer = ft_calloc(g->win_width, sizeof(float));
 	if (!g->z_buffer)
 	{
-		free_partial_config(&g->cfg);
-		free_tex(g, TEX_COUNT);
+		free_config(&g->cfg);
+		free_textures(g, TEX_COUNT);
 		return (0);
 	}
 	i = 0;

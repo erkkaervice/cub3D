@@ -13,7 +13,6 @@ SRC		= \
 	core/init_entities.c \
 	core/init_game.c \
 	core/cleanup.c \
-	core/freedom.c \
 	\
 	parsing/map.c \
 	parsing/parsing.c \

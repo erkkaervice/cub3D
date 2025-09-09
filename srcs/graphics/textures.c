@@ -17,7 +17,7 @@ static int	load_tex_file(mlx_t *mlx, t_tex *t, char *path, t_config *cfg)
 	t->img = mlx_load_png(path);
 	if (!t->img)
 	{
-		cleanup_cfg_tex_paths(cfg);
+		free_config(&cfg);
 		return (0);
 	}
 	t->width = t->img->width;
@@ -50,9 +50,9 @@ int	load_tex(t_game *g)
 	{
 		g->tex[i] = ft_calloc(1, sizeof(t_tex));
 		if (!g->tex[i])
-			return (free_tex(g, i), 0);
+			return (free_textures(g, i), 0);
 		if (!load_tex_file(g->mlx, g->tex[i], paths[i], g->cfg))
-			return (free_tex(g, i + 1), 0);
+			return (free_textures(g, i + 1), 0);
 		i++;
 	}
 	return (1);
