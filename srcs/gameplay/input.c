@@ -6,13 +6,13 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 15:25:54 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/09 15:02:39 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/10/08 14:32:00 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static void	set_key(t_input *input, int key, int value)
+void	key_set(t_input *input, int key, int value)
 {
 	if (key == KEY_MOVE_FORWARD)
 		input->move_forward = value;
@@ -36,7 +36,7 @@ static void	set_key(t_input *input, int key, int value)
 		input->fps_toggle = value;
 }
 
-void	key_hook(mlx_key_data_t keydata, void *param)
+void	key_input(mlx_key_data_t keydata, void *param)
 {
 	t_game	*g;
 
@@ -46,16 +46,16 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 		if (keydata.key == MLX_KEY_ESCAPE)
 			mlx_close_window(g->mlx);
 		else if (keydata.key == KEY_MM_TOGGLE)
-			g->minimap_visible = !g->minimap_visible;
+			g->mm_visible = !g->mm_visible;
 		else if (keydata.key == KEY_FPS_TOGGLE)
 			g->fps_visible = !g->fps_visible;
 		else if (keydata.key == KEY_INTERACT)
-			toggle_door(g);
+			door_toggle(g);
 		else
-			set_key(&g->input, keydata.key, 1);
+			key_set(&g->input, keydata.key, 1);
 	}
 	else if (keydata.action == MLX_RELEASE)
-		set_key(&g->input, keydata.key, 0);
+		key_set(&g->input, keydata.key, 0);
 }
 
 void	mouse_move(double x, double y, void *param)
@@ -77,22 +77,26 @@ void	mouse_move(double x, double y, void *param)
 	mlx_set_mouse_pos(g->mlx, center_x, center_y);
 }
 
-void	apply_mouse_look(t_game *g, double frame_time)
+void	mouse_look(t_game *g, double frame_time)
 {
 	double	old_dir_x;
 	double	old_plane_x;
 	double	rot;
+	double	cos_r;
+	double	sin_r;
 
 	if (g->mouse.dx != 0.0)
 	{
 		rot = (g->mouse.dx * g->mouse.sensitivity) * frame_time
 			* MOUSE_FRAME_MULTIPLIER;
+		cos_r = cos(rot);
+		sin_r = sin(rot);
 		old_dir_x = g->dir_x;
 		old_plane_x = g->plane_x;
-		g->dir_x = g->dir_x * cos(rot) - g->dir_y * sin(rot);
-		g->dir_y = old_dir_x * sin(rot) + g->dir_y * cos(rot);
-		g->plane_x = g->plane_x * cos(rot) - g->plane_y * sin(rot);
-		g->plane_y = old_plane_x * sin(rot) + g->plane_y * cos(rot);
+		g->dir_x = g->dir_x * cos_r - g->dir_y * sin_r;
+		g->dir_y = old_dir_x * sin_r + g->dir_y * cos_r;
+		g->plane_x = g->plane_x * cos_r - g->plane_y * sin_r;
+		g->plane_y = old_plane_x * sin_r + g->plane_y * cos_r;
 		g->mouse.dx *= MOUSE_DAMPING;
 		if (fabs(g->mouse.dx) < MOUSE_DX_THRESHOLD)
 			g->mouse.dx = 0.0;

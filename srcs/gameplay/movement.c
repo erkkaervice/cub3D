@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/04 15:29:29 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/09 15:02:28 by eala-lah         ###   ########.fr       */
+/*   Created: 2025/10/03 15:16:34 by eala-lah          #+#    #+#             */
+/*   Updated: 2025/10/06 15:13:20 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	can_move(t_game *g, float x, float y)
+int	can_move(const t_game *g, float x, float y)
 {
 	int		ix;
 	int		iy;
@@ -23,29 +23,37 @@ int	can_move(t_game *g, float x, float y)
 	iy = (int)y;
 	if (x < 0.0f || y < 0.0f)
 		return (0);
-	if (iy >= map_dim(g->cfg->map, MAP_DIM_HEIGHT))
+	if (iy >= g->cfg->map_h)
 		return (0);
-	if (ix >= map_dim(&g->cfg->map[iy], MAP_DIM_WIDTH))
+	if (ix >= g->cfg->map_w)
 		return (0);
-	if (is_wall_or_door(g, ix, iy))
+	if (tile_blocked(g, ix, iy))
 		return (0);
 	return (1);
 }
 
-static void	move_player(t_game *g, float dx, float dy, float speed)
+void	move(t_game *g, float move_x, float move_y)
 {
-	float	new_x;
-	float	new_y;
+	float	len;
 
-	new_x = g->player_x + dx * speed;
-	new_y = g->player_y + dy * speed;
-	if (can_move(g, g->player_x, new_y))
-		g->player_y = new_y;
-	if (can_move(g, new_x, g->player_y))
-		g->player_x = new_x;
+	len = move_x * move_x + move_y * move_y;
+	if (len > 1e-6f && len > 1.0f)
+	{
+		len = sqrtf(len);
+		move_x /= len;
+		move_y /= len;
+	}
+	if (can_move(g, g->player_x, g->player_y + move_y))
+		g->player_y += move_y;
+	if (can_move(g, g->player_x + move_x, g->player_y))
+		g->player_x += move_x;
+	if (g->player_x < 0.0f)
+		g->player_x = 0.0f;
+	if (g->player_y < 0.0f)
+		g->player_y = 0.0f;
 }
 
-static void	rotate_player(t_game *g, float angle)
+void	rotate(t_game *g, float angle)
 {
 	float	cos_a;
 	float	sin_a;
@@ -62,8 +70,10 @@ static void	rotate_player(t_game *g, float angle)
 	g->plane_y = old_plane_x * sin_a + g->plane_y * cos_a;
 }
 
-void	update_movement_vector(t_game *g, float *dx, float *dy)
+void	calc_move_vec(t_game *g, float *dx, float *dy)
 {
+	*dx = 0.0f;
+	*dy = 0.0f;
 	if (g->input.move_forward)
 	{
 		*dx += g->dir_x;
@@ -86,31 +96,24 @@ void	update_movement_vector(t_game *g, float *dx, float *dy)
 	}
 }
 
-void	update_player_position(t_game *g)
+void	update_pos(t_game *g)
 {
-	float	move;
+	float	mov;
 	float	rot;
 	float	dx;
 	float	dy;
-	float	len;
 
-	move = PLAYER_WALK_SPEED;
 	if (g->input.run)
-		move = PLAYER_RUN_SPEED;
+		mov = PLAYER_RUN_SPEED;
+	else
+		mov = PLAYER_WALK_SPEED;
 	rot = PLAYER_ROT_SPEED;
 	dx = 0.0f;
 	dy = 0.0f;
-	update_movement_vector(g, &dx, &dy);
-	len = dx * dx + dy * dy;
-	if (len > 1.0f)
-	{
-		len = sqrtf(len);
-		dx /= len;
-		dy /= len;
-	}
-	move_player(g, dx, dy, move);
+	calc_move_vec(g, &dx, &dy);
+	move(g, dx * mov, dy * mov);
 	if (g->input.rotate_left)
-		rotate_player(g, -rot);
+		rotate(g, -rot);
 	if (g->input.rotate_right)
-		rotate_player(g, rot);
+		rotate(g, rot);
 }

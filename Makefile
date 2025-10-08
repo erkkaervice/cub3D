@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/09/23 16:05:32 by eala-lah          #+#    #+#              #
+#    Updated: 2025/10/08 17:50:30 by eala-lah         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME		= cub3D
 INCS		= -I ./incs/ -I ./libft/inc/ -I ./mlx/include/
 LIBFT_DIR	= libft/
@@ -9,36 +21,40 @@ MLX_FLAGS	= -L $(MLX_DIR)/build -lmlx42 -lglfw -lm -ldl -pthread
 SRC_DIR		= srcs
 SRC		= \
 	core/main.c \
-	core/init_data.c \
-	core/init_entities.c \
-	core/init_game.c \
-	core/cleanup.c \
+	core/freedom.c \
 	\
-	parsing/map.c \
-	parsing/parsing.c \
-	parsing/parsing2.c \
-	parsing/parsing3.c \
-	parsing/parsing4.c \
-	parsing/parsing_utils.c \
-	parsing/parsing_utils2.c \
-	\
-	graphics/blit.c \
-	graphics/render.c \
-	graphics/raycast.c \
-	graphics/textures.c \
-	\
+	gameplay/entity_manager.c \
+	gameplay/sprite_draw.c \
+	gameplay/sprite_logic.c \
+	gameplay/map.c \
 	gameplay/input.c \
 	gameplay/movement.c \
-	gameplay/door.c \
-	gameplay/door_utils.c \
 	\
-	hud/minimap.c \
-	hud/fps.c \
-	hud/fps_utils.c \
+	hud/fps_data.c \
+	hud/fps_update.c \
+	hud/mm_entity.c \
+	hud/mm_layer.c \
+	hud/mm_map.c \
 	\
-	sprites/sprites_parsing.c \
-	sprites/sprites_logic.c \
-	sprites/sprites_behavior.c \
+	initialisation/init_entities.c \
+	initialisation/init_game.c \
+	initialisation/init_graphics.c \
+	initialisation/init_hud.c \
+	initialisation/init_world.c \
+	\
+	parsing/parse_cfg.c \
+	parsing/parse_dynamic.c \
+	parsing/parse_map.c \
+	parsing/parse_rgb.c \
+	\
+	raycast/raycast_core.c \
+	raycast/raycast_doors.c \
+	raycast/raycast_sprites.c \
+	raycast/raycast_wall.c \
+	raycast/render_buffer.c \
+	raycast/render_frame.c \
+	raycast/render_textures.c \
+	raycast/render_wall.c
 
 OBJ_DIR		= obj
 OBJS		= $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))

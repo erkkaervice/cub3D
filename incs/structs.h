@@ -3,22 +3,83 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eala-lah <eala-lah@student.hive.fi>       +#+  +:+       +#+        */
+/*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/12 18:52:20 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/04 18:00:00 by eala-lah         ###   ########.fr       */
+/*   Created: 2025/10/06 13:56:19 by eala-lah          #+#    #+#             */
+/*   Updated: 2025/10/08 16:49:07 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCTS_H
 # define STRUCTS_H
 
+# include "cub3d.h"
+
 typedef struct s_game	t_game;
 
-/* ========================================================================== */
-/*                                BASIC TYPES                                 */
-/* ========================================================================== */
+/* ************************************************************************** */
+/*                                    HUD                                     */
+/* ************************************************************************** */
 
+typedef struct s_hud
+{
+	uint32_t	*dst;
+	int			frame_w;
+	int			frame_h;
+	int			x;
+	int			y;
+	uint32_t	color;
+	float		alpha;
+}	t_hud;
+
+typedef struct s_fps
+{
+	int			frames;
+	int			fps;
+	int			frame_count;
+	clock_t		last_time;
+	t_game		*g;
+	int			x;
+	int			y;
+	int			scale;
+	int			value;
+}	t_fps;
+
+typedef struct s_mm
+{
+	uint32_t	*dst;
+	int			frame_w;
+	int			frame_h;
+	int			off_x;
+	int			off_y;
+	int			tile_px;
+	int			tx;
+	int			ty;
+	char		tile;
+	int			cx;
+	int			cy;
+	float		dir_x;
+	float		dir_y;
+	uint32_t	color;
+}	t_mm;
+
+typedef struct s_mm_thread
+{
+	t_game		*g;
+	int			start;
+	int			end;
+	uint32_t	*dst;
+	int			frame_w;
+	int			frame_h;
+	int			off_x;
+	int			off_y;
+	int			tile_px;
+	int			map_start;
+}	t_mm_thread;
+
+/* ************************************************************************** */
+/*                                Basic Types                                 */
+/* ************************************************************************** */
 typedef struct s_point
 {
 	int	x;
@@ -39,45 +100,49 @@ typedef struct s_input
 	int	fps_toggle;
 }	t_input;
 
-/* ========================================================================== */
-/*                              CONFIGURATION                                 */
-/* ========================================================================== */
-
+/* ************************************************************************** */
+/*                                Configuration                               */
+/* ************************************************************************** */
 typedef struct s_config
 {
-	int		player;
+	char	**map;
 	int		player_x;
 	int		player_y;
 	char	player_dir;
-	char	**map;
+	int		map_w;
+	int		map_h;
+
 	bool	no;
 	bool	so;
 	bool	we;
 	bool	ea;
 	bool	f;
 	bool	c;
+
 	char	*north_tex;
 	char	*south_tex;
 	char	*east_tex;
 	char	*west_tex;
 	char	*door_tex;
-	char	*sprite_tex_0;
-	char	*sprite_tex_1;
-	char	*sprite_tex_2;
+	char	**sprite_tex;
 	char	*floor_color;
 	char	*ceiling_color;
+
+	uint32_t ceiling_color_u32;
+	uint32_t floor_color_u32;
 }	t_config;
 
-/* ========================================================================== */
-/*                          RENDERING & TEXTURES                              */
-/* ========================================================================== */
-
+/* ************************************************************************** */
+/*                        Rendering & Textures                                */
+/* ************************************************************************** */
 typedef struct s_tex
 {
 	int				width;
 	int				height;
-	mlx_texture_t	*img;
-	mlx_image_t		*image;
+	uint32_t		*pixels32;
+	int				row_stride; 
+	mlx_texture_t	*tex;
+	mlx_image_t		*img;
 }	t_tex;
 
 typedef struct s_dir_info
@@ -115,53 +180,31 @@ typedef struct s_wall
 	int		tex_x;
 }	t_wall;
 
-typedef struct s_blit
+typedef struct s_render_thread
 {
-	t_game	*game;
+	t_game *g;
+	int min_x;
+	int max_x;
+}	t_render_thread;
+
+
+
+typedef struct s_draw_tex
+{
+	t_game	*g;
 	int		x;
-	int		y;
-	float	scale_x;
-	float	scale_y;
-}	t_blit;
+	t_wall	*w;
+	t_tex	*tex;
+	int		tex_idx;
+	int		shift;
+}	t_draw_tex;
 
-/* ========================================================================== */
-/*                                   DOORS                                    */
-/* ========================================================================== */
 
-typedef struct s_door
-{
-	int		x;
-	int		y;
-	float	open_ratio;
-	int		is_opening;
-}	t_door;
-
-/* ========================================================================== */
-/*                               FPS & MOUSE                                  */
-/* ========================================================================== */
-
-typedef struct s_fps
-{
-	int		frames;
-	int		fps;
-	clock_t	last_time;
-}	t_fps;
-
-typedef struct s_mouse
-{
-	int		prev_x;
-	double	dx;
-	double	velocity;
-	double	sensitivity;
-}	t_mouse;
-
-/* ========================================================================== */
-/*                                  SPRITES                                   */
-/* ========================================================================== */
-
+/* ************************************************************************** */
+/*                                Sprites                                     */
+/* ************************************************************************** */
 typedef struct s_sprite
 {
-	int		tex_id;
 	t_tex	*frames[3];
 	int		frame_index;
 
@@ -169,8 +212,6 @@ typedef struct s_sprite
 	float	y;
 	float	dist;
 	float	perp_dist;
-	float	sx;
-	float	sy;
 	float	tx;
 	float	ty;
 
@@ -184,54 +225,92 @@ typedef struct s_sprite
 
 	float	anim_timer;
 	float	speed;
-	int		active;
-	int		chasing;
-	int		stopped;
+	bool	active;
+	bool	chasing;
+	bool	stopped;
 }	t_sprite;
 
-/* ========================================================================== */
-/*                                GAME STATE                                  */
-/* ========================================================================== */
+typedef struct s_sprite_thread
+{
+	t_game		*g;
+	t_sprite	*sprites;
+	int			start;
+	int			end;
+	float		*zb;
+	float		dt;
+}	t_sprite_thread;
 
+/* ************************************************************************** */
+/*                                Doors                                       */
+/* ************************************************************************** */
+typedef enum e_door_state
+{
+	DOOR_CLOSED,
+	DOOR_OPENING,
+	DOOR_OPEN,
+	DOOR_CLOSING
+}	t_door_state;
+
+typedef struct s_door
+{
+	int				x;
+	int				y;
+	t_door_state	state;
+	float			open_ratio;
+}	t_door;
+
+/* ************************************************************************** */
+/*                                FPS & Mouse                                 */
+/* ************************************************************************** */
+
+
+typedef struct s_mouse
+{
+	int		prev_x;
+	double	dx;
+	double	velocity;
+	double	sensitivity;
+}	t_mouse;
+
+/* ************************************************************************** */
+/*                                Game State                                  */
+/* ************************************************************************** */
 typedef struct s_game
 {
-	t_config	*cfg;
-
 	float		player_x;
 	float		player_y;
 	float		dir_x;
 	float		dir_y;
 	float		plane_x;
 	float		plane_y;
-
-	t_tex		*tex[TEX_COUNT];
-	t_dir_info	dir_infos[DIR_COUNT];
-
-	t_input		input;
-
+	float		move_speed;
+	float		rot_speed;
+	float		*z_buffer;
 	int			win_width;
 	int			win_height;
-	int			minimap_visible;
-	int			fps_visible;
+	mlx_image_t	*back_buffer;
+	t_tex		*tex[TEX_COUNT];
 
+	t_config	*cfg;
+	t_input		input;
+	bool		mm_visible;
+	bool		fps_visible;
 	t_fps		fps;
-
 	t_door		*doors;
 	int			num_doors;
-
 	t_sprite	*sprites;
 	int			num_sprites;
-
 	t_mouse		mouse;
 
 	mlx_t		*mlx;
 	mlx_image_t	*img;
+	mlx_image_t	*front_buffer;
 	mlx_image_t	*frame;
 
-	float		*z_buffer;
 	float		scale_x;
 	float		scale_y;
 	int			needs_blit;
+	t_dir_info	dir_infos[4];
 }	t_game;
 
 #endif

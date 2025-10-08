@@ -17,6 +17,10 @@
 # include <time.h>
 # include <fcntl.h>
 # include <stdio.h>
+# include <stdint.h>
+# include <stdbool.h>
+# include <pthread.h>
+# include <stdatomic.h>
 
 # include <libft.h>
 # include "MLX42/MLX42.h"

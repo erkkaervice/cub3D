@@ -3,138 +3,119 @@
 /*                                                        :::      ::::::::   */
 /*   functions.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eala-lah <eala-lah@student.hive.fi>       +#+  +:+       +#+        */
+/*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 18:53:05 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/09/09 21:10:00 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/10/08 19:18:35 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FUNCTIONS_H
 # define FUNCTIONS_H
 
-/* ************************************************************************** */
-/*                        Initialization & Config                             */
-/* ************************************************************************** */
-t_config	*map_config(char *f);
-int			init_game(t_game *g, char *f);
-void		init_game_struct(t_game *g);
-void		init_dir_infos(t_game *g);
-void		init_player(t_game *g);
-void		init_doors(t_game *g);
-void		init_mouse(t_game *g);
+# ifndef CUB3D_H
+#  error "Include cub3d.h before functions.h"
+# endif
 
-/* ************************************************************************** */
-/*                         Map utilities & validation                         */
-/* ************************************************************************** */
-void		file_valid(char *f, char *ext1, char *ext2);
-int			map_dim(char **map, int mode);
-int			is_wall_or_door(t_game *g, int x, int y);
-int			handle_tile(t_game *g, t_ray *r, int map_w, int map_h);
-bool		validate_player(t_config *cfg, int map_start);
-bool		map_parsing(t_config *cfg, char *f);
-bool		map_parsing2(t_config *cfg, char *f);
-bool		map_validation2(t_config *cfg);
-bool		map_validation3(t_config *cfg);
-void		config_validation(t_config *cfg, char *line);
-void		set_path(char **dest, bool *seen, char *line, t_config *cfg);
-uint32_t	color_converter(int *rgb);
-int			*color_atoia(const char *color_string);
-bool		process_config_lines2(t_config *cfg, int *i,
-				int *config_count, bool *map_started);
-
-/* ************************************************************************** */
-/*                          Parsing utilities                                 */
-/* ************************************************************************** */
-bool		is_map_line(char *line);
-bool		is_config_line(char *line);
-bool		is_empty_line(char *line);
-int			print_err(t_config *cfg, char *line, int fd);
+/*freedom*/
+void		free_game(t_game *g);
+void		free_cfg(t_config **cfg_ptr);
+void		free_tex(t_game *g);
 void		free_cfg_tex(t_config *cfg);
-bool		is_valid_number(const char *s);
-int			check_last_line(char	*last_line);
 void		free_split(char **split);
 
-/* ************************************************************************** */
-/*                               Cleanup                                      */
-/* ************************************************************************** */
+/*parsing*/
+void		cfg_check_file(char *filename, char *ext1, char *ext2);
+void		cfg_set_asset(char **dest, bool *seen, char *line);
+int			map_load(t_config *cfg, const char *filename);
+bool		map_normalize(t_config *cfg, int max_len);
+void		map_valid_struct(t_config *cfg, int start_line);
+void		init_spr(t_game *g, t_sprite *s, int x, int y);
+int			*rgb_parse_array(const char *color_string);
+bool		cfg_is_line(const char *line);
+bool		map_valid_player(t_config *cfg, int map_start);
+int			map_check_last_line(char *last_line);
+void		cfg_parse_line(t_config *cfg, char *line);
+
+/*initialisation*/
+void		init_struct(t_game *g);
+int			init_resources(t_game *g, const char *f);
+int			init_game(t_game *g, const char *f);
+t_config	*world_config(const char *f);
+int			tex_load_all(t_game *g);
+void		spr_parse(t_game *g);
+void		doors_init(t_game *g);
+int			spr_reset(t_game *g);
+int			init_mlx(t_game *g);
 void		cleanup_game(t_game *g);
-void		free_config(t_config **cfg_ptr);
-void		cleanup_cfg_tex_paths(t_config *cfg);
-void		free_textures(t_game *g);
-void		free_config_textures(t_config *cfg);
-
-/* ************************************************************************** */
-/*                               Raycasting                                   */
-/* ************************************************************************** */
-void		init_ray_basic(t_game *g, int x, t_ray *r);
-void		init_ray_steps(t_game *g, t_ray *r);
-int			perform_dda(t_game *g, t_ray *r, int x);
-void		calculate_wall(t_game *g, t_ray *r, t_wall *w);
-void		raycast_column(t_game *g, int x);
-
-/* ************************************************************************** */
-/*                               Rendering                                    */
-/* ************************************************************************** */
-void		draw_column(t_game *g, t_wall *w, int x, int tex_id);
-void		blend_pixel(uint32_t *dst, uint32_t src, float *zbuf, float dist);
-void		blit_scaled(t_game *g);
-void		render_frame(void *param);
-void		render_minimap(t_game *g);
-void		render_fps(t_game *g);
-
-/* ************************************************************************** */
-/*                             Texture management                             */
-/* ************************************************************************** */
-int			load_tex(t_game *g);
-int			get_tex_index(int side, float ray_dir_x, float ray_dir_y);
-int			get_tex_index_door(t_game *g, int map_x, int map_y);
-int			get_tex_x(t_game *g, t_ray *r, float wall_x, int tex_id);
-int			get_tex_color_from_tex(t_tex *tex, int tex_x, int tex_y);
-int			get_tex_color(t_game *g, int tex_id, int tex_x, int tex_y);
-
-/* ************************************************************************** */
-/*                              Door management                               */
-/* ************************************************************************** */
-int			count_doors(t_game *g);
-int			fill_doors(t_game *g);
-int			count_and_fill_doors(t_game *g);
-int			find_door_index(t_game *g, int x, int y);
-int			handle_door(t_game *g, t_ray *r);
-int			door_hit(t_game *g, t_ray *r, t_wall *w, int *tex_id);
-void		update_doors(t_game *g);
-void		adjust_ray_for_door(t_ray *r, float open_ratio);
-void		toggle_door(t_game *g);
-
-/* ************************************************************************** */
-/*                        Player movement & Input                             */
-/* ************************************************************************** */
-int			can_move(t_game *g, float x, float y);
-void		update_player_position(t_game *g);
-void		key_hook(mlx_key_data_t keydata, void *param);
-void		mouse_init(t_game *g);
+void		init_mouse(t_game *g);
 void		mouse_move(double x, double y, void *param);
-void		apply_mouse_look(t_game *g, double frame_time);
+void		init_dirs(t_game *g);
+void		init_player(t_game *g);
+void		key_input(mlx_key_data_t keydata, void *param);
+void		app_close(void *param);
+void		draw_frame(void *param);
+void		resize_buffers(int32_t w, int32_t h, void *param);
+void		spr_bounds(t_game *g, t_sprite *s);
+void		init_fps(t_fps *fps, t_game *g);
+bool		cfg_parse(t_config *cfg, const char *filename);
+uint32_t	rgb_to_u32(const char *s);
+int			map_count_lines(const char *filename);
+int			map_fill_lines(t_config *cfg, const char *filename);
+bool		map_is_line(const char *line);
+int			map_valid_enc(t_config *cfg, int i);
 
-/* ************************************************************************** */
-/*                                 Sprites                                    */
-/* ************************************************************************** */
-void		init_sprite(t_game *g, t_sprite *s, int x, int y);
-int			init_sprite_render(t_game *g, t_sprite *s);
-void		parse_sprites(t_game *g);
-int			compute_sprite_transform(t_game *g, t_sprite *s);
-void		compute_sprite_bounds(t_game *g, t_sprite *s);
-void		draw_sprite_stripe(t_game *g, t_sprite *s, float *zb);
-void		render_sprites(t_game *g, float *zb);
-void		update_sprite(t_game *g, t_sprite *s, float dt);
-void		update_sprite_behavior(t_game *g, t_sprite *s, float dt);
+/*raycasting*/
+int			map_dim(char **map, int mode);
+void		init_ray(const t_game *g, int x, t_ray *ray);
+void		init_ray_steps(const t_game *g, t_ray *ray);
+void		door_draw_col(t_game *g, t_ray *r, int x);
+void		draw_wall(t_game *g, t_ray *r, int x);
+int			raycast_dda(const t_game *g, t_ray *r, int x);
+void		wall_calc_bounds(const t_game *g, const t_ray *r, t_wall *w);
+int			wall_tex_idx(int side, float ray_dir_x, float ray_dir_y);
+int			wall_tex_x(const t_game *g, const t_ray *r,
+				float wall_x, int tex_id);
+void		draw_tex(t_draw_tex args);
+void		spr_render(t_game *g, float *zb, float dt);
+void		mm_render(t_game *g);
+void		fps_render(t_game *g);
+void		raycast_column(t_game *g, int x);
+void		clear_frame(t_game *g);
+void		doors_upd(t_game *g);
+void		mouse_look(t_game *g, double frame_time);
+void		update_pos(t_game *g);
+void		copy_back(t_game *g);
+t_tex		*col_validate(t_game *g, t_wall *w, int x, int tex_id);
+uint32_t	tex_color(const t_game *g, int tex_id, int tex_x, int tex_y);
 
-/* ************************************************************************** */
-/*                           Fonts & text rendering                           */
-/* ************************************************************************** */
-const char	**get_font_digits(void);
-const char	**get_font_letters(void);
-void		draw_scaled_pixel(t_game *g, t_point pos, int scale, int color);
-void		draw_char(t_game *g, t_point pos, const char bmap[5], int scale);
+/*sprites*/
+void		spr_upd(t_game *g, t_sprite *s, float dt);
+void		blend(uint32_t *restrict dst, uint32_t src,
+				float *restrict zbuf, float dist);
+int			tex_pixel(const t_tex *t, int tex_x, int tex_y);
+int			spr_project(t_game *g, t_sprite *s);
+int			init_spr_render(t_game *g, t_sprite *s);
+void		spr_stripe(t_game *g, t_sprite *s, float *zb);
+void		*spr_thread(void *arg);
+void		start_spr_threads(t_game *g, float *zb, float dt,
+				t_sprite_thread *params);
+void		sort_spr(t_game *g);
+int			can_move(const t_game *g, float x, float y);
+int			spr_los(const t_game *g, t_sprite *s);
+
+/*doors*/
+int			door_idx(const t_game *g, int x, int y);
+void		door_toggle(t_game *g);
+int			tile_blocked(const t_game *g, int x, int y);
+void		hud_blend(t_hud px);
+
+/*HUD*/
+void		bitmap_char(t_game *g, t_point pos, char c, int scale);
+void		init_mm(t_game *g, uint32_t *dst, int *v, t_mm_thread *p);
+void		spr_normalize(float *fx, float *fy);
+void		mm_threads(t_game *g, int *v);
+void		mm_player(t_game *g, int *v);
+void		mm_sprites(t_game *g, int *v);
 
 #endif
