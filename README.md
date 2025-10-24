@@ -29,6 +29,7 @@ macOS:
 2. Install Homebrew (for MLX42 or GLFW libraries):
 
 `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
+
 `brew install glfw glew`
 
 Ubuntu / Linux:
@@ -49,6 +50,7 @@ Windows (via WSL2):
 1. Clone the repository:
 
 `git clone https://github.com/yourusername/cub3D.git`
+
 `cd cub3D`
 
 2. Initialize submodules (if using MLX42 as a submodule):
