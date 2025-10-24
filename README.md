@@ -49,7 +49,7 @@ Windows (via WSL2):
 
 1. Clone the repository:
 
-`git clone https://github.com/yourusername/cub3D.git`
+`git clone https://github.com/erkkaervice/cub3D.git`
 
 `cd cub3D`
 
