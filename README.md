@@ -78,7 +78,7 @@ Cleaning build artifacts:
 
 ## Running the Game
 
-'./cub3D path/to/your/map.cub'
+`./cub3D path/to/your/map.cub`
 
 - Make sure your `.cub` map file follows the expected format.  
 - Example maps are included in the `maps/` folder.
