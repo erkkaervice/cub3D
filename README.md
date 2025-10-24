@@ -24,12 +24,12 @@ macOS:
 
 1. Install Xcode Command Line Tools:
 
-'xcode-select --install'
+`xcode-select --install`
 
 2. Install Homebrew (for MLX42 or GLFW libraries):
 
-'/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-brew install glfw glew'
+`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
+`brew install glfw glew`
 
 Ubuntu / Linux:
 
@@ -48,12 +48,12 @@ Windows (via WSL2):
 
 1. Clone the repository:
 
-'git clone https://github.com/yourusername/cub3D.git
-cd cub3D'
+`git clone https://github.com/yourusername/cub3D.git`
+`cd cub3D`
 
 2. Initialize submodules (if using MLX42 as a submodule):
 
-'git submodule update --init --recursive'
+`git submodule update --init --recursive`
 
 3. Make sure `libft` is present or will be built automatically.
 
@@ -63,14 +63,14 @@ cd cub3D'
 
 The Makefile handles building `libft`, `MLX42`, and cub3D itself. Run:
 
-'make'
+`make`
 
 After building, the executable `cub3D` will be created in the project root.
 
 Cleaning build artifacts:
 
-'make clean
-make fclean'
+`make clean`
+`make fclean`
 
 ---
 
