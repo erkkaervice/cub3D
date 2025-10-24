@@ -6,7 +6,7 @@
 /*   By: eala-lah <eala-lah@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 16:12:46 by eala-lah          #+#    #+#             */
-/*   Updated: 2025/10/08 17:17:36 by eala-lah         ###   ########.fr       */
+/*   Updated: 2025/10/24 16:18:59 by eala-lah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	spr_col(t_game *g, t_sprite *s, int xi)
 	int			tx;
 	uint32_t	color;
 
-	if (!s || !s->frames || !s->frames[s->frame_index])
+	if (!s || !s->frames[s->frame_index])
 		return ;
 	t = s->frames[s->frame_index];
 	if (!t || !t->tex || !t->tex->pixels || s->width <= 0 || s->height <= 0)
